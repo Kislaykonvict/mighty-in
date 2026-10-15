@@ -1,0 +1,379 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------
+// Universal Dynamic Site Section Model
+// Controls Sections 1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17, 19
+// -------------------------------------------------------------
+model SiteSection {
+  id          String   @id @default(cuid())
+  pageSlug    String   @default("home") // "home", "about", "approach", "businesses"
+  sectionKey  String   // "hero", "trust", "ecosystem", "persona_selector", "challenge_selector", "before_after", "method", "strategy_builder", "why_mw", "roi_calculator", "assessment_promo", "global_offices", "about_preview", "final_cta"
+  name        String   // Human-readable section name in Admin
+  title       String?
+  subtitle    String?
+  badge       String?
+  content     Json?    // Detailed nested configuration, panels, cards, formula equations, interactive options
+  ctaText     String?
+  ctaLink     String?
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([pageSlug, sectionKey])
+  @@index([pageSlug, order, isActive])
+}
+
+// -------------------------------------------------------------
+// Section 0 & 20: Navigation (Header & Footer)
+// -------------------------------------------------------------
+model NavigationItem {
+  id          String           @id @default(cuid())
+  label       String
+  href        String
+  order       Int              @default(0)
+  location    String           @default("HEADER") // "HEADER" | "FOOTER"
+  group       String?          // e.g. "businesses", "company", "services", "contact"
+  tagline     String?
+  description String?
+  badge       String?
+  accentColor String?          // Gradient or color class e.g. "from-orange-500 to-rose-500"
+  isDropdown  Boolean          @default(false)
+  subItems    Json?            // Array of sub-item strings or links
+  isExternal  Boolean          @default(false)
+  parentId    String?
+  parent      NavigationItem?  @relation("SubNav", fields: [parentId], references: [id], onDelete: Cascade)
+  children    NavigationItem[] @relation("SubNav")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([location, order])
+}
+
+// -------------------------------------------------------------
+// Section 4: Business Verticals (Digital & Growth, Technology, Talent)
+// -------------------------------------------------------------
+model BusinessVertical {
+  id                  String        @id // "digital-growth", "technology", "talent-solutions"
+  slug                String        @unique
+  name                String
+  pillarHeadline      String
+  tagline             String
+  headline            String
+  subheadline         String
+  description         String
+  themeColor          String        // "growth", "tech", "talent"
+  accentHex           String
+  gradient            String
+  bgGradient          String
+  heroImage           String
+  audiences           Json?         // Array of audience objects
+  services            Json          // Array of ServiceItem objects
+  outcomes            Json          // Array of outcome metric objects
+  featuredProjectSlugs Json?        // Array of project slugs
+  coreCapabilities    Json          // Array of capability strings
+  order               Int           @default(0)
+  isActive            Boolean       @default(true)
+
+  // Custom SEO & Meta Tags (Item Level)
+  metaTitle           String?
+  metaDescription     String?       @db.Text
+  metaKeywords        String?
+  canonicalUrl        String?
+  headCode            String?       @db.Text
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  projects            Project[]
+  testimonials        Testimonial[]
+}
+
+// -------------------------------------------------------------
+// Section 7 & 8: Projects & Case Studies (Featured Work & Before/After)
+// -------------------------------------------------------------
+model Project {
+  id                String            @id @default(cuid())
+  slug              String            @unique
+  title             String
+  client            String
+  industry          String
+  verticalId        String
+  vertical          BusinessVertical  @relation(fields: [verticalId], references: [id])
+  verticalName      String
+  year              String            @default("2024")
+  heroImage         String
+  thumbnailImage    String
+  galleryImages     Json?             // Array of image URLs
+  shortDescription  String
+  tagline           String
+  summary           String            @db.Text
+  challenge         String            @db.Text
+  objectives        Json              // Array of strings
+  strategy          Json              // Array of strings
+  solution          String            @db.Text
+  technologiesUsed  Json              // Array of strings
+  metrics           Json              // Array of { value, label, description }
+  featured          Boolean           @default(false)
+  testimonialId     String?
+  liveUrl           String?
+  beforeImage       String?           // For before/after slider
+  afterImage        String?           // For before/after slider
+  order             Int               @default(0)
+
+  // Custom SEO & Meta Tags (Item Level)
+  metaTitle         String?
+  metaDescription   String?           @db.Text
+  metaKeywords      String?
+  canonicalUrl      String?
+  headCode          String?           @db.Text
+
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  testimonials      Testimonial[]
+
+  @@index([verticalId, featured])
+}
+
+// -------------------------------------------------------------
+// Section 14: Testimonials & Social Proof
+// -------------------------------------------------------------
+model Testimonial {
+  id                  String            @id @default(cuid())
+  clientName          String
+  role                String
+  company             String
+  industry            String
+  quote               String            @db.Text
+  fullQuote           String?           @db.Text
+  verticalId          String            // "digital-growth", "technology", "talent-solutions"
+  vertical            BusinessVertical? @relation(fields: [verticalId], references: [id])
+  relatedProjectSlug  String?
+  relatedProjectTitle String?
+  project             Project?          @relation(fields: [relatedProjectSlug], references: [slug])
+  rating              Int               @default(5)
+  highlightedPhrase   String
+  avatarUrl           String?
+  featured            Boolean           @default(true)
+  order               Int               @default(0)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([verticalId, featured])
+}
+
+// -------------------------------------------------------------
+// Section 15: People & Leadership Profiles
+// -------------------------------------------------------------
+model TeamMember {
+  id         String   @id @default(cuid())
+  name       String
+  role       String
+  specialty  String   // "Enterprise Strategy & Brand Architecture", etc.
+  bio        String   @db.Text
+  image      String
+  department String   // "Leadership", "Technology", "Growth", "Talent"
+  linkedin   String?
+  twitter    String?
+  featured   Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([department, order])
+}
+
+// -------------------------------------------------------------
+// Section 16: Global Offices (Interactive Globe & Directory)
+// -------------------------------------------------------------
+model Office {
+  id             String   @id // "dubai", "new-york", "london", "singapore", "sydney"
+  city           String
+  country        String
+  countryCode    String
+  flag           String
+  role           String
+  description    String   @db.Text
+  address        String
+  fullAddress    String
+  coordinatesLat Float
+  coordinatesLng Float
+  cobeLocation   Json     // [lat, lng]
+  timezone       String
+  timezoneLabel  String
+  utcOffset      String
+  phoneNumbers   Json     // Array of { label, number, link, isPrimary, isTollFree }
+  whatsapp       Json?    // { number, link }
+  email          String
+  specialties    Json     // Array of strings
+  teamSizeBadge  String
+  established    String
+  isHeadquarters Boolean  @default(false)
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([order])
+}
+
+// -------------------------------------------------------------
+// Section 18: Insights & Articles
+// -------------------------------------------------------------
+model Insight {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  subtitle     String
+  category     String   // "Growth", "Technology", "Business", "Talent"
+  verticalId   String?
+  readTime     String
+  publishedAt  DateTime @default(now())
+  authorName   String
+  authorRole   String
+  authorAvatar String?
+  coverImage   String
+  excerpt      String   @db.Text
+  content      Json     // Array of paragraph / subheading strings
+  keyTakeaways Json     // Array of bullet strings
+  tags         Json     // Array of tag strings
+  featured     Boolean  @default(false)
+
+  // Custom SEO & Meta Tags (Item Level)
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  metaKeywords    String?
+  canonicalUrl    String?
+  headCode        String?  @db.Text
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category, featured])
+}
+
+// -------------------------------------------------------------
+// Section 13: Assessment Questions & Diagnostic Logic
+// -------------------------------------------------------------
+model AssessmentQuestion {
+  id        String   @id @default(cuid())
+  step      Int      @default(1)
+  question  String
+  subtitle  String?
+  category  String   // "growth", "technology", "talent"
+  order     Int      @default(0)
+  options   Json     // Array of { label, description, score, pillar, feedback }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+// -------------------------------------------------------------
+// Global Site Settings (Company Info, Socials, Sticky CTA, Terminal)
+// -------------------------------------------------------------
+model SiteSetting {
+  id             String   @id @default("global")
+  siteName       String   @default("Mighty Warner")
+  siteUrl        String   @default("https://mightywarner.com")
+  tagline        String?  @default("One Company. Multiple Ways to Move Your Business Forward.")
+  description    String?  @db.Text
+  email          String   @default("hello@mightywarner.com")
+  phone          String   @default("+1 (800) 555-MWARNER")
+  headquarters   String?  @default("Global Offices (North America, APAC, EMEA)")
+  socialLinks    Json?    // { twitter, linkedin, github }
+  stats          Json?    // { yearsInBusiness, projectsDelivered, marketsServed, clientSatisfaction, activeSpecialists }
+  stickyCta      Json?    // { showMobile: true, cta1Text, cta1Link, cta2Text, cta2Link }
+  growthTerminal Json?    // Quick actions & links
+  seoMeta        Json?    // { defaultTitle, defaultDescription, ogImage }
+  updatedAt      DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// Media & Upload Management (Cloudinary / S3 / Local)
+// -------------------------------------------------------------
+model MediaAsset {
+  id          String   @id @default(cuid())
+  publicId    String?  // Cloudinary public_id or unique key
+  url         String
+  secureUrl   String?
+  format      String?  // "webp", "png", "jpg"
+  width       Int?
+  height      Int?
+  bytes       Int?
+  folder      String?  @default("general") // "hero", "case-studies", "team", "offices", "insights"
+  altText     String?
+  caption     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([folder])
+}
+
+// -------------------------------------------------------------
+// Lead Submissions (Contact Forms, Assessment, ROI, Strategy)
+// -------------------------------------------------------------
+model LeadSubmission {
+  id        String   @id @default(cuid())
+  type      String   // "CONTACT", "ASSESSMENT", "ROI_SIMULATOR", "STRATEGY_BUILDER"
+  topic     String?  // "digital-growth", "technology", "talent-solutions", "not-sure", "ecosystem"
+  source    String?  // "navbar_cta", "final_cta", "contact_page", "roi_calculator"
+  fullName  String
+  email     String
+  company   String?
+  phone     String?
+  message   String?
+  data      Json?    // Detailed inputs (e.g. Assessment answers, ROI calculations, Strategy plan)
+  status    String   @default("NEW") // "NEW", "REVIEWED", "CONTACTED", "ARCHIVED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type, status, createdAt])
+  @@index([topic, status])
+}
+
+// -------------------------------------------------------------
+// Admin Users & Auth
+// -------------------------------------------------------------
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("ADMIN") // "SUPERADMIN", "ADMIN", "EDITOR"
+  isActive     Boolean   @default(true)
+  avatarUrl    String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+// -------------------------------------------------------------
+// Search Engine Optimization (SEO) & Custom Head Scripts
+// -------------------------------------------------------------
+model PageSeo {
+  id              String   @id @default(cuid())
+  path            String   @unique // e.g. "/", "/about", "/approach", "/businesses/digital-growth", "/work/strata-financial-brand-transformation", "/insights/*"
+  pageName        String   // Human-readable title in Admin e.g. "Home Page", "About Us", "Strata Financial"
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  metaKeywords    String?  // Comma-separated keywords
+  canonicalUrl    String?
+  ogTitle         String?
+  ogDescription   String?  @db.Text
+  ogImage         String?
+  noIndex         Boolean  @default(false)
+  noFollow        Boolean  @default(false)
+  headCode        String?  @db.Text // Custom <meta> tags, verification, tracking scripts, <script type="application/ld+json">
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([path])
+}

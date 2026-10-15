@@ -1,0 +1,100 @@
+import { Testimonial } from '@/types/testimonial';
+
+export const testimonialsData: Testimonial[] = [
+  {
+    id: 't-strata',
+    clientName: 'Marcus Vance',
+    role: 'Chief Marketing Officer',
+    company: 'Strata Financial Group',
+    industry: 'Financial Services & Wealth Management',
+    quote:
+      'Mighty Warner completely transformed how high-net-worth clients perceive our firm. Their team did not just build a website—they created a scalable organic lead generation engine that generated over $140M in new pipeline within 9 months.',
+    fullQuote:
+      'Prior to working with Mighty Warner, our digital presence was a massive liability. They brought strategic clarity to our brand narrative, engineered an extraordinarily fast web experience, and gave us organic search dominance in our core market.',
+    verticalId: 'digital-growth',
+    relatedProjectSlug: 'strata-financial-brand-transformation',
+    relatedProjectTitle: 'Strata Financial: Brand Transformation',
+    rating: 5,
+    highlightedPhrase: '$140M in new pipeline within 9 months',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 't-quantum',
+    clientName: 'Elena Rostova',
+    role: 'VP of Engineering',
+    company: 'Quantum Cloud Systems',
+    industry: 'Enterprise B2B Cloud & Logistics',
+    quote:
+      'The engineering horsepower and architectural maturity Mighty Warner brought to our platform rebuild was extraordinary. They eliminated our system bottlenecks, delivered 99.99% uptime, and cut our AWS costs by over 50%.',
+    fullQuote:
+      'When our legacy monolith began failing under enterprise peak loads, we needed genuine architects who could execute without hand-holding. Mighty Warner re-architected our entire backend into event-driven microservices that now handle 5M+ daily transactions seamlessly.',
+    verticalId: 'technology',
+    relatedProjectSlug: 'quantum-saas-platform-modernization',
+    relatedProjectTitle: 'Quantum Cloud: SaaS Modernization',
+    rating: 5,
+    highlightedPhrase: '99.99% uptime and 50%+ cloud cost savings',
+    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 't-aurapay',
+    clientName: 'David Chen',
+    role: 'Head of People & Engineering Operations',
+    company: 'AuraPay Global',
+    industry: 'Fintech & Payments',
+    quote:
+      'When we faced a critical European regulatory deadline, Mighty Warner deployed a dedicated 12-person senior engineering pod in just 18 days. They integrated into our sprint cycles immediately and delivered 3 weeks ahead of schedule.',
+    fullQuote:
+      'Finding senior payment engineers with deep regulatory understanding usually takes 4 to 6 months. Mighty Warner’s pre-vetted talent network allowed us to bypass the recruitment bottleneck and achieve complete PSD2 compliance flawlessly.',
+    verticalId: 'talent-solutions',
+    relatedProjectSlug: 'fintech-scaleup-engineering-pod',
+    relatedProjectTitle: 'AuraPay: Core Payments Pod',
+    rating: 5,
+    highlightedPhrase: 'Deployed 12 senior engineers in 18 days',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 't-elevate',
+    clientName: 'Sarah Jenkins',
+    role: 'Co-Founder & CEO',
+    company: 'Elevate Health Technologies',
+    industry: 'HealthTech & Wellness',
+    quote:
+      'Mighty Warner’s interactive onboarding quiz and CRO experiments drove a 74% increase in funnel completions and dropped our customer acquisition cost by 38%. They are unmatched in data-driven growth.',
+    verticalId: 'digital-growth',
+    relatedProjectSlug: 'elevate-health-scale',
+    relatedProjectTitle: 'Elevate Health: Digital Growth',
+    rating: 5,
+    highlightedPhrase: '38% reduction in CAC with 74% higher conversion',
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 't-nexus',
+    clientName: 'Tariq Al-Mansoor',
+    role: 'Chief Technology Officer',
+    company: 'Nexus Supply Chain',
+    industry: 'Freight & Logistics',
+    quote:
+      'Automating customs filings and carrier dispatch webhooks saved our operations team hundreds of hours each week. Mighty Warner designed the ideal API middleware architecture.',
+    verticalId: 'technology',
+    relatedProjectSlug: 'nexus-supply-chain-api-mesh',
+    relatedProjectTitle: 'Nexus: Logistics API Mesh',
+    rating: 5,
+    highlightedPhrase: 'Saved hundreds of manual hours every week',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+  },
+  {
+    id: 't-medvance',
+    clientName: 'Dr. Katherine Brooks',
+    role: 'VP of Product Development',
+    company: 'MedVance Diagnostics',
+    industry: 'Clinical MedTech',
+    quote:
+      'Mighty Warner embedded an expert talent squad that hired 24 specialized medical device software engineers in 4 months. That shaved 5 months off our FDA submission roadmap.',
+    verticalId: 'talent-solutions',
+    relatedProjectSlug: 'healthtech-global-team-expansion',
+    relatedProjectTitle: 'MedVance: Clinical Engineering Team',
+    rating: 5,
+    highlightedPhrase: 'Shaved 5 months off FDA submission timeline',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+  },
+];

@@ -1,0 +1,174 @@
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowRight, Sparkles, Cpu, Users, CheckCircle2 } from 'lucide-react';
+import { constructMetadata } from '@/lib/utils/seo';
+import { businessesData } from '@/data/businesses';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { SectionContainer } from '@/components/layout/SectionContainer';
+import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+
+export const metadata = constructMetadata({
+  title: 'Businesses & Core Capabilities',
+  description:
+    'Explore the three business verticals of Mighty Warner: Digital & Growth, Technology, and Talent Solutions. One company with multiple ways to move your enterprise forward.',
+  canonical: '/businesses',
+});
+
+export default function BusinessesPage() {
+  const icons = {
+    'digital-growth': Sparkles,
+    technology: Cpu,
+    'talent-solutions': Users,
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {/* Hero Header */}
+      <section className="pt-16 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
+        <div className="absolute inset-0 subtle-grid-bg opacity-20 pointer-events-none" />
+        <SectionContainer width="default" paddingY="none">
+          <Badge variant="subtle" dot className="mb-4">
+            THE MIGHTY WARNER ECOSYSTEM
+          </Badge>
+          <h1 className="text-display-h1 font-extrabold text-white tracking-tight mb-6 max-w-4xl">
+            Three businesses. One unified engine for growth.
+          </h1>
+          <p className="text-body-lg text-slate-300 max-w-2xl leading-relaxed mb-8">
+            Whether your immediate constraint is market visibility, software scalability, or hiring execution speed, our three specialized divisions provide surgical capabilities backed by unified accountability.
+          </p>
+        </SectionContainer>
+      </section>
+
+      {/* 3 Detailed Vertical Deep Dives */}
+      <SectionContainer width="default" paddingY="lg">
+        <div className="space-y-16">
+          {businessesData.map((business, idx) => {
+            const Icon = icons[business.id] || Sparkles;
+            const themeConfig = {
+              'digital-growth': {
+                badge: 'growth' as const,
+                accentColor: 'text-orange-400',
+                btnVariant: 'growth' as const,
+                borderColor: 'border-orange-500/25',
+              },
+              technology: {
+                badge: 'tech' as const,
+                accentColor: 'text-blue-400',
+                btnVariant: 'tech' as const,
+                borderColor: 'border-blue-500/25',
+              },
+              'talent-solutions': {
+                badge: 'talent' as const,
+                accentColor: 'text-emerald-400',
+                btnVariant: 'talent' as const,
+                borderColor: 'border-emerald-500/25',
+              },
+            }[business.id];
+
+            return (
+              <div
+                key={business.id}
+                id={business.id}
+                className={`p-8 sm:p-12 rounded-3xl bg-[#0F1626] border ${themeConfig.borderColor} shadow-xl relative overflow-hidden`}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                  <div className="lg:col-span-7 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <Badge variant={themeConfig.badge} dot>
+                        {business.pillarHeadline}
+                      </Badge>
+                      <span className="text-xs font-mono text-slate-500">VERTICAL 0{idx + 1}</span>
+                    </div>
+
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                      {business.name}
+                    </h2>
+
+                    <p className="text-base text-slate-300 leading-relaxed font-normal">
+                      {business.description}
+                    </p>
+
+                    {/* Detailed Services Grid */}
+                    <div className="space-y-3 pt-2">
+                      <div className="text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold">
+                        Specialized Capabilities
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {business.services.map((srv) => (
+                          <div
+                            key={srv.id}
+                            className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1"
+                          >
+                            <div className="text-sm font-bold text-white flex items-center gap-2">
+                              <CheckCircle2 className={`w-4 h-4 ${themeConfig.accentColor} shrink-0`} />
+                              <span>{srv.name}</span>
+                            </div>
+                            <p className="text-xs text-slate-400 leading-relaxed">
+                              {srv.shortDescription}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-4 flex flex-wrap items-center gap-4">
+                      <Button
+                        href={`/businesses/${business.slug}`}
+                        variant={themeConfig.btnVariant}
+                        size="md"
+                        rightIcon={<ArrowRight className="w-4 h-4" />}
+                      >
+                        Explore Detailed {business.name} Page
+                      </Button>
+
+                      <Button
+                        href={`/contact?topic=${business.id}`}
+                        variant="outline"
+                        size="md"
+                      >
+                        Inquire About {business.name}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Outcomes & Image */}
+                  <div className="lg:col-span-5 space-y-4">
+                    <div className="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+                      <Image
+                        src={business.heroImage}
+                        alt={business.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-[#080C14] border border-white/8 space-y-3">
+                      <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                        Key Performance Metrics
+                      </div>
+                      {business.outcomes.map((out) => (
+                        <div key={out.label} className="border-b border-white/5 last:border-0 pb-2 last:pb-0">
+                          <div className="text-xl font-black text-white">{out.metric}</div>
+                          <div className="text-xs font-semibold text-slate-300">{out.label}</div>
+                          <div className="text-[11px] text-slate-500">{out.context}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </SectionContainer>
+
+      <FinalCtaSection />
+    </div>
+  );
+}
