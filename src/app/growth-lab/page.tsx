@@ -9,7 +9,7 @@ import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 export const metadata = constructMetadata({
   title: 'Mighty Warner Growth Lab | Interactive Strategy & Diagnostics',
   description:
-    'Interactive tools for enterprise growth: 3-Minute Growth Assessment, 90-Day Strategy Blueprint Builder, ROI Impact Calculator, and Before/After Transformation Showcase.',
+    'Interactive tools for enterprise growth: 3-Minute Growth Assessment, 90-Day Strategy Blueprint Builder, ROI Impact Calculator, and Executive Perspectives.',
   canonical: '/growth-lab',
 });
 

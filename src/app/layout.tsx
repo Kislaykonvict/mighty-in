@@ -1,10 +1,22 @@
 import type { Metadata, Viewport } from 'next';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import '@/app/globals.css';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
-import { StickyBottomCta } from '@/components/layout/StickyBottomCta';
-import { GrowthTerminal } from '@/components/interactive/GrowthTerminal';
+import { SiteChrome } from '@/components/layout/SiteChrome';
 import { siteConfig } from '@/config/site';
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const viewport: Viewport = {
   themeColor: '#080C14',
@@ -98,7 +110,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${plusJakartaSans.variable} ${jetbrainsMono.variable} font-sans`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -108,11 +120,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#080C14] text-[#F8FAFC] antialiased selection:bg-sky-500/30 selection:text-white flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow pt-20">{children}</main>
-        <Footer />
-        <StickyBottomCta />
-        <GrowthTerminal />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

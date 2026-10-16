@@ -3,24 +3,48 @@ import { constructDynamicMetadata } from '@/lib/utils/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { HeroSection } from '@/components/hero/HeroSection';
 import { TrustSection } from '@/components/trust/TrustSection';
-import { EcosystemSection } from '@/components/ecosystem/EcosystemSection';
 import { BusinessCardsSection } from '@/components/businesses/BusinessCardsSection';
-import { PersonaSelector } from '@/components/interactive/PersonaSelector';
-import { ChallengeSelector } from '@/components/challenge/ChallengeSelector';
 import { WorkSection } from '@/components/work/WorkSection';
-import { BeforeAfterSlider } from '@/components/interactive/BeforeAfterSlider';
-import { MethodSection } from '@/components/method/MethodSection';
-import { StrategyBuilder } from '@/components/interactive/StrategyBuilder';
-import { WhySection } from '@/components/why/WhySection';
-import { RoiCalculator } from '@/components/interactive/RoiCalculator';
-import { AssessmentPromoSection } from '@/components/assessment/AssessmentPromoSection';
 import { TestimonialsSection } from '@/components/testimonials/TestimonialsSection';
-import { PeopleSection } from '@/components/people/PeopleSection';
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
-import { AboutPreviewSection } from '@/components/about/AboutPreviewSection';
-import { InsightsPreviewSection } from '@/components/insights/InsightsPreviewSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
-import { SectionContainer } from '@/components/layout/SectionContainer';
+import { prisma } from '@/lib/db/prisma';
+import { defaultHeroData, HeroData } from '@/types/hero';
+
+export const revalidate = 0;
+
+async function getHeroData(): Promise<HeroData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'hero',
+        },
+      },
+    });
+
+    if (!section || !section.isActive) return defaultHeroData;
+
+    const content = (section.content as any) || {};
+
+    return {
+      badge: section.badge || defaultHeroData.badge,
+      title: section.title || defaultHeroData.title,
+      subtitle: section.subtitle || defaultHeroData.subtitle,
+      ctaText: section.ctaText || defaultHeroData.ctaText,
+      ctaLink: section.ctaLink || defaultHeroData.ctaLink,
+      secondaryCtaText: content.secondaryCtaText || defaultHeroData.secondaryCtaText,
+      secondaryCtaLink: content.secondaryCtaLink || defaultHeroData.secondaryCtaLink,
+      videoUrl: content.videoUrl || defaultHeroData.videoUrl,
+      fallbackImageUrl: content.fallbackImageUrl || defaultHeroData.fallbackImageUrl,
+      overlayOpacity: typeof content.overlayOpacity === 'number' ? content.overlayOpacity : defaultHeroData.overlayOpacity,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultHeroData;
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
@@ -31,75 +55,33 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const heroData = await getHeroData();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Dynamic SEO Custom Header Scripts, Meta Tags & Schema */}
       <CustomHeadCode path="/" />
 
-      {/* 1. Attention: Signature Hero Narrative */}
-      <HeroSection />
+      {/* 1. Signature Dynamic Full-Width Video Hero */}
+      <HeroSection data={heroData} />
 
-      {/* 2. Understanding: Verified Trust & Inception */}
+      {/* 2. Verified Trust & Client Credibility */}
       <TrustSection />
 
-      {/* 3. Narrative Ecosystem: People + Tech + Growth = Momentum */}
-      <EcosystemSection />
-
-      {/* 4. Core Business Pillars: 3 Major Disciplines */}
+      {/* 3. Core Business Pillars: 3 Major Disciplines */}
       <BusinessCardsSection />
 
-      {/* 5. Role-Tailored Perspectives: Persona Selector */}
-      <SectionContainer width="default" paddingY="sm">
-        <PersonaSelector />
-      </SectionContainer>
-
-      {/* 6. Self-Identification: Challenge Selector */}
-      <ChallengeSelector />
-
-      {/* 7. Proof: Verified Portfolio & Case Studies */}
+      {/* 4. Proof: Verified Portfolio & Case Studies */}
       <WorkSection />
 
-      {/* 8. Transformation Proof: Before / After Slider */}
-      <SectionContainer width="default" paddingY="sm">
-        <BeforeAfterSlider />
-      </SectionContainer>
-
-      {/* 9. Methodology: The Mighty Warner Method (5-Stage Framework) */}
-      <MethodSection />
-
-      {/* 10. Interactive 90-Day Strategy Blueprint Synthesizer */}
-      <SectionContainer width="default" paddingY="sm">
-        <StrategyBuilder />
-      </SectionContainer>
-
-      {/* 11. Differentiation: Why Mighty Warner */}
-      <WhySection />
-
-      {/* 12. Interactive Revenue & ROI Impact Simulator */}
-      <SectionContainer width="default" paddingY="sm">
-        <RoiCalculator />
-      </SectionContainer>
-
-      {/* 13. Signature Diagnostic Engagement: 3-Minute Growth Diagnostic */}
-      <AssessmentPromoSection />
-
-      {/* 14. Social Proof: Executive Endorsements & Reviews */}
+      {/* 5. Social Proof: Executive Endorsements & Reviews */}
       <TestimonialsSection />
 
-      {/* 15. Multidisciplinary Culture: Leadership & People */}
-      <PeopleSection />
-
-      {/* 16. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
+      {/* 6. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
       <GlobalOfficesSection />
 
-      {/* 17. Heritage: Since 2013 Timeline */}
-      <AboutPreviewSection />
-
-      {/* 17. Strategic Perspectives: Insights & Articles */}
-      <InsightsPreviewSection />
-
-      {/* 18. Conversion: Final What's Next CTA */}
+      {/* 7. Conversion: Final What's Next CTA */}
       <FinalCtaSection />
     </div>
   );

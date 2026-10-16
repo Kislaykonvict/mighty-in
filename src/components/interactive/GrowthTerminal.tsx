@@ -81,17 +81,6 @@ export function GrowthTerminal() {
       },
     },
     {
-      id: 'before-after',
-      title: 'View Before & After Transformation Showcase',
-      description: 'Interactive split-screen comparison of legacy vs modernized stacks',
-      category: 'Showcase',
-      icon: Layers,
-      action: () => {
-        router.push('/growth-lab?tab=showcase');
-        setIsOpen(false);
-      },
-    },
-    {
       id: 'digital',
       title: 'Explore Digital & Growth Vertical',
       description: 'Branding, Web Design, Next.js Development, SEO, Paid Media',

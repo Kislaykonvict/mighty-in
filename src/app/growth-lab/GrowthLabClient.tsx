@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Sparkles, Calculator, Layers, ArrowLeftRight, Crown } from 'lucide-react';
+import { Sparkles, Calculator, Layers, Crown } from 'lucide-react';
 import { AssessmentWizard } from '@/components/assessment/AssessmentWizard';
 import { StrategyBuilder } from '@/components/interactive/StrategyBuilder';
 import { RoiCalculator } from '@/components/interactive/RoiCalculator';
-import { BeforeAfterSlider } from '@/components/interactive/BeforeAfterSlider';
 import { PersonaSelector } from '@/components/interactive/PersonaSelector';
 
-type LabTab = 'diagnostic' | 'strategy' | 'roi' | 'showcase' | 'persona';
+type LabTab = 'diagnostic' | 'strategy' | 'roi' | 'persona';
 
 const tabs = [
   {
@@ -32,13 +31,6 @@ const tabs = [
     icon: Calculator,
     badge: 'Pipeline Simulator',
     color: 'text-emerald-400',
-  },
-  {
-    id: 'showcase' as LabTab,
-    label: 'Before / After Showcase',
-    icon: ArrowLeftRight,
-    badge: 'Transformation',
-    color: 'text-rose-400',
   },
   {
     id: 'persona' as LabTab,
@@ -104,12 +96,6 @@ export function GrowthLabClient() {
         {activeTab === 'roi' && (
           <div className="space-y-4 animate-fade-in">
             <RoiCalculator />
-          </div>
-        )}
-
-        {activeTab === 'showcase' && (
-          <div className="space-y-4 animate-fade-in">
-            <BeforeAfterSlider />
           </div>
         )}
 

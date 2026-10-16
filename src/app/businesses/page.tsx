@@ -8,6 +8,8 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { SectionContainer } from '@/components/layout/SectionContainer';
+import { EcosystemSection } from '@/components/ecosystem/EcosystemSection';
+import { ChallengeSelector } from '@/components/challenge/ChallengeSelector';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 
 export const metadata = constructMetadata({
@@ -167,6 +169,12 @@ export default function BusinessesPage() {
           })}
         </div>
       </SectionContainer>
+
+      {/* Narrative Ecosystem: People + Tech + Growth = Momentum */}
+      <EcosystemSection />
+
+      {/* Self-Identification: Challenge Selector */}
+      <ChallengeSelector />
 
       <FinalCtaSection />
     </div>

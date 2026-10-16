@@ -7,6 +7,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { MethodSection } from '@/components/method/MethodSection';
+import { StrategyBuilder } from '@/components/interactive/StrategyBuilder';
 import { WhySection } from '@/components/why/WhySection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
@@ -95,6 +96,11 @@ export default function ApproachPage() {
             </div>
           ))}
         </div>
+      </SectionContainer>
+
+      {/* Interactive 90-Day Strategy Blueprint Synthesizer */}
+      <SectionContainer width="default" paddingY="lg">
+        <StrategyBuilder />
       </SectionContainer>
 
       {/* Why Mighty Warner Core Principles */}
