@@ -19,9 +19,63 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Configure dynamic full-screen video background, typography & call-to-actions',
       };
     }
+    if (pathname?.startsWith('/admin/track-record')) {
+      return {
+        title: 'Proven Track Record',
+        subtitle: 'Manage verified metrics, dynamic cards, custom logos and trusted industry sectors',
+      };
+    }
+    if (pathname?.startsWith('/admin/sections')) {
+      return {
+        title: 'Site Sections (Builder)',
+        subtitle: 'Build and customize modular homepage layout blocks and interactive components',
+      };
+    }
+    if (pathname?.startsWith('/admin/work')) {
+      return {
+        title: 'Case Studies / Work',
+        subtitle: 'Manage client portfolio items, case study metrics and showcase assets',
+      };
+    }
+    if (pathname?.startsWith('/admin/businesses')) {
+      return {
+        title: 'Business Verticals',
+        subtitle: 'Manage specialized agency offerings, capabilities and service stacks',
+      };
+    }
+    if (pathname?.startsWith('/admin/faqs')) {
+      return {
+        title: 'FAQs & Schema',
+        subtitle: 'Manage structured knowledge base, interactive accordions and FAQPage schema',
+      };
+    }
+    if (pathname?.startsWith('/admin/seo')) {
+      return {
+        title: 'SEO & Metadata Hub',
+        subtitle: 'Audit meta tags, OpenGraph previews, canonical links and indexation settings',
+      };
+    }
+    if (pathname?.startsWith('/admin/leads')) {
+      return {
+        title: 'Lead Submissions',
+        subtitle: 'Review incoming contact inquiries, consultation requests and client briefs',
+      };
+    }
+    if (pathname?.startsWith('/admin/settings')) {
+      return {
+        title: 'Global Site Settings',
+        subtitle: 'Configure branding, navigation links, global contact info and analytics keys',
+      };
+    }
+    if (pathname?.startsWith('/admin/users')) {
+      return {
+        title: 'User Management',
+        subtitle: 'Manage administrators, roles and team permissions',
+      };
+    }
     return {
-      title: 'User Management',
-      subtitle: 'Manage administrators, roles and team permissions',
+      title: 'Admin Console',
+      subtitle: 'Manage website content, growth sections, and settings',
     };
   };
 

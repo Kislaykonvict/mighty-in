@@ -1,114 +1,280 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ShieldCheck, Award, Globe, Building2, Users } from 'lucide-react';
-import { siteConfig } from '@/config/site';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import {
+  Award,
+  FileText,
+  Globe,
+  Users,
+  ShieldCheck,
+  TrendingUp,
+  Zap,
+  Building2,
+  Sparkles,
+  Layers,
+} from 'lucide-react';
+import { TrackRecordData, defaultTrackRecordData, TrackRecordCard } from '@/types/trackRecord';
 
-const stats = [
-  {
-    value: siteConfig.stats.yearsInBusiness,
-    label: 'Years in Business',
-    subtext: 'Continuous innovation since 2013',
-    icon: Award,
-  },
-  {
-    value: siteConfig.stats.projectsDelivered,
-    label: 'Projects Delivered',
-    subtext: 'Web apps, platforms & growth engines',
-    icon: Building2,
-  },
-  {
-    value: siteConfig.stats.marketsServed,
-    label: 'Global Markets',
-    subtext: 'North America, EMEA & APAC',
-    icon: Globe,
-  },
-  {
-    value: siteConfig.stats.activeSpecialists,
-    label: 'Vetted Specialists',
-    subtext: 'Engineers, strategists & designers',
-    icon: Users,
-  },
-  {
-    value: siteConfig.stats.clientSatisfaction,
-    label: 'Satisfaction Rating',
-    subtext: 'Measured on long-term retainers',
-    icon: ShieldCheck,
-  },
-];
+const ICON_MAP: Record<string, React.ElementType> = {
+  Award,
+  FileText,
+  Globe,
+  Users,
+  ShieldCheck,
+  TrendingUp,
+  Zap,
+  Building2,
+  Sparkles,
+  Layers,
+};
 
-const clientIndustries = [
-  'Fintech & Payments',
-  'Enterprise SaaS',
-  'Healthcare & MedTech',
-  'Supply Chain & Freight',
-  'Wealth Management',
-  'Digital Commerce',
-];
+interface AnimatedCounterProps {
+  rawValue: string;
+}
 
-export function TrustSection() {
+function parseStatValue(raw: string) {
+  const match = (raw || '').match(/^(\d+)(.*)$/);
+  if (match) {
+    return {
+      target: parseInt(match[1], 10),
+      suffix: match[2] || '',
+    };
+  }
+  return { target: 0, suffix: raw };
+}
+
+function AnimatedCounter({ rawValue }: AnimatedCounterProps) {
+  const { target, suffix } = parseStatValue(rawValue);
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-40px' });
+
+  useEffect(() => {
+    if (!isInView || target === 0) return;
+
+    let startTime: number | null = null;
+    const duration = 1800; // 1.8s smooth duration
+
+    const animateCount = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Smooth ease-out cubic
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(easeOut * target);
+
+      setCount(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateCount);
+      } else {
+        setCount(target);
+      }
+    };
+
+    const rafId = requestAnimationFrame(animateCount);
+    return () => cancelAnimationFrame(rafId);
+  }, [isInView, target]);
+
   return (
-    <section className="py-14 sm:py-20 border-y border-white/8 bg-[#060910] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-white/8 gap-4">
-          <div>
-            <div className="text-xs font-mono uppercase tracking-widest text-sky-400 mb-1.5 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-              <span>PROVEN TRACK RECORD</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Building businesses since 2013.
-            </h2>
-          </div>
-          <p className="text-sm text-slate-400 max-w-md">
-            Verified institutional track record across enterprise software delivery, high-velocity brand growth, and talent scaling.
-          </p>
-        </div>
+    <span ref={ref} className="inline-block tabular-nums font-black">
+      {count}
+      {suffix}
+    </span>
+  );
+}
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 mb-12">
-          {stats.map((stat, idx) => {
-            const Icon = stat.icon;
-            return (
+interface TrustSectionProps {
+  data?: TrackRecordData;
+}
+
+export function TrustSection({ data: initialData }: TrustSectionProps) {
+  const [data, setData] = useState<TrackRecordData>(initialData || defaultTrackRecordData);
+
+  // Sync with initialData or fetch dynamically from API
+  useEffect(() => {
+    if (initialData) {
+      setData(initialData);
+    } else {
+      fetch('/api/track-record')
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && json.data) {
+            setData(json.data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialData]);
+
+  if (!data.isActive) return null;
+
+  const cards = data.cards && data.cards.length > 0 ? data.cards : defaultTrackRecordData.cards;
+  const industries = data.industries && data.industries.length > 0 ? data.industries : defaultTrackRecordData.industries;
+
+  return (
+    <section className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#070B12] overflow-hidden border-b border-white/[0.06]">
+      {/* Ambient Lighting & Luminous Waves */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Soft diagonal luminous waves */}
+        <div className="absolute -top-32 right-[-5%] w-[850px] h-[550px] bg-gradient-to-br from-cyan-500/10 via-sky-700/5 to-transparent rounded-full blur-3xl transform rotate-12" />
+        <div className="absolute -bottom-24 left-[-10%] w-[750px] h-[450px] bg-gradient-to-tr from-blue-700/10 via-indigo-950/20 to-transparent rounded-full blur-3xl" />
+
+        {/* Card cluster back-glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-64 bg-cyan-950/15 blur-[120px] rounded-full" />
+
+        {/* Subtle geometric texture grid */}
+        <div className="absolute inset-0 subtle-grid-bg opacity-10" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header: Pill Badge + 2-Line Headline + Vertical Divider Description */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6 md:gap-12">
+          <div className="max-w-2xl">
+            {/* Eyebrow Pill Badge */}
+            {data.badge && (
               <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="p-5 rounded-xl bg-white/[0.02] border border-white/8 hover:border-white/15 transition-all flex flex-col justify-between"
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-300 uppercase mb-6 backdrop-blur-md shadow-sm"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <Icon className="w-4 h-4 text-slate-400" />
-                  <span className="text-[10px] font-mono text-slate-500">VERIFIED</span>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mb-1">
-                    {stat.value}
+                <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <span>{data.badge}</span>
+              </motion.div>
+            )}
+
+            {/* Chunky Bold Two-Line Headline */}
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.08]"
+            >
+              {data.headlineLine1 || 'Building businesses'}
+              {data.headlineLine2 && (
+                <>
+                  <br />
+                  <span className="text-white">{data.headlineLine2}</span>
+                </>
+              )}
+            </motion.h2>
+          </div>
+
+          {/* Institutional Track Record Paragraph with Vertical Separator */}
+          {data.subtitle && (
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.15 }}
+              className="flex items-center md:max-w-md lg:max-w-lg"
+            >
+              <div className="border-l border-white/20 pl-6 py-1">
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+                  {data.subtitle}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Dynamic Metric Cards Grid with Exact Baseline Alignment & Logo Upload Support */}
+        <div
+          className={`grid gap-4 lg:gap-4 xl:gap-5 mb-14 items-stretch ${
+            cards.length === 5
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5'
+              : cards.length === 4
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+              : cards.length === 3
+              ? 'grid-cols-1 sm:grid-cols-3'
+              : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-5'
+          }`}
+        >
+          {cards.map((stat, idx) => {
+            const Icon = ICON_MAP[stat.iconName || 'Award'] || Award;
+            return (
+              <motion.div
+                key={stat.id || stat.label}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+                className="group relative rounded-2xl p-6 sm:p-7 flex flex-col justify-start min-h-[230px] transition-all duration-300 bg-gradient-to-b from-[#111927]/85 to-[#0A0F1A]/90 border border-white/15 hover:border-white/35 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.45)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.65),0_0_24px_rgba(56,189,248,0.12)] hover:-translate-y-1 overflow-hidden"
+              >
+                {/* Top Subtle Edge Reflection Glow */}
+                <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
+
+                {/* 1. Card Top Row: Logo or Icon + VERIFIED Tag */}
+                <div className="flex items-center justify-between mb-8 h-6">
+                  <div className="text-slate-200 group-hover:text-white transition-colors flex items-center justify-center">
+                    {stat.iconUrl ? (
+                      <img
+                        src={stat.iconUrl}
+                        alt={stat.label}
+                        className="w-6 h-6 object-contain"
+                      />
+                    ) : (
+                      <Icon className="w-6 h-6 stroke-[1.8]" />
+                    )}
                   </div>
-                  <div className="text-xs font-bold text-slate-200 mb-1">{stat.label}</div>
-                  <div className="text-[11px] text-slate-400 leading-tight">{stat.subtext}</div>
+
+                  <span className="px-2.5 py-0.5 rounded-full border border-white/15 bg-white/[0.04] text-[10px] font-mono tracking-wider text-slate-400 uppercase font-semibold">
+                    {stat.tag || 'VERIFIED'}
+                  </span>
+                </div>
+
+                {/* 2. Number: Exact baseline and height in every card with animated count-up */}
+                <div className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-none mb-3 h-12 flex items-baseline">
+                  <AnimatedCounter rawValue={stat.value} />
+                </div>
+
+                {/* 3. Title: Fixed spacing */}
+                <div className="text-sm font-bold text-white mb-1.5 tracking-tight">
+                  {stat.label}
+                </div>
+
+                {/* 4. Subtitle: Description */}
+                <div className="text-xs text-slate-400 leading-relaxed font-normal">
+                  {stat.subtext}
                 </div>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Client Sector Trust Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 pt-2">
-          <span className="text-xs font-mono uppercase text-slate-500 mr-2">
-            Trusted Across:
-          </span>
-          {clientIndustries.map((industry) => (
-            <div
-              key={industry}
-              className="px-3.5 py-1.5 rounded-full bg-white/[0.03] border border-white/8 text-xs font-medium text-slate-300 hover:text-white hover:border-white/20 transition-colors"
-            >
-              {industry}
+        {/* Footer: Leading Rule + "TRUSTED ACROSS:" + Dynamic Industry Capsule Pills */}
+        {industries.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3 pt-6"
+          >
+            {/* Leading Line Accent & Monospace Label */}
+            <div className="flex items-center gap-3 mr-1">
+              <span className="w-12 h-[1px] bg-white/20 hidden sm:block" />
+              <span className="text-[11px] font-mono tracking-widest text-slate-400 uppercase font-semibold whitespace-nowrap">
+                TRUSTED ACROSS:
+              </span>
             </div>
-          ))}
-        </div>
+
+            {/* Industry Pills */}
+            {industries.map((industry) => (
+              <div
+                key={industry}
+                className="px-4 py-2 rounded-full border border-white/20 bg-white/[0.05] hover:bg-white/[0.1] hover:border-white/40 text-xs font-semibold text-slate-200 transition-all duration-200 cursor-default shadow-xs"
+              >
+                {industry}
+              </div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

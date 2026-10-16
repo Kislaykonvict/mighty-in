@@ -22,6 +22,7 @@ import {
   CheckCircle2,
   LogOut,
   Video,
+  Award,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -61,6 +62,13 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           icon: Video,
           badge: 'Video',
           badgeType: 'indigo',
+        },
+        {
+          name: 'Track Record',
+          href: '/admin/track-record',
+          icon: Award,
+          badge: 'Metrics',
+          badgeType: 'emerald',
         },
         {
           name: 'Site Sections (Builder)',
