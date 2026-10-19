@@ -9,7 +9,6 @@ import { PeopleSection } from '@/components/people/PeopleSection';
 import { WhySection } from '@/components/why/WhySection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { Award, Globe, Building2, ShieldCheck, MapPin } from 'lucide-react';
-import { siteConfig } from '@/config/site';
 
 export const metadata = constructMetadata({
   title: 'About Mighty Warner | Building Businesses Since 2013',
@@ -34,45 +33,6 @@ export default function AboutPage() {
           <p className="text-body-lg text-slate-300 max-w-2xl leading-relaxed mb-4">
             Mighty Warner was founded in 2013 to bridge the gap between high-level brand strategy, deep software engineering, and rapid talent deployment.
           </p>
-        </SectionContainer>
-      </section>
-
-      {/* Verified Company Stats */}
-      <section className="py-12 bg-[#060910] border-b border-white/8">
-        <SectionContainer width="default" paddingY="none">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="p-6 rounded-2xl bg-[#0F1626] border border-white/8">
-              <div className="text-3xl sm:text-4xl font-black text-white font-mono mb-1">
-                {siteConfig.stats.yearsInBusiness}
-              </div>
-              <div className="text-xs font-bold text-slate-200">Years in Business</div>
-              <div className="text-[11px] text-slate-400">Continuous operation since 2013</div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#0F1626] border border-white/8">
-              <div className="text-3xl sm:text-4xl font-black text-white font-mono mb-1">
-                {siteConfig.stats.projectsDelivered}
-              </div>
-              <div className="text-xs font-bold text-slate-200">Projects Delivered</div>
-              <div className="text-[11px] text-slate-400">Web apps, platforms & brands</div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#0F1626] border border-white/8">
-              <div className="text-3xl sm:text-4xl font-black text-white font-mono mb-1">
-                {siteConfig.stats.marketsServed}
-              </div>
-              <div className="text-xs font-bold text-slate-200">Global Markets</div>
-              <div className="text-[11px] text-slate-400">North America, EMEA & APAC</div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#0F1626] border border-white/8">
-              <div className="text-3xl sm:text-4xl font-black text-emerald-400 font-mono mb-1">
-                {siteConfig.stats.clientSatisfaction}
-              </div>
-              <div className="text-xs font-bold text-slate-200">Satisfaction Rating</div>
-              <div className="text-[11px] text-slate-400">Across multi-year partnerships</div>
-            </div>
-          </div>
         </SectionContainer>
       </section>
 
