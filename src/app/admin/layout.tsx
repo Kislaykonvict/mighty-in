@@ -25,6 +25,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage verified metrics, dynamic cards, custom logos and trusted industry sectors',
       };
     }
+    if (pathname?.startsWith('/admin/core-business')) {
+      return {
+        title: 'Core Business Verticals',
+        subtitle: 'Manage homepage services showcase, scroll stacking cards, and diagram assets',
+      };
+    }
     if (pathname?.startsWith('/admin/sections')) {
       return {
         title: 'Site Sections (Builder)',

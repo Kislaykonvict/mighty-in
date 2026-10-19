@@ -23,6 +23,7 @@ import {
   LogOut,
   Video,
   Award,
+  Building2,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -69,6 +70,13 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           icon: Award,
           badge: 'Metrics',
           badgeType: 'emerald',
+        },
+        {
+          name: 'Core Business',
+          href: '/admin/core-business',
+          icon: Building2,
+          badge: 'Showcase',
+          badgeType: 'indigo',
         },
         {
           name: 'Site Sections (Builder)',
