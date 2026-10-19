@@ -6,7 +6,6 @@ import { SectionContainer } from '@/components/layout/SectionContainer';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
 import { PeopleSection } from '@/components/people/PeopleSection';
-import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
 import { WhySection } from '@/components/why/WhySection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { Award, Globe, Building2, ShieldCheck, MapPin } from 'lucide-react';
@@ -110,9 +109,6 @@ export default function AboutPage() {
 
       {/* Leadership & Culture */}
       <PeopleSection />
-
-      {/* Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
-      <GlobalOfficesSection />
 
       {/* Core Principles */}
       <WhySection />
