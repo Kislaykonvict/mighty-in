@@ -126,15 +126,18 @@ export function Footer() {
             © {new Date().getFullYear()} Mighty Warner Inc. All rights reserved. Building businesses since 2013.
           </div>
 
-          <div className="flex items-center gap-6">
-            <Link href="/approach" className="hover:text-slate-300 transition-colors">
-              Methodology
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <Link href="/terms-and-conditions" className="hover:text-slate-300 transition-colors">
+              Terms &amp; Conditions
             </Link>
-            <Link href="/assessment" className="hover:text-slate-300 transition-colors">
-              Growth Diagnostic
+            <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
+              Privacy Policy
             </Link>
-            <Link href="/contact" className="hover:text-slate-300 transition-colors">
-              Client Portal
+            <Link href="/disclaimer" className="hover:text-slate-300 transition-colors">
+              Disclaimer
+            </Link>
+            <Link href="/refund-policy" className="hover:text-slate-300 transition-colors">
+              Refund Policy
             </Link>
           </div>
         </div>

@@ -61,6 +61,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage structured knowledge base, interactive accordions and FAQPage schema',
       };
     }
+    if (pathname?.startsWith('/admin/policies')) {
+      return {
+        title: 'Legal & Policy Pages',
+        subtitle: 'Configure dynamic full-bleed hero covers, bottom-left typography & rich content editor',
+      };
+    }
     if (pathname?.startsWith('/admin/seo')) {
       return {
         title: 'SEO & Metadata Hub',

@@ -408,3 +408,33 @@ model FaqItem {
   @@index([pageSlug, order, isActive])
   @@index([category, order])
 }
+
+// -------------------------------------------------------------
+// Legal & Policy Dynamic Pages (Terms, Disclaimer, Privacy, Refund)
+// -------------------------------------------------------------
+model PolicyPage {
+  id              String   @id @default(cuid())
+  slug            String   @unique // "terms-and-conditions", "disclaimer", "privacy-policy", "refund-policy"
+  title           String   // e.g. "Terms and Conditions"
+
+  // Hero section
+  heroImage       String   // Full-screen background picture
+  heroTitle       String?  // Optional headline over picture (bottom-left)
+  heroSubtitle    String?  // Optional subtitle over picture (bottom-left)
+  heroBadge       String?  // Optional badge over picture (e.g. "Legal Notice")
+
+  // Content section
+  content         String   @db.Text // Rich text HTML content
+
+  // SEO & Meta Tags
+  metaTitle       String?
+  metaDescription String?  @db.Text
+
+  isActive        Boolean  @default(true)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([slug, isActive])
+}
+

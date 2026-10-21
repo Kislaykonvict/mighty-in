@@ -24,6 +24,7 @@ import {
   Video,
   Award,
   Building2,
+  FileText,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -104,6 +105,13 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           name: 'FAQs & Schema',
           href: '/admin/faqs',
           icon: HelpCircle,
+        },
+        {
+          name: 'Legal & Policies',
+          href: '/admin/policies',
+          icon: FileText,
+          badge: 'Dynamic',
+          badgeType: 'indigo',
         },
       ],
     },
