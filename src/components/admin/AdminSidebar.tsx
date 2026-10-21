@@ -79,6 +79,13 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           badgeType: 'indigo',
         },
         {
+          name: 'About Page',
+          href: '/admin/about',
+          icon: Sparkles,
+          badge: 'Dynamic',
+          badgeType: 'indigo',
+        },
+        {
           name: 'Site Sections (Builder)',
           href: '/admin/sections',
           icon: Layers,

@@ -7,10 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// -------------------------------------------------------------
+// -----------------------------------------------------------------
 // Universal Dynamic Site Section Model
 // Controls Sections 1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17, 19
-// -------------------------------------------------------------
+// -----------------------------------------------------------------
 model SiteSection {
   id          String   @id @default(cuid())
   pageSlug    String   @default("home") // "home", "about", "approach", "businesses"

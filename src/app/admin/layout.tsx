@@ -31,6 +31,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage homepage services showcase, scroll stacking cards, and diagram assets',
       };
     }
+    if (pathname?.startsWith('/admin/about')) {
+      return {
+        title: 'About Page Management',
+        subtitle: 'Manage the Versett hero, brand evolution trajectory, and philosophy story cards',
+      };
+    }
     if (pathname?.startsWith('/admin/sections')) {
       return {
         title: 'Site Sections (Builder)',

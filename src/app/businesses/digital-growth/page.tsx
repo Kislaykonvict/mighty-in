@@ -26,7 +26,7 @@ export default function DigitalGrowthPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="pt-16 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
+      <section className="pt-28 sm:pt-32 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-orange-500/10 blur-[130px] pointer-events-none" />
         <div className="absolute inset-0 subtle-grid-bg opacity-20 pointer-events-none" />
 

@@ -6,6 +6,7 @@ import { InnovativeTrajectorySection } from '@/components/about/InnovativeTrajec
 import { AboutStorySection } from '@/components/about/AboutStorySection';
 import { PeopleSection } from '@/components/people/PeopleSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
 import { TrajectoryData, defaultTrajectoryData } from '@/types/trajectory';
 import { AboutStoryData, defaultAboutStoryData } from '@/types/aboutStory';
 
@@ -17,6 +18,39 @@ export const metadata = constructMetadata({
     'Learn about Mighty Warner’s journey since 2013: our multidisciplinary team, founding vision, and connected business ecosystem across strategy, technology, and talent.',
   canonical: '/about',
 });
+
+async function getHeroData(): Promise<AboutHeroData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'about',
+          sectionKey: 'hero',
+        },
+      },
+    });
+
+    if (!section || !section.content) {
+      return defaultAboutHeroData;
+    }
+
+    const content = section.content as any;
+
+    return {
+      headline: section.title || content.headline || defaultAboutHeroData.headline,
+      subheadline: section.subtitle || content.subheadline || defaultAboutHeroData.subheadline,
+      ctaText: section.ctaText || content.ctaText || defaultAboutHeroData.ctaText,
+      ctaLink: section.ctaLink || content.ctaLink || defaultAboutHeroData.ctaLink,
+      backgroundImage: content.backgroundImage || defaultAboutHeroData.backgroundImage,
+      imageAlt: content.imageAlt || defaultAboutHeroData.imageAlt,
+      scrollTarget: content.scrollTarget || defaultAboutHeroData.scrollTarget,
+      isActive: section.isActive ?? true,
+    };
+  } catch (error) {
+    console.error('Error fetching dynamic about hero data, using defaults:', error);
+    return defaultAboutHeroData;
+  }
+}
 
 async function getTrajectoryData(): Promise<TrajectoryData> {
   try {
@@ -83,20 +117,21 @@ async function getStoryData(): Promise<AboutStoryData> {
 }
 
 export default async function AboutPage() {
-  const [trajectoryData, storyData] = await Promise.all([
+  const [heroData, trajectoryData, storyData] = await Promise.all([
+    getHeroData(),
     getTrajectoryData(),
     getStoryData(),
   ]);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#080C14]">
-      {/* 1. Versett-Style Text Over Picture Hero */}
-      <AboutHeroVersett />
+      {/* 1. Versett-Style Text Over Picture Hero (Dynamic) */}
+      <AboutHeroVersett initialData={heroData} />
 
-      {/* 2. Innovative Dynamic Brand Trajectory Engine */}
+      {/* 2. Innovative Dynamic Brand Trajectory Engine (Dynamic) */}
       <InnovativeTrajectorySection initialData={trajectoryData} />
 
-      {/* 3. Story & Philosophy (Photo + Narrative Cards) */}
+      {/* 3. Story & Philosophy (Photo + Narrative Cards, Dynamic) */}
       <AboutStorySection initialData={storyData} />
 
       {/* 4. Leadership & Culture */}
@@ -107,4 +142,3 @@ export default async function AboutPage() {
     </div>
   );
 }
-

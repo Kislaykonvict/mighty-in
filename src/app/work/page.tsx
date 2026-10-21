@@ -18,7 +18,7 @@ export default function WorkPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <section className="pt-16 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
+      <section className="pt-28 sm:pt-32 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
         <div className="absolute inset-0 subtle-grid-bg opacity-20 pointer-events-none" />
         <SectionContainer width="default" paddingY="none">
           <Badge variant="subtle" dot className="mb-4">

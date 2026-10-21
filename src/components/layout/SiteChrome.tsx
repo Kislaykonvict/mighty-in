@@ -15,12 +15,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     return <div className="min-h-screen w-full">{children}</div>;
   }
 
-  const isHome = pathname === '/';
-
   return (
     <>
       <Navbar />
-      <main className={`flex-grow ${isHome ? '' : 'pt-20'}`}>{children}</main>
+      <main className="flex-grow">{children}</main>
       <Footer />
       <StickyBottomCta />
       <GrowthTerminal />
