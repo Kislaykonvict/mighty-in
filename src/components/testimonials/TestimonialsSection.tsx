@@ -89,7 +89,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
       ref={containerRef}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="py-12 sm:py-16 bg-[#060A12] relative border-t border-white/8 overflow-hidden select-none"
+      className="py-12 sm:py-16 bg-[#DBDBDB] dark:bg-[#060A12] relative border-t border-neutral-300 dark:border-white/8 overflow-hidden select-none transition-colors duration-200"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Dynamic Section Header */}
@@ -178,12 +178,12 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
               >
                 {/* Clean Grey Card with Full-Height Portrait & Fading Split Layout */}
                 <div
-                  className={`relative rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col sm:flex-row bg-[#181E29] ${
-                    isActive ? 'border-white/12' : 'border-white/6'
+                  className={`relative rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col sm:flex-row bg-white dark:bg-[#181E29] ${
+                    isActive ? 'border-slate-200 dark:border-white/12 shadow-sm' : 'border-slate-100 dark:border-white/6'
                   }`}
                 >
                   {/* Left Column: Full-Height Portrait with Right Fade & Overlaid Details */}
-                  <div className="relative w-full sm:w-72 md:w-80 shrink-0 min-h-[260px] sm:min-h-[360px] flex flex-col justify-end overflow-hidden">
+                  <div className="relative w-full sm:w-72 md:w-80 shrink-0 min-h-[260px] sm:min-h-[360px] flex flex-col justify-end overflow-hidden bg-slate-900">
                     {/* Author Portrait Image */}
                     {t.avatarUrl ? (
                       <div className="absolute inset-0">
@@ -195,14 +195,14 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                           className="object-cover object-top"
                           priority={isActive}
                         />
-                        {/* Desktop: Right-side horizontal fade blending into the card background and separation line */}
-                        <div className="hidden sm:block absolute inset-y-0 right-0 w-28 bg-gradient-to-r from-transparent via-[#181E29]/70 to-[#181E29] pointer-events-none" />
+                        {/* Desktop: Right-side horizontal fade */}
+                        <div className="hidden sm:block absolute inset-y-0 right-0 w-28 bg-gradient-to-r from-transparent via-slate-950/70 to-slate-950 pointer-events-none" />
 
-                        {/* Mobile: Bottom-side fade blending into card body */}
-                        <div className="sm:hidden absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#181E29] via-[#181E29]/80 to-transparent pointer-events-none" />
+                        {/* Mobile: Bottom-side fade */}
+                        <div className="sm:hidden absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none" />
 
                         {/* Subtle vignette across the portrait to make text pop */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#181E29] via-[#181E29]/40 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent pointer-events-none" />
                       </div>
                     ) : (
                       <div className="absolute inset-0 bg-slate-800 flex items-center justify-center font-bold text-white text-5xl">
@@ -224,7 +224,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                           </div>
                         )}
                         {t.company && (
-                          <div className="text-xs sm:text-sm text-sky-300 font-semibold drop-shadow-md">
+                          <div className="text-xs sm:text-sm text-rose-400 dark:text-sky-300 font-semibold drop-shadow-md">
                             {t.company}
                           </div>
                         )}
@@ -238,13 +238,13 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                   </div>
 
                   {/* Fading Separation Line */}
-                  <div className="hidden sm:block w-px self-stretch bg-gradient-to-b from-transparent via-white/20 to-transparent shrink-0" />
-                  <div className="sm:hidden h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent shrink-0" />
+                  <div className="hidden sm:block w-px self-stretch bg-slate-200 dark:bg-white/10 shrink-0" />
+                  <div className="sm:hidden h-px w-full bg-slate-200 dark:bg-white/10 shrink-0" />
 
                   {/* Right Column: Category Badge, Stars, Quote & Case Study Link */}
                   <div className="flex-1 p-6 sm:p-8 lg:p-10 flex flex-col justify-between relative z-10">
                     {/* Decorative Quote Mark */}
-                    <Quote className="absolute top-6 right-6 sm:top-8 sm:right-8 w-16 h-16 sm:w-20 sm:h-20 text-white/[0.03] pointer-events-none" />
+                    <Quote className="absolute top-6 right-6 sm:top-8 sm:right-8 w-16 h-16 sm:w-20 sm:h-20 text-slate-200/50 dark:text-white/[0.03] pointer-events-none" />
 
                     <div>
                       {/* Top Row: 5-Star Rating */}
@@ -256,7 +256,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
 
                       {/* Testimonial Quote */}
                       {t.quote && (
-                        <blockquote className="text-base sm:text-lg lg:text-[19px] font-normal text-slate-100 leading-relaxed tracking-tight py-1 sm:py-2">
+                        <blockquote className="text-base sm:text-lg lg:text-[19px] font-normal text-slate-800 dark:text-slate-100 leading-relaxed tracking-tight py-1 sm:py-2">
                           &ldquo;{t.quote}&rdquo;
                         </blockquote>
                       )}
@@ -269,7 +269,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
         </div>
 
         {/* Centered Progress Indicator Dots */}
-        <div className="flex items-center justify-center mt-5 sm:mt-6 pt-3 border-t border-white/5">
+        <div className="flex items-center justify-center mt-5 sm:mt-6 pt-3 border-t border-slate-200 dark:border-white/5">
           <div className="flex items-center gap-1.5">
             {cards.map((t, idx) => {
               const isSelected = idx === safeIndex;
@@ -280,8 +280,8 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                   onClick={() => setCurrentIndex(idx)}
                   className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                     isSelected
-                      ? 'w-6 bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.5)]'
-                      : 'w-1.5 bg-slate-700 hover:bg-slate-500'
+                      ? 'w-6 bg-rose-600 dark:bg-sky-400 shadow-xs'
+                      : 'w-1.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
                   }`}
                   aria-label={`Go to testimonial ${idx + 1}`}
                 />

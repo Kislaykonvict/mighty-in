@@ -68,7 +68,6 @@ export function HeroManagementView() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   // Cloudinary upload states
   const [cloudinaryStatus, setCloudinaryStatus] = useState<{ configured: boolean; cloudName: string | null }>({
@@ -329,10 +328,9 @@ export function HeroManagementView() {
         </div>
       </div>
 
-      {/* Main Grid: Form Editor & Live Real-Time Preview */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Configuration Controls Form */}
-        <form onSubmit={handleSave} className="lg:col-span-7 space-y-6">
+      {/* Main Form Editor */}
+      <div className="max-w-4xl mx-auto">
+        <form onSubmit={handleSave} className="space-y-6">
           {/* Section 1: Video & Visual Assets */}
           <div
             className={`p-6 rounded-2xl border space-y-6 shadow-sm ${
@@ -703,129 +701,6 @@ export function HeroManagementView() {
             </button>
           </div>
         </form>
-
-        {/* Right Column: Live Responsive Interactive Preview */}
-        <div className="lg:col-span-5 sticky top-24 space-y-4">
-          <div
-            className={`p-4 rounded-2xl border shadow-sm ${
-              isDark ? 'bg-[#0F172A] border-slate-800' : 'bg-white border-slate-200'
-            }`}
-          >
-            {/* Preview Toolbar */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-bold">Real-Time Storefront Preview</span>
-              </div>
-
-              <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('desktop')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
-                    previewDevice === 'desktop'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Desktop Preview"
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('mobile')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
-                    previewDevice === 'mobile'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Mobile Preview"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Preview Viewport Frame */}
-            <div
-              className={`relative overflow-hidden rounded-xl border border-white/10 shadow-2xl transition-all duration-300 mx-auto ${
-                previewDevice === 'desktop' ? 'w-full aspect-[16/10]' : 'w-[280px] aspect-[9/16]'
-              }`}
-            >
-              {/* Video Element */}
-              <video
-                key={formData.videoUrl}
-                src={formData.videoUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster={formData.fallbackImageUrl}
-                className="absolute inset-0 w-full h-full object-cover"
-              >
-                <source src={formData.videoUrl} type="video/mp4" />
-              </video>
-
-              {/* Dynamic Overlay */}
-              <div
-                className="absolute inset-0 transition-opacity duration-200 pointer-events-none"
-                style={{ backgroundColor: `rgba(8, 12, 20, ${formData.overlayOpacity / 100})` }}
-              />
-
-              {/* Gradient Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#080C14] via-transparent to-[#080C14]/40 pointer-events-none" />
-
-              {/* Mock Top Nav Bar */}
-              <div className="absolute top-0 inset-x-0 p-3 flex items-center justify-between z-10">
-                <span className="text-[10px] font-black text-white tracking-widest uppercase">MIGHTY WARNER</span>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/20 text-white backdrop-blur-sm">
-                  LIVE VIDEO
-                </span>
-              </div>
-
-              {/* Overlay Content (Left-Aligned per reference) */}
-              <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 z-10 text-left">
-
-                <h3
-                  className={`font-black text-white tracking-tight leading-[1.08] mb-2 ${
-                    previewDevice === 'desktop' ? 'text-xl sm:text-2xl' : 'text-base'
-                  }`}
-                >
-                  {formData.title || 'Creative staffing for what\'s next.'}
-                </h3>
-
-                {formData.subtitle && (
-                  <p
-                    className={`text-slate-200 font-normal leading-relaxed mb-4 line-clamp-3 ${
-                      previewDevice === 'desktop' ? 'text-xs' : 'text-[10px]'
-                    }`}
-                  >
-                    {formData.subtitle}
-                  </p>
-                )}
-
-                {/* Buttons Row */}
-                <div className="flex flex-wrap items-center gap-2">
-                  {formData.ctaText && (
-                    <span className="px-3 py-1.5 bg-white/20 border border-white/40 text-white font-black text-[10px] tracking-wider uppercase rounded-xs backdrop-blur-md shadow-md">
-                      {formData.ctaText}
-                    </span>
-                  )}
-                  {formData.secondaryCtaText && (
-                    <span className="px-3 py-1.5 bg-white/5 border border-white/25 text-white font-black text-[10px] tracking-wider uppercase rounded-xs backdrop-blur-md">
-                      {formData.secondaryCtaText}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-3 text-[11px] text-slate-400 flex items-center justify-between">
-              <span>Aspect: {previewDevice === 'desktop' ? '16:10 Desktop' : '9:16 Mobile'}</span>
-              <span>100vh Full Screen on Live</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

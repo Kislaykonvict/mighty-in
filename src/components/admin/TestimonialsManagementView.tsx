@@ -45,10 +45,8 @@ export function TestimonialsManagementView() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [uploadingCardId, setUploadingCardId] = useState<string | null>(null);
-  const [previewIndex, setPreviewIndex] = useState(0);
   const [isDirty, setIsDirty] = useState(false);
 
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -93,9 +91,6 @@ export function TestimonialsManagementView() {
     loadData();
   }, []);
 
-  const totalCards = formData.cards.length;
-  const safePreviewIndex = totalCards > 0 ? previewIndex % totalCards : 0;
-
   // Header field change
   const handleFieldChange = <K extends keyof TestimonialsSectionData>(
     key: K,
@@ -137,7 +132,6 @@ export function TestimonialsManagementView() {
     }));
     setIsDirty(true);
     setExpandedCardId(newId);
-    setPreviewIndex(formData.cards.length);
   };
 
   // Delete card
@@ -153,7 +147,6 @@ export function TestimonialsManagementView() {
         cards: prev.cards.filter((c) => c.id !== cardId),
       }));
       setIsDirty(true);
-      setPreviewIndex(0);
     }
   };
 
@@ -261,7 +254,6 @@ export function TestimonialsManagementView() {
     if (confirm('Reset testimonials section and cards to default system template?')) {
       setFormData(defaultTestimonialsSectionData);
       setIsDirty(true);
-      setPreviewIndex(0);
       setFeedback({
         type: 'success',
         message: 'Reset to default template. Click "Save & Publish" to commit changes to storefront.',
@@ -279,8 +271,6 @@ export function TestimonialsManagementView() {
       </div>
     );
   }
-
-  const activeCard = formData.cards[safePreviewIndex] || formData.cards[0];
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-24 font-sans">
@@ -401,10 +391,8 @@ export function TestimonialsManagementView() {
         )}
       </AnimatePresence>
 
-      {/* Dual-Pane Grid Layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Form Configuration */}
-        <div className="xl:col-span-7 space-y-6">
+      {/* Main Form Configuration Layout */}
+      <div className="max-w-4xl mx-auto space-y-6">
           {/* Section 1: Section Header Details */}
           <div
             className={`p-6 rounded-2xl border transition-all ${
@@ -551,7 +539,6 @@ export function TestimonialsManagementView() {
                     <div
                       onClick={() => {
                         setExpandedCardId(isExpanded ? null : card.id);
-                        setPreviewIndex(index);
                       }}
                       className="p-4 flex items-center justify-between gap-3 cursor-pointer select-none"
                     >
@@ -921,212 +908,6 @@ export function TestimonialsManagementView() {
             </div>
           </div>
         </div>
-
-        {/* Right Column: Live Interactive 3D Card Stack Preview */}
-        <div className="xl:col-span-5 sticky top-6 space-y-4">
-          <div
-            className={`p-6 rounded-2xl border transition-all ${
-              isDark
-                ? 'bg-[#0F172A]/80 border-slate-800 shadow-xl'
-                : 'bg-white border-slate-200 shadow-sm'
-            }`}
-          >
-            {/* Preview Toolbar */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-700/40 mb-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-sky-400" />
-                <span className="text-xs font-bold uppercase tracking-wider">
-                  Interactive 3D Stack Preview
-                </span>
-              </div>
-
-              {/* Device Selector */}
-              <div
-                className={`flex items-center p-0.5 rounded-lg border ${
-                  isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-300'
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('desktop')}
-                  className={`p-1.5 rounded-md transition-colors ${
-                    previewDevice === 'desktop'
-                      ? 'bg-sky-500 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                  title="Desktop Preview"
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('mobile')}
-                  className={`p-1.5 rounded-md transition-colors ${
-                    previewDevice === 'mobile'
-                      ? 'bg-sky-500 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                  title="Mobile Preview"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Preview Window Canvas */}
-            <div
-              className={`rounded-2xl bg-[#060A12] border border-white/8 p-5 sm:p-6 overflow-hidden transition-all duration-300 ${
-                previewDevice === 'mobile' ? 'max-w-sm mx-auto' : 'w-full'
-              }`}
-            >
-              {/* Header preview */}
-              {(formData.badge || formData.title || formData.subtitle) && (
-                <div className="mb-4">
-                  {formData.badge && (
-                    <span className="text-[10px] font-mono font-bold text-sky-400 uppercase tracking-widest block mb-1">
-                      {formData.badge}
-                    </span>
-                  )}
-                  {formData.title && (
-                    <h3 className="text-base font-bold text-white tracking-tight">
-                      {formData.title}
-                    </h3>
-                  )}
-                  {formData.subtitle && (
-                    <p className="text-xs text-slate-400 mt-1 line-clamp-2">
-                      {formData.subtitle}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* Card Preview Box */}
-              {activeCard ? (
-                <div className="relative rounded-2xl bg-[#181E29] border border-white/12 shadow-2xl overflow-hidden flex flex-col sm:flex-row transition-all duration-300">
-                  {/* Left Column: Portrait */}
-                  <div className="relative w-full sm:w-44 md:w-48 shrink-0 min-h-[200px] sm:min-h-[260px] flex flex-col justify-end overflow-hidden">
-                    {activeCard.avatarUrl ? (
-                      <div className="absolute inset-0">
-                        <Image
-                          src={activeCard.avatarUrl}
-                          alt={activeCard.clientName || 'Author portrait'}
-                          fill
-                          className="object-cover object-top"
-                        />
-                        {/* Right edge fade on desktop */}
-                        <div className="hidden sm:block absolute inset-y-0 right-0 w-20 bg-gradient-to-r from-transparent via-[#181E29]/70 to-[#181E29] pointer-events-none" />
-                        {/* Bottom fade on mobile */}
-                        <div className="sm:hidden absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#181E29] via-[#181E29]/80 to-transparent pointer-events-none" />
-                        {/* Vignette */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#181E29] via-[#181E29]/40 to-transparent pointer-events-none" />
-                      </div>
-                    ) : (
-                      <div className="absolute inset-0 bg-slate-800 flex items-center justify-center font-bold text-white text-3xl">
-                        {activeCard.clientName ? activeCard.clientName.charAt(0) : ''}
-                      </div>
-                    )}
-
-                    {/* Overlaid details */}
-                    {(activeCard.clientName || activeCard.role || activeCard.company || activeCard.industry) && (
-                      <div className="relative z-10 p-3.5 space-y-0.5">
-                        {activeCard.clientName && (
-                          <div className="text-sm font-bold text-white tracking-tight leading-snug drop-shadow-md">
-                            {activeCard.clientName}
-                          </div>
-                        )}
-                        {activeCard.role && (
-                          <div className="text-[11px] text-slate-200 leading-snug drop-shadow-md">
-                            {activeCard.role}
-                          </div>
-                        )}
-                        {activeCard.company && (
-                          <div className="text-[11px] text-sky-300 font-semibold drop-shadow-md">
-                            {activeCard.company}
-                          </div>
-                        )}
-                        {activeCard.industry && (
-                          <div className="text-[9px] font-mono text-slate-300 uppercase tracking-wider pt-0.5">
-                            {activeCard.industry}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Fading Separation Line */}
-                  <div className="hidden sm:block w-px self-stretch bg-gradient-to-b from-transparent via-white/20 to-transparent shrink-0" />
-                  <div className="sm:hidden h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent shrink-0" />
-
-                  {/* Right Column: Quote & Stars */}
-                  <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between relative">
-                    <Quote className="absolute top-4 right-4 w-12 h-12 text-white/[0.03] pointer-events-none" />
-
-                    <div>
-                      {/* 5-Star Rating */}
-                      <div className="flex items-center gap-0.5 text-amber-400 mb-3">
-                        {[...Array(activeCard.rating || 5)].map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-
-                      {/* Quote */}
-                      {activeCard.quote && (
-                        <blockquote className="text-xs sm:text-sm text-slate-100 leading-relaxed font-normal">
-                          &ldquo;{activeCard.quote}&rdquo;
-                        </blockquote>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-8 text-center text-xs text-slate-500">
-                  No cards available to preview.
-                </div>
-              )}
-
-              {/* Navigation dots in preview */}
-              <div className="flex items-center justify-center gap-2 mt-4 pt-3 border-t border-white/5">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setPreviewIndex((prev) => (prev - 1 + totalCards) % Math.max(1, totalCards))
-                  }
-                  className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
-                  title="Previous Card"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-
-                <div className="flex items-center gap-1">
-                  {formData.cards.map((_, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setPreviewIndex(idx)}
-                      className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                        idx === safePreviewIndex ? 'w-5 bg-sky-400' : 'w-1.5 bg-slate-700'
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setPreviewIndex((prev) => (prev + 1) % Math.max(1, totalCards))}
-                  className="p-1 rounded-full text-slate-400 hover:text-white transition-colors cursor-pointer"
-                  title="Next Card"
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-3 text-[11px] text-slate-400 text-center">
-              💡 Changes made in the editor update this preview in real-time.
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
   );
 }

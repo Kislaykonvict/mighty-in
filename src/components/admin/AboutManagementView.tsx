@@ -17,14 +17,10 @@ import {
   CheckCircle2,
   AlertCircle,
   X,
-  Eye,
-  Monitor,
-  Smartphone,
   Loader2,
   Layers,
   Milestone,
   BookOpen,
-  ArrowRight,
   Type,
   Link as LinkIcon,
   ToggleLeft,
@@ -45,15 +41,11 @@ export function AboutManagementView() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   // Form states
   const [heroData, setHeroData] = useState<AboutHeroData>(defaultAboutHeroData);
   const [trajectoryData, setTrajectoryData] = useState<TrajectoryData>(defaultTrajectoryData);
   const [storyData, setStoryData] = useState<AboutStoryData>(defaultAboutStoryData);
-
-  // Active preview state for trajectory
-  const [previewEpochIdx, setPreviewEpochIdx] = useState(0);
 
   // File upload refs
   const heroImageInputRef = useRef<HTMLInputElement | null>(null);
@@ -224,7 +216,6 @@ export function AboutManagementView() {
       ...prev,
       epochs: [...prev.epochs, newEpoch],
     }));
-    setPreviewEpochIdx(trajectoryData.epochs.length);
   };
 
   const handleDeleteEpoch = (idx: number) => {
@@ -236,7 +227,6 @@ export function AboutManagementView() {
       ...prev,
       epochs: prev.epochs.filter((_, i) => i !== idx),
     }));
-    setPreviewEpochIdx(0);
   };
 
   const handleMoveEpoch = (idx: number, direction: 'up' | 'down') => {
@@ -247,7 +237,6 @@ export function AboutManagementView() {
     updated[idx] = updated[targetIdx];
     updated[targetIdx] = temp;
     setTrajectoryData((prev) => ({ ...prev, epochs: updated }));
-    setPreviewEpochIdx(targetIdx);
   };
 
   const handleUpdateEpoch = (idx: number, field: keyof TrajectoryEpoch, val: any) => {
@@ -331,7 +320,7 @@ export function AboutManagementView() {
             About Us Management
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Dynamically configure the three core sections of Mighty Warner’s About page with instant live previews.
+            Dynamically configure the three core sections of Mighty Warner’s About page.
           </p>
         </div>
 
@@ -438,10 +427,8 @@ export function AboutManagementView() {
       {/* TAB 1: HERO SECTION CONFIGURATION */}
       {/* ========================================================= */}
       {activeTab === 'hero' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Form Fields */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -580,90 +567,14 @@ export function AboutManagementView() {
               </div>
             </div>
           </div>
-
-          {/* Right: Live Visual Preview */}
-          <div className="lg:col-span-5 sticky top-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-sky-400" /> Live Hero Preview
-              </span>
-              <div className="flex items-center gap-1 bg-slate-200 dark:bg-slate-900 p-1 rounded-lg border border-slate-300 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('desktop')}
-                  className={`p-1 rounded ${previewDevice === 'desktop' ? 'bg-white dark:bg-slate-800 text-sky-400' : 'text-slate-400'
-                    }`}
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('mobile')}
-                  className={`p-1 rounded ${previewDevice === 'mobile' ? 'bg-white dark:bg-slate-800 text-sky-400' : 'text-slate-400'
-                    }`}
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            <div
-              className={`relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-[#080C14] text-white transition-all ${previewDevice === 'mobile' ? 'max-w-[340px] mx-auto min-h-[380px]' : 'w-full min-h-[360px]'
-                }`}
-            >
-              {/* Background preview */}
-              <div className="absolute inset-0 pointer-events-none">
-                {heroData.backgroundImage && (
-                  <Image
-                    src={heroData.backgroundImage}
-                    alt={heroData.imageAlt || 'Hero background'}
-                    fill
-                    className="object-cover object-right opacity-100 brightness-[1.12] contrast-[1.05]"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#080C14]/90 via-[#080C14]/40 to-transparent" />
-                <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-[#080C14] to-transparent" />
-              </div>
-
-              {/* Content preview */}
-              <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-between min-h-[360px]">
-                <div className="space-y-4 pt-6">
-                  <h2 className="text-lg sm:text-2xl font-normal text-white leading-snug">
-                    {heroData.headline || 'Your Headline Here...'}
-                  </h2>
-
-                  {heroData.subheadline && (
-                    <p className="text-xs text-slate-300 font-light">{heroData.subheadline}</p>
-                  )}
-
-                  {heroData.ctaText && (
-                    <div>
-                      <span className="inline-block text-xs text-slate-200 pb-0.5 border-b border-white/60">
-                        {heroData.ctaText}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-8">
-                  <span className="inline-flex items-center text-slate-400">
-                    <ArrowDown className="w-4 h-4 animate-bounce" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
 
       {/* ========================================================= */}
       {/* TAB 2: BRAND TRAJECTORY CONFIGURATION */}
       {/* ========================================================= */}
       {activeTab === 'trajectory' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Section Header & Epoch Cards */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Section Heading Settings */}
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Section Heading Settings */}
             <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -716,34 +627,21 @@ export function AboutManagementView() {
                 </button>
               </div>
 
-              {trajectoryData.epochs.map((epoch, idx) => {
-                const isSelected = previewEpochIdx === idx;
-
-                return (
-                  <div
-                    key={epoch.id || idx}
-                    className={`p-5 rounded-2xl border transition-all ${isSelected
-                        ? 'bg-slate-50 dark:bg-slate-900/90 border-sky-500/50 shadow-md'
-                        : 'bg-white dark:bg-[#0B101D] border-slate-200 dark:border-slate-800/80 hover:border-slate-400 dark:hover:border-slate-700'
-                      }`}
-                  >
-                    {/* Epoch Top Bar */}
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/60">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setPreviewEpochIdx(idx)}
-                          className={`px-3 py-1 rounded-full text-xs font-mono font-bold cursor-pointer ${isSelected
-                              ? 'bg-sky-500 text-white'
-                              : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                            }`}
-                        >
-                          {epoch.year}
-                        </button>
-                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                          {epoch.phaseTitle}
-                        </span>
-                      </div>
+              {trajectoryData.epochs.map((epoch, idx) => (
+                <div
+                  key={epoch.id || idx}
+                  className="p-5 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4"
+                >
+                  {/* Epoch Top Bar */}
+                  <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/60">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        {epoch.year}
+                      </span>
+                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                        {epoch.phaseTitle}
+                      </span>
+                    </div>
 
                       <div className="flex items-center gap-1">
                         <button
@@ -902,94 +800,9 @@ export function AboutManagementView() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Right: Live Trajectory Preview */}
-          <div className="lg:col-span-5 sticky top-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-emerald-400" /> Live Trajectory Preview
-              </span>
-              <span className="text-xs text-slate-500 font-medium">
-                Pill Hover Activated
-              </span>
-            </div>
-
-            {/* Trajectory Preview Card */}
-            <div className="p-5 sm:p-6 rounded-2xl bg-[#080C14] border border-white/10 text-white space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h4 className="text-sm font-bold text-white tracking-tight">
-                  {trajectoryData.title || 'Our Evolution Through Time'}
-                </h4>
-              </div>
-
-              {/* Scrubber pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-                {trajectoryData.epochs.map((ep, i) => {
-                  const isActive = i === previewEpochIdx;
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      onMouseEnter={() => setPreviewEpochIdx(i)}
-                      onClick={() => setPreviewEpochIdx(i)}
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-mono transition-all shrink-0 cursor-pointer ${isActive
-                          ? 'bg-white text-slate-950 font-bold'
-                          : 'bg-white/5 text-slate-400 hover:text-white border border-white/10'
-                        }`}
-                    >
-                      {ep.year}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Preview stage */}
-              {trajectoryData.epochs[previewEpochIdx] && (
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-white/10 font-bold">
-                      {trajectoryData.epochs[previewEpochIdx].year}
-                    </span>
-                    <span className="text-[11px] font-semibold text-slate-300 uppercase">
-                      {trajectoryData.epochs[previewEpochIdx].phaseTitle}
-                    </span>
-                  </div>
-
-                  <h5 className="text-sm sm:text-base font-bold text-white leading-snug">
-                    {trajectoryData.epochs[previewEpochIdx].headline}
-                  </h5>
-
-                  <p className="text-xs text-slate-300 font-light leading-relaxed">
-                    {trajectoryData.epochs[previewEpochIdx].narrative}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
-                    <div className="p-2 rounded bg-white/[0.02]">
-                      <div className="text-sm font-mono font-black text-white">
-                        {trajectoryData.epochs[previewEpochIdx].primaryMetric.value}
-                      </div>
-                      <div className="text-[10px] text-slate-400">
-                        {trajectoryData.epochs[previewEpochIdx].primaryMetric.label}
-                      </div>
-                    </div>
-                    <div className="p-2 rounded bg-white/[0.02]">
-                      <div className="text-sm font-mono font-black text-emerald-400">
-                        {trajectoryData.epochs[previewEpochIdx].secondaryMetric.value}
-                      </div>
-                      <div className="text-[10px] text-slate-400">
-                        {trajectoryData.epochs[previewEpochIdx].secondaryMetric.label}
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              )}
+              ))}
             </div>
-          </div>
         </div>
       )}
 
@@ -997,10 +810,8 @@ export function AboutManagementView() {
       {/* TAB 3: STORY & PICTURE CARDS CONFIGURATION */}
       {/* ========================================================= */}
       {activeTab === 'story' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left: Section Header & Story Cards */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Header config */}
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Header config */}
             <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -1242,54 +1053,6 @@ export function AboutManagementView() {
               })}
             </div>
           </div>
-
-          {/* Right: Live Story Cards Preview */}
-          <div className="lg:col-span-5 sticky top-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-indigo-400" /> Live Story Preview
-              </span>
-              <span className="text-xs text-slate-500 font-medium">
-                Alternating Flow
-              </span>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-[#080C14] border border-white/10 text-white space-y-6 max-h-[600px] overflow-y-auto no-scrollbar">
-              <div className="text-center space-y-1.5 border-b border-white/10 pb-4">
-                {storyData.badge && (
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase tracking-widest bg-white/5 border border-white/10 text-sky-400">
-                    {storyData.badge}
-                  </span>
-                )}
-                <h4 className="text-base font-black text-white">{storyData.title}</h4>
-                <p className="text-[11px] text-slate-300 font-light leading-relaxed line-clamp-2">
-                  {storyData.subtitle}
-                </p>
-              </div>
-
-              {storyData.cards.map((card, i) => (
-                <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-16 h-20 rounded-xl overflow-hidden border border-white/10 shrink-0 bg-slate-900">
-                      {card.image && (
-                        <Image src={card.image} alt={card.title} fill className="object-cover" />
-                      )}
-                    </div>
-                    <div className="space-y-1 min-w-0">
-                      {card.badge && (
-                        <div className="text-[9px] font-mono text-slate-400">{card.badge}</div>
-                      )}
-                      <h5 className="text-xs font-bold text-white truncate">{card.title}</h5>
-                      <p className="text-[10px] text-slate-300 line-clamp-2 font-light">
-                        {card.paragraphs[0]}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

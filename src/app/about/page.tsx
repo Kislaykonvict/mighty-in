@@ -124,7 +124,7 @@ export default async function AboutPage() {
   ]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#080C14]">
+    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
       {/* 1. Versett-Style Text Over Picture Hero (Dynamic) */}
       <AboutHeroVersett initialData={heroData} />
 

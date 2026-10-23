@@ -115,18 +115,15 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
   const industries = data.industries && data.industries.length > 0 ? data.industries : defaultTrackRecordData.industries;
 
   return (
-    <section className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#070B12] overflow-hidden border-b border-white/[0.06]">
+    <section className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#DBDBDB] dark:bg-[#070B12] overflow-hidden border-b border-neutral-300 dark:border-white/[0.06] transition-colors duration-200">
       {/* Ambient Lighting & Luminous Waves */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Soft diagonal luminous waves */}
-        <div className="absolute -top-32 right-[-5%] w-[850px] h-[550px] bg-gradient-to-br from-cyan-500/10 via-sky-700/5 to-transparent rounded-full blur-3xl transform rotate-12" />
-        <div className="absolute -bottom-24 left-[-10%] w-[750px] h-[450px] bg-gradient-to-tr from-blue-700/10 via-indigo-950/20 to-transparent rounded-full blur-3xl" />
-
-        {/* Card cluster back-glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-6xl h-64 bg-cyan-950/15 blur-[120px] rounded-full" />
+        <div className="absolute -top-32 right-[-5%] w-[850px] h-[550px] bg-gradient-to-br from-rose-500/5 via-sky-700/5 to-transparent dark:from-cyan-500/10 dark:via-sky-700/5 rounded-full blur-3xl transform rotate-12" />
+        <div className="absolute -bottom-24 left-[-10%] w-[750px] h-[450px] bg-gradient-to-tr from-slate-200/50 via-slate-100/30 to-transparent dark:from-blue-700/10 dark:via-indigo-950/20 rounded-full blur-3xl" />
 
         {/* Subtle geometric texture grid */}
-        <div className="absolute inset-0 subtle-grid-bg opacity-10" />
+        <div className="absolute inset-0 subtle-grid-bg opacity-15" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -140,9 +137,9 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-300 uppercase mb-6 backdrop-blur-md shadow-sm"
+                className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/15 bg-white dark:bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-700 dark:text-slate-300 uppercase mb-6 shadow-xs"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-600 dark:bg-white shadow-[0_0_8px_rgba(225,29,72,0.8)] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                 <span>{data.badge}</span>
               </motion.div>
             )}
@@ -153,13 +150,13 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.55, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.08]"
+              className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.08]"
             >
               {data.headlineLine1 || 'Building businesses'}
               {data.headlineLine2 && (
                 <>
                   <br />
-                  <span className="text-white">{data.headlineLine2}</span>
+                  <span className="text-slate-900 dark:text-white">{data.headlineLine2}</span>
                 </>
               )}
             </motion.h2>
@@ -174,8 +171,8 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
               transition={{ duration: 0.55, delay: 0.15 }}
               className="flex items-center md:max-w-md lg:max-w-lg"
             >
-              <div className="border-l border-white/20 pl-6 py-1">
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+              <div className="border-l border-slate-300 dark:border-white/20 pl-6 py-1">
+                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                   {data.subtitle}
                 </p>
               </div>
@@ -204,14 +201,11 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: idx * 0.08 }}
-                className="group relative rounded-2xl p-6 sm:p-7 flex flex-col justify-start min-h-[230px] transition-all duration-300 bg-gradient-to-b from-[#111927]/85 to-[#0A0F1A]/90 border border-white/15 hover:border-white/35 backdrop-blur-xl shadow-[0_12px_32px_rgba(0,0,0,0.45)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.65),0_0_24px_rgba(56,189,248,0.12)] hover:-translate-y-1 overflow-hidden"
+                className="group relative rounded-2xl p-6 sm:p-7 flex flex-col justify-start min-h-[230px] transition-all duration-300 bg-white dark:bg-[#111927] border border-slate-200 dark:border-white/15 hover:border-slate-300 dark:hover:border-white/35 shadow-sm hover:shadow-md hover:-translate-y-1 overflow-hidden"
               >
-                {/* Top Subtle Edge Reflection Glow */}
-                <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none" />
-
                 {/* 1. Card Top Row: Logo or Icon + VERIFIED Tag */}
                 <div className="flex items-center justify-between mb-8 h-6">
-                  <div className="text-slate-200 group-hover:text-white transition-colors flex items-center justify-center">
+                  <div className="text-rose-600 dark:text-slate-200 group-hover:scale-105 transition-transform flex items-center justify-center">
                     {stat.iconUrl ? (
                       <img
                         src={stat.iconUrl}
@@ -223,23 +217,23 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
                     )}
                   </div>
 
-                  <span className="px-2.5 py-0.5 rounded-full border border-white/15 bg-white/[0.04] text-[10px] font-mono tracking-wider text-slate-400 uppercase font-semibold">
+                  <span className="px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-white/[0.04] text-[10px] font-mono tracking-wider text-slate-600 dark:text-slate-400 uppercase font-semibold">
                     {stat.tag || 'VERIFIED'}
                   </span>
                 </div>
 
                 {/* 2. Number: Exact baseline and height in every card with animated count-up */}
-                <div className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-none mb-3 h-12 flex items-baseline">
+                <div className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-3 h-12 flex items-baseline">
                   <AnimatedCounter rawValue={stat.value} />
                 </div>
 
                 {/* 3. Title: Fixed spacing */}
-                <div className="text-sm font-bold text-white mb-1.5 tracking-tight">
+                <div className="text-sm font-bold text-slate-900 dark:text-white mb-1.5 tracking-tight">
                   {stat.label}
                 </div>
 
                 {/* 4. Subtitle: Description */}
-                <div className="text-xs text-slate-400 leading-relaxed font-normal">
+                <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
                   {stat.subtext}
                 </div>
               </motion.div>
@@ -258,8 +252,8 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
           >
             {/* Leading Line Accent & Monospace Label */}
             <div className="flex items-center gap-3 mr-1">
-              <span className="w-12 h-[1px] bg-white/20 hidden sm:block" />
-              <span className="text-[11px] font-mono tracking-widest text-slate-400 uppercase font-semibold whitespace-nowrap">
+              <span className="w-12 h-[1px] bg-slate-300 dark:bg-white/20 hidden sm:block" />
+              <span className="text-[11px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase font-semibold whitespace-nowrap">
                 TRUSTED ACROSS:
               </span>
             </div>
@@ -268,7 +262,7 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
             {industries.map((industry) => (
               <div
                 key={industry}
-                className="px-4 py-2 rounded-full border border-white/20 bg-white/[0.05] hover:bg-white/[0.1] hover:border-white/40 text-xs font-semibold text-slate-200 transition-all duration-200 cursor-default shadow-xs"
+                className="px-4 py-2 rounded-full border border-slate-200 dark:border-white/20 bg-white dark:bg-white/[0.05] hover:bg-slate-100 dark:hover:bg-white/[0.1] hover:border-slate-300 dark:hover:border-white/40 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all duration-200 cursor-default shadow-xs"
               >
                 {industry}
               </div>

@@ -216,13 +216,13 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-[#080C14] text-white border-t border-white/[0.08]"
+      className="relative w-full bg-[#DBDBDB] dark:bg-[#080C14] text-slate-900 dark:text-white border-t border-neutral-300 dark:border-white/[0.08] transition-colors duration-200"
       style={{ height: `${Math.max(cards.length, 1) * 105 + 50}vh` }}
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-indigo-950/20 blur-[150px] rounded-full" />
-        <div className="absolute top-2/3 right-10 w-[500px] h-[400px] bg-sky-950/15 blur-[130px] rounded-full" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-rose-500/5 dark:bg-indigo-950/20 blur-[150px] rounded-full" />
+        <div className="absolute top-2/3 right-10 w-[500px] h-[400px] bg-sky-500/5 dark:bg-sky-950/15 blur-[130px] rounded-full" />
         <div className="absolute inset-0 subtle-grid-bg opacity-10" />
       </div>
 
@@ -231,18 +231,18 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
         {/* Section Headline (Positioned at the top as shown in screenshot, stationary during card scroll) */}
         <div className="text-center z-20 pointer-events-none px-4 max-w-3xl mb-6 sm:mb-8 shrink-0">
           {data.badge && (
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-300 uppercase mb-2.5 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-700 dark:text-slate-300 uppercase mb-2.5 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
               <span>{data.badge}</span>
             </div>
           )}
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-tight drop-shadow-sm">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight leading-tight drop-shadow-xs">
             {data.title || 'CORE BUSINESSES'}
           </h2>
 
           {data.subtitle && (
-            <p className="mt-2.5 text-xs sm:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed line-clamp-2">
+            <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed line-clamp-2">
               {data.subtitle}
             </p>
           )}

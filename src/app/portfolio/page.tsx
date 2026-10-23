@@ -15,24 +15,24 @@ export const metadata = constructMetadata({
 
 export default function PortfolioPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#060A12]">
+    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
       {/* Editorial Header */}
-      <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
+      <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
         <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />
         
         {/* Ambient Gradient Glows */}
-        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 -left-48 w-96 h-96 bg-rose-500/5 dark:bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <SectionContainer width="default" paddingY="none" className="relative z-10">
           <div className="max-w-3xl">
             <Badge variant="subtle" dot className="mb-4">
               VERIFIED PORTFOLIO • 450+ PRODUCTION OUTCOMES
             </Badge>
-            <h1 className="text-display-h1 font-black text-white tracking-tight mb-5">
+            <h1 className="text-display-h1 font-black text-slate-900 dark:text-white tracking-tight mb-5">
               Work that moves <span className="gradient-text-brand">businesses forward.</span>
             </h1>
-            <p className="text-body-lg text-slate-300 leading-relaxed font-normal">
+            <p className="text-body-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
               From high-concurrency multi-vendor marketplaces to luxury real estate platforms and sovereign portals. Explore our complete portfolio of live client solutions.
             </p>
           </div>

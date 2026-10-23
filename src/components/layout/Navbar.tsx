@@ -11,6 +11,8 @@ import { MobileNav } from './MobileNav';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';
 
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -49,10 +51,10 @@ export function Navbar() {
     <>
       <header
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-200 ${
           scrolled
-            ? 'bg-[#060A12]/35 backdrop-blur-2xl border-b border-white/[0.08] py-3.5 shadow-[0_4px_30px_rgba(0,0,0,0.2)]'
-            : 'bg-transparent py-5'
+            ? 'bg-white/98 dark:bg-[#060A12]/98 border-b border-slate-200 dark:border-white/[0.08] py-3.5 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+            : 'bg-white/98 dark:bg-[#060A12]/98 border-b border-slate-200/80 dark:border-white/[0.08] py-4 shadow-xs'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -90,17 +92,17 @@ export function Navbar() {
                     <button
                       type="button"
                       onClick={() => setMegaMenuOpen(!megaMenuOpen)}
-                      className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-colors ${
                         megaMenuOpen || isActive
-                          ? 'text-white bg-white/10'
-                          : 'text-slate-300 hover:text-white hover:bg-white/5'
+                          ? 'text-rose-600 bg-rose-50/80 dark:text-white dark:bg-white/10'
+                          : 'text-slate-700 hover:text-rose-600 hover:bg-slate-100/70 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
                       }`}
                       aria-expanded={megaMenuOpen}
                     >
                       <span>{item.name}</span>
                       <ChevronDown
                         className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                          megaMenuOpen ? 'rotate-180 text-sky-400' : 'text-slate-400'
+                          megaMenuOpen ? 'rotate-180 text-rose-500 dark:text-sky-400' : 'text-slate-400'
                         }`}
                       />
                     </button>
@@ -114,10 +116,10 @@ export function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3.5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-colors ${
                     isActive
-                      ? 'text-white bg-white/10'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      ? 'text-rose-600 bg-rose-50/80 dark:text-white dark:bg-white/10'
+                      : 'text-slate-700 hover:text-rose-600 hover:bg-slate-100/70 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
                   }`}
                 >
                   {item.name}
@@ -130,10 +132,12 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/assessment"
-              className="text-xs font-mono text-slate-300 hover:text-sky-400 px-3 py-1.5 rounded-lg border border-white/10 hover:border-sky-400/40 transition-colors"
+              className="text-xs font-mono font-medium text-slate-700 hover:text-rose-600 dark:text-slate-300 dark:hover:text-sky-400 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-sky-400/40 bg-slate-50 dark:bg-transparent transition-colors"
             >
               Diagnostic 72/100
             </Link>
+
+            <ThemeToggle />
 
             <Button
               href="/contact"
@@ -148,6 +152,8 @@ export function Navbar() {
 
           {/* Mobile Menu Trigger */}
           <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+
             <Button
               href="/contact"
               variant="white"
@@ -159,7 +165,7 @@ export function Navbar() {
 
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white"
+              className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               aria-label="Open navigation menu"
             >
               <Menu className="w-6 h-6" />

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { defaultAboutHeroData, AboutHeroData } from '@/types/aboutHero';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const section = await prisma.siteSection.findUnique({

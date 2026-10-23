@@ -25,13 +25,13 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variantClasses = {
-    default: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
-    growth: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
-    tech: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-    talent: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    outline: 'bg-transparent text-slate-400 border-slate-700',
-    subtle: 'bg-white/5 text-slate-300 border-white/10',
-    success: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    default: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/60',
+    growth: 'bg-orange-50 text-orange-600 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/30',
+    tech: 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/30',
+    talent: 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30',
+    outline: 'bg-transparent text-slate-600 border-slate-300 dark:text-slate-400 dark:border-slate-700',
+    subtle: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-white/5 dark:text-slate-300 dark:border-white/10',
+    success: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30',
   };
 
   const dotColors = {

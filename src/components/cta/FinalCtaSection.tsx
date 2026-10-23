@@ -9,10 +9,10 @@ import { analytics } from '@/lib/analytics';
 
 export function FinalCtaSection() {
   return (
-    <section className="py-24 sm:py-32 bg-[#05080E] relative border-t border-white/10 overflow-hidden">
+    <section className="py-24 sm:py-32 bg-[#DBDBDB] dark:bg-[#05080E] relative border-t border-neutral-300 dark:border-white/10 overflow-hidden">
       {/* Background dynamic ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-r from-orange-500/10 via-blue-500/10 to-emerald-500/10 blur-[130px] pointer-events-none" />
-      <div className="absolute inset-0 subtle-grid-bg opacity-20 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-rose-500/5 dark:bg-gradient-to-r dark:from-orange-500/10 dark:via-blue-500/10 dark:to-emerald-500/10 blur-[130px] pointer-events-none" />
+      <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.div
@@ -20,9 +20,9 @@ export function FinalCtaSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-slate-300 uppercase tracking-widest mb-8"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-300 text-xs font-mono text-rose-700 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 uppercase tracking-widest mb-8 shadow-xs"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>YOUR GROWTH ACCELERATOR</span>
         </motion.div>
 
@@ -31,7 +31,7 @@ export function FinalCtaSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-display-h1 font-extrabold text-white tracking-tight mb-8"
+          className="text-display-h1 font-extrabold text-slate-900 dark:text-white tracking-tight mb-8"
         >
           What’s next for your business?
         </motion.h2>
@@ -41,12 +41,12 @@ export function FinalCtaSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-2xl mx-auto text-body-lg text-slate-300 leading-relaxed mb-10 space-y-2"
+          className="max-w-2xl mx-auto text-body-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-10 space-y-2"
         >
           <p>Maybe you need more customers.</p>
           <p>Better technology.</p>
           <p>The right people.</p>
-          <p className="text-white font-bold pt-2">
+          <p className="text-slate-900 dark:text-white font-bold pt-2">
             Or a combination of all three. Let’s figure it out.
           </p>
         </motion.div>
@@ -72,7 +72,7 @@ export function FinalCtaSection() {
             href="/assessment"
             variant="outline"
             size="lg"
-            leftIcon={<Sparkles className="w-4 h-4 text-sky-400" />}
+            leftIcon={<Sparkles className="w-4 h-4 text-rose-600 dark:text-sky-400" />}
             onClick={() => analytics.trackCtaClick('Take Diagnostic (Final CTA)', 'FinalCTA')}
           >
             Take the 3-minute assessment

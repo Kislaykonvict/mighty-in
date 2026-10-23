@@ -69,7 +69,6 @@ export function TrackRecordManagementView() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [newIndustry, setNewIndustry] = useState('');
   const [uploadingCardId, setUploadingCardId] = useState<string | null>(null);
 
@@ -325,10 +324,9 @@ export function TrackRecordManagementView() {
         )}
       </div>
 
-      {/* Main Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Form Editor (7 cols) */}
-        <form onSubmit={handleSave} className="lg:col-span-7 space-y-6">
+      {/* Main Form Editor */}
+      <div className="max-w-4xl mx-auto">
+        <form onSubmit={handleSave} className="space-y-6">
           {/* Section 1: Header & Typography */}
           <div
             className={`p-6 rounded-2xl border space-y-5 shadow-sm ${
@@ -777,142 +775,6 @@ export function TrackRecordManagementView() {
             </button>
           </div>
         </form>
-
-        {/* Right Column: Live Interactive Preview (5 cols) */}
-        <div className="lg:col-span-5 sticky top-24 space-y-4">
-          <div
-            className={`p-4 rounded-2xl border shadow-sm ${
-              isDark ? 'bg-[#0F172A] border-slate-800' : 'bg-white border-slate-200'
-            }`}
-          >
-            {/* Preview Toolbar */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-bold">Real-Time Section Preview</span>
-              </div>
-
-              <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('desktop')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
-                    previewDevice === 'desktop'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Desktop Preview"
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('mobile')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
-                    previewDevice === 'mobile'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                  }`}
-                  title="Mobile Preview"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Preview Frame */}
-            <div
-              className={`relative overflow-hidden rounded-xl border border-white/10 shadow-2xl transition-all duration-300 mx-auto bg-[#070B12] p-5 sm:p-6 ${
-                previewDevice === 'desktop' ? 'w-full' : 'w-[280px]'
-              }`}
-            >
-              {/* Eyebrow */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/15 bg-white/[0.04] text-[9px] font-mono tracking-widest text-slate-300 uppercase mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]" />
-                <span>{formData.badge}</span>
-              </div>
-
-              {/* Headline */}
-              <h4 className="text-lg sm:text-xl font-black text-white tracking-tight leading-[1.1] mb-2">
-                {formData.headlineLine1}
-                {formData.headlineLine2 && <><br />{formData.headlineLine2}</>}
-              </h4>
-
-              {/* Subtitle */}
-              {formData.subtitle && (
-                <div className="border-l border-white/20 pl-3 mb-5">
-                  <p className="text-[10px] text-slate-300 leading-relaxed line-clamp-3">
-                    {formData.subtitle}
-                  </p>
-                </div>
-              )}
-
-              {/* Cards Grid Preview */}
-              <div
-                className={`grid gap-2.5 mb-5 ${
-                  previewDevice === 'desktop' ? 'grid-cols-2 sm:grid-cols-3' : 'grid-cols-1'
-                }`}
-              >
-                {formData.cards.slice(0, previewDevice === 'desktop' ? 5 : 3).map((card) => {
-                  const IconComp = ICON_COMPONENTS[card.iconName || 'Award'] || Award;
-                  return (
-                    <div
-                      key={card.id}
-                      className="p-3 rounded-xl bg-gradient-to-b from-[#111927]/90 to-[#0A0F1A]/95 border border-white/15 shadow-md flex flex-col justify-between min-h-[105px]"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        {card.iconUrl ? (
-                          <img
-                            src={card.iconUrl}
-                            alt={card.label}
-                            className="w-4 h-4 object-contain"
-                          />
-                        ) : (
-                          <IconComp className="w-4 h-4 text-slate-300" />
-                        )}
-                        <span className="text-[7px] font-mono px-1.5 py-0.5 rounded-full border border-white/15 bg-white/[0.04] text-slate-400">
-                          {card.tag || 'VERIFIED'}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="text-base sm:text-lg font-black text-white leading-none mb-1">
-                          {card.value}
-                        </div>
-                        <div className="text-[9px] font-bold text-white line-clamp-1">{card.label}</div>
-                        <div className="text-[8px] text-slate-400 line-clamp-1">{card.subtext}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Trusted Across */}
-              <div className="pt-3 border-t border-white/10">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-5 h-[1px] bg-white/30" />
-                  <span className="text-[9px] font-mono tracking-widest text-slate-300 uppercase font-bold">
-                    TRUSTED ACROSS:
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {formData.industries.map((ind) => (
-                    <span
-                      key={ind}
-                      className="px-2.5 py-1 rounded-full border border-white/20 bg-white/[0.08] text-[9px] font-semibold text-slate-200 shadow-xs"
-                    >
-                      {ind}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-3 text-[11px] text-slate-400 flex items-center justify-between">
-              <span>Aspect: {previewDevice === 'desktop' ? 'Desktop' : 'Mobile'}</span>
-              <span>Live Storefront Mirror</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

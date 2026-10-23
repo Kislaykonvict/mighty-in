@@ -25,10 +25,10 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-[#080C14]/98 backdrop-blur-2xl flex flex-col justify-between overflow-y-auto"
+        className="fixed inset-0 z-50 bg-white dark:bg-[#080C14] flex flex-col justify-between overflow-y-auto"
       >
         {/* Mobile Nav Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 dark:border-white/10">
           <Link
             href="/"
             onClick={onClose}
@@ -48,7 +48,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white transition-colors"
+            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
             aria-label="Close navigation menu"
           >
             <X className="w-5 h-5" />
@@ -59,10 +59,10 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         <div className="px-6 py-6 space-y-6 flex-1">
           <div className="space-y-4">
             {/* Businesses Accordion */}
-            <div className="border-b border-white/10 pb-4">
+            <div className="border-b border-slate-200 dark:border-white/10 pb-4">
               <button
                 onClick={() => setBusinessesExpanded(!businessesExpanded)}
-                className="w-full flex items-center justify-between text-xl font-bold text-white tracking-tight py-2 text-left"
+                className="w-full flex items-center justify-between text-xl font-bold text-slate-900 dark:text-white tracking-tight py-2 text-left"
               >
                 <span>Businesses</span>
                 <ChevronDown
@@ -77,36 +77,36 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   <Link
                     href="/businesses/digital-growth"
                     onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 active:bg-orange-500/20"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 active:bg-orange-100"
                   >
-                    <Sparkles className="w-5 h-5 text-orange-400 mt-0.5 shrink-0" />
+                    <Sparkles className="w-5 h-5 text-orange-500 dark:text-orange-400 mt-0.5 shrink-0" />
                     <div>
-                      <div className="text-sm font-bold text-white">Digital & Growth</div>
-                      <div className="text-xs text-orange-300/80">Build a brand • Strategy & Web</div>
+                      <div className="text-sm font-bold text-slate-900 dark:text-white">Digital & Growth</div>
+                      <div className="text-xs text-orange-600 dark:text-orange-300/80">Build a brand • Strategy & Web</div>
                     </div>
                   </Link>
 
                   <Link
                     href="/businesses/technology"
                     onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 active:bg-blue-500/20"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 active:bg-blue-100"
                   >
-                    <Cpu className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
+                    <Cpu className="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0" />
                     <div>
-                      <div className="text-sm font-bold text-white">Technology</div>
-                      <div className="text-xs text-blue-300/80">Build a product • Custom Apps & APIs</div>
+                      <div className="text-sm font-bold text-slate-900 dark:text-white">Technology</div>
+                      <div className="text-xs text-blue-600 dark:text-blue-300/80">Build a product • Custom Apps & APIs</div>
                     </div>
                   </Link>
 
                   <Link
                     href="/businesses/talent-solutions"
                     onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 active:bg-emerald-500/20"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 active:bg-emerald-100"
                   >
-                    <Users className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
+                    <Users className="w-5 h-5 text-emerald-500 dark:text-emerald-400 mt-0.5 shrink-0" />
                     <div>
-                      <div className="text-sm font-bold text-white">Talent Solutions</div>
-                      <div className="text-xs text-emerald-300/80">Build a team • Staffing & SOW Pods</div>
+                      <div className="text-sm font-bold text-slate-900 dark:text-white">Talent Solutions</div>
+                      <div className="text-xs text-emerald-600 dark:text-emerald-300/80">Build a team • Staffing & SOW Pods</div>
                     </div>
                   </Link>
                 </div>
@@ -117,28 +117,28 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             {navItems
               .filter((i) => i.name !== 'Businesses')
               .map((item) => (
-                <div key={item.name} className="border-b border-white/10 pb-4">
+                <div key={item.name} className="border-b border-slate-200 dark:border-white/10 pb-4">
                   <Link
                     href={item.href}
                     onClick={() => {
                       analytics.trackCtaClick(`MobileNav: ${item.name}`, 'MobileNav', item.href);
                       onClose();
                     }}
-                    className="block text-xl font-bold text-white hover:text-sky-400 transition-colors py-1"
+                    className="block text-xl font-bold text-slate-900 dark:text-white hover:text-rose-600 dark:hover:text-sky-400 transition-colors py-1"
                   >
                     {item.name}
                   </Link>
                 </div>
               ))}
 
-            <div className="border-b border-white/10 pb-4">
+            <div className="border-b border-slate-200 dark:border-white/10 pb-4">
               <Link
                 href="/assessment"
                 onClick={onClose}
-                className="flex items-center justify-between text-base font-semibold text-sky-400 py-1"
+                className="flex items-center justify-between text-base font-semibold text-rose-600 dark:text-sky-400 py-1"
               >
                 <span>3-Minute Growth Assessment</span>
-                <span className="px-2 py-0.5 text-xs font-mono rounded bg-sky-400/10 border border-sky-400/30 text-sky-300">
+                <span className="px-2 py-0.5 text-xs font-mono rounded bg-rose-50 text-rose-600 border border-rose-200 dark:bg-sky-400/10 dark:border-sky-400/30 dark:text-sky-300">
                   Interactive
                 </span>
               </Link>
@@ -147,7 +147,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         </div>
 
         {/* Mobile Footer CTAs */}
-        <div className="p-6 bg-[#0B101E] border-t border-white/10 space-y-3">
+        <div className="p-6 bg-slate-50 dark:bg-[#0B101E] border-t border-slate-200 dark:border-white/10 space-y-3">
           <Button
             href="/contact"
             variant="growth"

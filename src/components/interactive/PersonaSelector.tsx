@@ -97,16 +97,16 @@ export function PersonaSelector() {
   const Icon = active.icon;
 
   return (
-    <div className="p-8 sm:p-12 rounded-3xl bg-[#0F1626] border border-white/10 shadow-2xl space-y-8">
+    <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 shadow-xl space-y-8">
       {/* Header */}
-      <div className="pb-6 border-b border-white/8">
-        <div className="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider mb-1">
+      <div className="pb-6 border-b border-slate-200 dark:border-white/8">
+        <div className="text-xs font-mono text-rose-600 dark:text-sky-400 font-bold uppercase tracking-wider mb-1">
           PERSONALIZED PERSPECTIVE
         </div>
-        <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           What is your executive focus?
         </h3>
-        <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-xl">
           Select your role to view how Mighty Warner solves the specific challenges on your desk today.
         </p>
       </div>
@@ -123,8 +123,8 @@ export function PersonaSelector() {
               onClick={() => setActivePersonaId(p.id)}
               className={`p-4 rounded-2xl text-left border transition-all flex flex-col justify-between ${
                 isSelected
-                  ? 'bg-white/10 border-white/30 text-white shadow-lg ring-1 ring-white/20'
-                  : 'bg-white/[0.02] border-white/8 hover:border-white/20 text-slate-400'
+                  ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white shadow-sm ring-1 ring-slate-400/30'
+                  : 'bg-slate-50 dark:bg-white/[0.02] border-slate-200 dark:border-white/8 hover:border-slate-300 text-slate-600 dark:text-slate-400'
               }`}
               style={{
                 borderColor: isSelected ? p.color : undefined,
@@ -138,8 +138,8 @@ export function PersonaSelector() {
                 />
               </div>
               <div>
-                <div className="text-sm font-bold text-white mb-0.5">{p.roleTitle}</div>
-                <div className="text-[11px] text-slate-400">{p.category}</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white mb-0.5">{p.roleTitle}</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">{p.category}</div>
               </div>
             </button>
           );
@@ -154,7 +154,7 @@ export function PersonaSelector() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.25 }}
-          className="p-6 sm:p-8 rounded-2xl bg-[#080C14] border border-white/8 space-y-6"
+          className="p-6 sm:p-8 rounded-2xl bg-slate-50 dark:bg-[#080C14] border border-slate-200 dark:border-white/8 space-y-6"
         >
           <div className="flex items-center gap-3">
             <div
@@ -167,34 +167,34 @@ export function PersonaSelector() {
               <span className="text-xs font-mono font-bold uppercase" style={{ color: active.color }}>
                 {active.roleTitle} PERSPECTIVE
               </span>
-              <h4 className="text-lg sm:text-xl font-bold text-white">{active.headline}</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{active.headline}</h4>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
-              <div className="text-xs font-mono text-slate-400 uppercase">Immediate Friction:</div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <div className="p-4 rounded-xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 shadow-xs space-y-2">
+              <div className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase">Immediate Friction:</div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {active.primaryConcern}
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
-              <div className="text-xs font-mono text-emerald-400 uppercase">How Mighty Warner Solves It:</div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <div className="p-4 rounded-xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 shadow-xs space-y-2">
+              <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase">How Mighty Warner Solves It:</div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {active.solutionFocus}
               </p>
             </div>
           </div>
 
           {/* Recommended Case Study */}
-          <div className="p-4 rounded-xl bg-white/[0.03] border border-white/8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 rounded-xl bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/8 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="text-[10px] font-mono text-slate-400 uppercase">
+              <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase">
                 RECOMMENDED PROOF POINT
               </div>
-              <div className="text-sm font-bold text-white">{active.recommendedCaseStudy.title}</div>
-              <div className="text-xs text-emerald-400 font-mono font-bold">
+              <div className="text-sm font-bold text-slate-900 dark:text-white">{active.recommendedCaseStudy.title}</div>
+              <div className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">
                 ✓ {active.recommendedCaseStudy.metric}
               </div>
             </div>

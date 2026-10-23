@@ -181,11 +181,11 @@ export function GrowthTerminal() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-[#0F1626]/90 hover:bg-[#151F36] border border-white/15 text-sky-400 shadow-2xl hover:scale-105 transition-all group flex items-center gap-2"
+        className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-white dark:bg-[#0F1626] hover:bg-slate-50 dark:hover:bg-[#151F36] border border-slate-200 dark:border-white/15 text-rose-600 dark:text-sky-400 shadow-xl hover:scale-105 transition-all group flex items-center gap-2"
         aria-label="Open Mighty Warner Command Terminal (Ctrl+K)"
       >
-        <Terminal className="w-5 h-5 text-sky-400" />
-        <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-200 group-hover:text-white pr-1">
+        <Terminal className="w-5 h-5 text-rose-600 dark:text-sky-400" />
+        <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-800 dark:text-slate-200 group-hover:text-rose-600 dark:group-hover:text-white pr-1">
           Growth Lab (Ctrl+K)
         </span>
       </button>
@@ -200,7 +200,7 @@ export function GrowthTerminal() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md"
+              className="fixed inset-0 bg-slate-900/60 dark:bg-black/80"
             />
 
             {/* Modal Dialog Body */}
@@ -209,26 +209,26 @@ export function GrowthTerminal() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -10 }}
               transition={{ duration: 0.18, ease: 'easeOut' }}
-              className="relative w-full max-w-2xl rounded-2xl bg-[#0B101E] border border-white/15 shadow-2xl shadow-black/90 overflow-hidden z-10"
+              className="relative w-full max-w-2xl rounded-2xl bg-white dark:bg-[#0B101E] border border-slate-200 dark:border-white/15 shadow-2xl overflow-hidden z-10"
             >
               {/* Terminal Title Bar */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#080C14]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#080C14]">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="text-xs font-mono text-slate-400 ml-2 font-bold">
+                  <div className="w-3 h-3 rounded-full bg-rose-500" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <span className="text-xs font-mono text-slate-600 dark:text-slate-400 ml-2 font-bold">
                     mighty-warner-terminal://v2.4
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 text-slate-400">
+                  <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400">
                     ESC to close
                   </span>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1 rounded text-slate-400 hover:text-white"
+                    className="p-1 rounded text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -236,8 +236,8 @@ export function GrowthTerminal() {
               </div>
 
               {/* Command Input Prompt */}
-              <div className="p-4 border-b border-white/10 flex items-center gap-3">
-                <Search className="w-5 h-5 text-sky-400 shrink-0" />
+              <div className="p-4 border-b border-slate-200 dark:border-white/10 flex items-center gap-3 bg-white dark:bg-transparent">
+                <Search className="w-5 h-5 text-rose-600 dark:text-sky-400 shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -248,12 +248,12 @@ export function GrowthTerminal() {
                     setSelectedIndex(0);
                   }}
                   onKeyDown={handleInputKeyDown}
-                  className="w-full bg-transparent text-white placeholder-slate-500 text-sm sm:text-base focus:outline-none font-sans"
+                  className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm sm:text-base focus:outline-none font-sans"
                 />
               </div>
 
               {/* Action List */}
-              <div className="max-h-[360px] overflow-y-auto p-2 space-y-1">
+              <div className="max-h-[360px] overflow-y-auto p-2 space-y-1 bg-white dark:bg-transparent">
                 {filtered.length === 0 ? (
                   <div className="p-8 text-center text-xs font-mono text-slate-500">
                     No matching actions found. Try typing &ldquo;diagnostic&rdquo;, &ldquo;roi&rdquo;, or &ldquo;tech&rdquo;.
@@ -271,36 +271,36 @@ export function GrowthTerminal() {
                         onMouseEnter={() => setSelectedIndex(idx)}
                         className={`w-full p-3 rounded-xl text-left flex items-center justify-between transition-colors ${
                           isSelected
-                            ? 'bg-white/10 text-white'
-                            : 'hover:bg-white/[0.04] text-slate-300'
+                            ? 'bg-rose-50 dark:bg-white/10 text-rose-950 dark:text-white'
+                            : 'hover:bg-slate-50 dark:hover:bg-white/[0.04] text-slate-700 dark:text-slate-300'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div
                             className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                               isSelected
-                                ? 'bg-sky-500 text-white'
-                                : 'bg-white/5 text-slate-400'
+                                ? 'bg-rose-600 text-white'
+                                : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400'
                             }`}
                           >
                             <Icon className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-sm font-semibold text-white">
+                            <div className="text-sm font-semibold text-slate-900 dark:text-white">
                               {action.title}
                             </div>
-                            <div className="text-xs text-slate-400">
+                            <div className="text-xs text-slate-500 dark:text-slate-400">
                               {action.description}
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-400 uppercase">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 uppercase">
                             {action.category}
                           </span>
                           <ArrowRight
-                            className={`w-4 h-4 text-sky-400 transition-transform ${
+                            className={`w-4 h-4 text-rose-600 dark:text-sky-400 transition-transform ${
                               isSelected ? 'translate-x-0.5 opacity-100' : 'opacity-0'
                             }`}
                           />
@@ -312,7 +312,7 @@ export function GrowthTerminal() {
               </div>
 
               {/* Terminal Footer */}
-              <div className="p-3 bg-[#080C14] border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <div className="p-3 bg-slate-50 dark:bg-[#080C14] border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-500">
                 <span>Use ↑↓ keys to navigate, Enter to select</span>
                 <span>Mighty Warner Ecosystem Lab</span>
               </div>

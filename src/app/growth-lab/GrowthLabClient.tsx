@@ -56,7 +56,7 @@ export function GrowthLabClient() {
   return (
     <div className="space-y-8">
       {/* 5-Tab Selector Bar */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-2 rounded-2xl bg-[#0F1626] border border-white/8 shadow-xl max-w-4xl mx-auto">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 p-2 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 shadow-lg max-w-4xl mx-auto">
         {tabs.map((tab) => {
           const isCurrent = activeTab === tab.id;
           const Icon = tab.icon;
@@ -68,11 +68,11 @@ export function GrowthLabClient() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
                 isCurrent
-                  ? 'bg-white text-slate-950 shadow-lg'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-rose-600 text-white shadow-md dark:bg-white dark:text-slate-950'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isCurrent ? 'text-slate-950' : tab.color}`} />
+              <Icon className={`w-4 h-4 ${isCurrent ? 'text-white dark:text-slate-950' : tab.color}`} />
               <span>{tab.label}</span>
             </button>
           );

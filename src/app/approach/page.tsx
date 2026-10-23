@@ -21,18 +21,18 @@ export const metadata = constructMetadata({
 
 export default function ApproachPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
       {/* Hero */}
-      <section className="pt-28 sm:pt-32 pb-20 bg-[#080C14] border-b border-white/8 relative overflow-hidden">
-        <div className="absolute inset-0 subtle-grid-bg opacity-20 pointer-events-none" />
+      <section className="pt-28 sm:pt-32 pb-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
+        <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />
         <SectionContainer width="default" paddingY="none">
           <Badge variant="subtle" dot className="mb-4">
             OPERATIONAL METHODOLOGY
           </Badge>
-          <h1 className="text-display-h1 font-extrabold text-white tracking-tight mb-6 max-w-4xl">
+          <h1 className="text-display-h1 font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-4xl">
             A battle-tested framework for <span className="gradient-text-brand">predictable momentum.</span>
           </h1>
-          <p className="text-body-lg text-slate-300 max-w-2xl leading-relaxed mb-8">
+          <p className="text-body-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mb-8">
             We don’t guess. Every engagement follows our systematic 5-stage lifecycle designed to de-risk investment, align stakeholders, and maximize long-term commercial upside.
           </p>
         </SectionContainer>
@@ -55,37 +55,37 @@ export default function ApproachPage() {
           {methodSteps.map((step) => (
             <div
               key={step.stepNumber}
-              className="p-8 sm:p-10 rounded-3xl bg-[#0F1626] border border-white/8 shadow-xl"
+              className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 shadow-sm"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 <div className="lg:col-span-4 space-y-2">
-                  <span className="text-xs font-mono font-bold text-sky-400 uppercase">
+                  <span className="text-xs font-mono font-bold text-rose-600 dark:text-sky-400 uppercase">
                     PHASE {step.stepNumber}
                   </span>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                     {step.name}
                   </h3>
-                  <div className="text-sm font-semibold text-slate-300">
+                  <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     {step.headline}
                   </div>
                 </div>
 
                 <div className="lg:col-span-8 space-y-4">
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
                     {step.description}
                   </p>
 
                   <div className="pt-2">
-                    <div className="text-xs font-mono uppercase text-slate-400 font-semibold mb-3">
+                    <div className="text-xs font-mono uppercase text-slate-500 dark:text-slate-400 font-semibold mb-3">
                       Deliverables Produced:
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {step.deliverables.map((del) => (
                         <div
                           key={del}
-                          className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/5 text-xs text-slate-200"
+                          className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 text-xs text-slate-700 dark:text-slate-200 font-medium"
                         >
-                          <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0" />
+                          <CheckCircle2 className="w-4 h-4 text-rose-600 dark:text-sky-400 shrink-0" />
                           <span>{del}</span>
                         </div>
                       ))}

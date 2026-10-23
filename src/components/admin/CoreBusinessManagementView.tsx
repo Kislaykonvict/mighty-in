@@ -16,12 +16,8 @@ import {
   CheckCircle2,
   AlertCircle,
   X,
-  Eye,
-  Monitor,
-  Smartphone,
   Loader2,
   Layers,
-  ArrowRight,
   Type,
   Sparkles,
 } from 'lucide-react';
@@ -37,7 +33,6 @@ export function CoreBusinessManagementView() {
   const [isSaving, setIsSaving] = useState(false);
   const [uploadingCardId, setUploadingCardId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -287,10 +282,8 @@ export function CoreBusinessManagementView() {
         )}
       </div>
 
-      {/* Main Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Form Editor (7 cols) */}
-        <form onSubmit={handleSave} className="lg:col-span-7 space-y-6">
+      {/* Centered Form Editor */}
+      <form onSubmit={handleSave} className="max-w-4xl mx-auto space-y-6">
           {/* Section 1: Top Headline & Copy */}
           <div
             className={`p-6 rounded-2xl border space-y-5 shadow-sm ${isDark ? 'bg-[#0F172A] border-slate-800' : 'bg-white border-slate-200'
@@ -645,138 +638,6 @@ export function CoreBusinessManagementView() {
             </button>
           </div>
         </form>
-
-        {/* Right Column: Live Interactive Stacking Preview (5 cols) */}
-        <div className="lg:col-span-5 sticky top-24 space-y-4">
-          <div
-            className={`p-4 rounded-2xl border shadow-sm ${isDark ? 'bg-[#0F172A] border-slate-800' : 'bg-white border-slate-200'
-              }`}
-          >
-            {/* Preview Toolbar */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-indigo-400" />
-                <span className="text-xs font-bold">Real-Time Stacking Preview</span>
-              </div>
-
-              <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('desktop')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${previewDevice === 'desktop'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  title="Desktop Preview"
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewDevice('mobile')}
-                  className={`p-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${previewDevice === 'mobile'
-                      ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
-                      : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  title="Mobile Preview"
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Live Mirror Render Container (Dark background like live site) */}
-            <div
-              className={`rounded-xl bg-[#080C14] border border-white/10 p-4 overflow-y-auto max-h-[580px] transition-all scrollbar-thin ${previewDevice === 'mobile' ? 'max-w-[320px] mx-auto' : 'w-full'
-                }`}
-            >
-              {/* Preview Headline */}
-              <div className="text-center pt-2 pb-6">
-                {formData.badge && (
-                  <span className="inline-block px-2 py-0.5 rounded-full border border-white/15 bg-white/[0.04] text-[8px] font-mono tracking-widest text-slate-300 uppercase mb-2">
-                    {formData.badge}
-                  </span>
-                )}
-                <h4 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight leading-none">
-                  {formData.title || 'CORE BUSINESSES'}
-                </h4>
-                {formData.subtitle && (
-                  <p className="text-[9px] text-slate-400 mt-1 line-clamp-2">
-                    {formData.subtitle}
-                  </p>
-                )}
-              </div>
-
-              {/* Preview Stacking Cards */}
-              <div className="space-y-4">
-                {formData.cards.map((card, idx) => {
-                  const hasImage = Boolean(card.imageUrl && card.imageUrl.trim() !== '');
-
-                  return (
-                    <div
-                      key={card.id || idx}
-                      className="group relative rounded-2xl bg-[#1E293B] border border-slate-700/80 p-4 shadow-xl overflow-hidden transition-all text-white"
-                    >
-                      {/* Full-Bleed Extended Uploaded Image Cover */}
-                      {hasImage && (
-                        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                          <img
-                            src={card.imageUrl!}
-                            alt={card.title}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A]/85 via-[#0F172A]/40 to-transparent" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-transparent to-transparent opacity-80" />
-                        </div>
-                      )}
-
-                      {/* Subtle Surface Texture when no image (Dark Slate Grey Card) */}
-                      {!hasImage && (
-                        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
-                          <div className="absolute inset-0 bg-[radial-gradient(#64748B_1px,transparent_1px)] [background-size:16px_16px] opacity-20" />
-                        </div>
-                      )}
-
-                      <div className="relative z-10">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <span className="text-rose-500 font-mono text-[10px] font-bold">
-                            {card.indexNumber || String(idx + 1).padStart(2, '0')}
-                          </span>
-                          {hasImage && (
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-white/10 text-[8px] font-mono text-slate-200">
-                              <Sparkles className="w-2 h-2 text-rose-400" />
-                              <span>Cover</span>
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="text-sm font-extrabold text-white leading-tight mb-1.5 drop-shadow-sm">
-                          {card.title}
-                        </div>
-
-                        <p className="text-[10px] text-slate-300 leading-relaxed line-clamp-2 mb-3">
-                          {card.description}
-                        </p>
-
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-slate-950 text-[9px] font-bold shadow-sm">
-                          <span>{card.ctaText || 'more information'}</span>
-                          <ArrowRight className="w-2.5 h-2.5" />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="pt-3 text-[11px] text-slate-400 flex items-center justify-between">
-              <span>Aspect: {previewDevice === 'desktop' ? 'Desktop' : 'Mobile'}</span>
-              <span>Live Storefront Mirror</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

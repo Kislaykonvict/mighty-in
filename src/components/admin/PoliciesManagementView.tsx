@@ -388,56 +388,6 @@ export function PoliciesManagementView() {
               </div>
             </div>
 
-            {/* Interactive Hero Live Preview Box (Bottom-Left Text Over Picture) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="font-semibold flex items-center gap-1.5">
-                  <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                  Hero Live Preview (Shows Full-Screen Background + Bottom-Left Text)
-                </span>
-                <span className="text-[11px] font-mono opacity-70">Aspect: 16:9 Cinema</span>
-              </div>
-
-              <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950 group">
-                {formData.heroImage ? (
-                  <Image
-                    src={formData.heroImage}
-                    alt={formData.title}
-                    fill
-                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-600">
-                    No hero image specified
-                  </div>
-                )}
-
-                {/* Soft bottom-left gradient matching public page */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#080C14] via-[#080C14]/40 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#080C14]/85 via-[#080C14]/25 to-transparent sm:w-3/5" />
-
-                {/* Optional Text Aligned Bottom-Left Corner */}
-                <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 max-w-xl space-y-2 z-10">
-                  {formData.heroBadge && (
-                    <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-white/10 backdrop-blur-md text-white border border-white/20">
-                      {formData.heroBadge}
-                    </span>
-                  )}
-                  {formData.heroTitle ? (
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight drop-shadow-md leading-tight">
-                      {formData.heroTitle}
-                    </h1>
-                  ) : (
-                    <div className="text-xs text-slate-400 italic">No overlay headline (optional)</div>
-                  )}
-                  {formData.heroSubtitle && (
-                    <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed drop-shadow-sm line-clamp-2">
-                      {formData.heroSubtitle}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
 
             {/* Hero Image, Page Name, and Optional Hero Badge in a balanced 3-column row */}
             <div className="space-y-3 pt-2">

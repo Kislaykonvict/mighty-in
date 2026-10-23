@@ -21,7 +21,7 @@ export function StickyBottomCta() {
   if (!visible) return null;
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3 bg-[#080C14]/90 backdrop-blur-xl border-t border-white/10 shadow-2xl animate-fade-in">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3 bg-white dark:bg-[#080C14] border-t border-slate-200 dark:border-white/10 shadow-xl animate-fade-in">
       <div className="flex items-center gap-3">
         <Button
           href="/assessment"

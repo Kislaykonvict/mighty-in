@@ -243,21 +243,21 @@ export function InteractiveGlobe({
       />
 
       {/* Floating Interactive Controls Pill */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/85 backdrop-blur-md border border-white/15 shadow-xl text-xs text-slate-300">
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/15 shadow-xl text-xs text-slate-700 dark:text-slate-300">
         <button
           type="button"
           onClick={() => setIsAutoSpinning(!isAutoSpinning)}
           className={`flex items-center gap-1 px-2.5 py-1 rounded-full font-medium transition-all ${
             isAutoSpinning
-              ? 'bg-brand-crimson/20 text-brand-crimson border border-brand-crimson/30'
-              : 'hover:bg-white/10 text-slate-300'
+              ? 'bg-rose-50 dark:bg-brand-crimson/20 text-rose-600 dark:text-brand-crimson border border-rose-200 dark:border-brand-crimson/30'
+              : 'hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300'
           }`}
           title={isAutoSpinning ? 'Pause Auto-Rotation' : 'Resume Auto-Rotation'}
           aria-label="Toggle Auto-Rotation"
         >
           {isAutoSpinning ? (
             <>
-              <Pause className="w-3 h-3 text-brand-crimson fill-brand-crimson" />
+              <Pause className="w-3 h-3 text-rose-600 dark:text-brand-crimson fill-rose-600 dark:fill-brand-crimson" />
               <span>Spinning</span>
             </>
           ) : (
@@ -268,12 +268,12 @@ export function InteractiveGlobe({
           )}
         </button>
 
-        <div className="w-px h-3.5 bg-white/15 mx-0.5" />
+        <div className="w-px h-3.5 bg-slate-200 dark:bg-white/15 mx-0.5" />
 
         <button
           type="button"
           onClick={resetView}
-          className="flex items-center gap-1 px-2.5 py-1 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
           title="Reset Globe View"
           aria-label="Reset Globe"
         >
@@ -281,16 +281,16 @@ export function InteractiveGlobe({
           <span>Reset</span>
         </button>
 
-        <div className="w-px h-3.5 bg-white/15 mx-0.5" />
+        <div className="w-px h-3.5 bg-slate-200 dark:bg-white/15 mx-0.5" />
 
-        <span className="flex items-center gap-1 text-[11px] text-slate-400 pl-1 pr-1 hidden sm:flex">
-          <Compass className="w-3 h-3 text-brand-royal" />
+        <span className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 pl-1 pr-1 hidden sm:flex">
+          <Compass className="w-3 h-3 text-rose-600 dark:text-brand-royal" />
           <span>Drag to rotate</span>
         </span>
       </div>
 
       {/* Quick Office Jump Hotspots */}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/12 shadow-lg">
+      <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 rounded-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/12 shadow-lg">
         {MIGHTY_OFFICES.map((office) => {
           const isSelected = selectedOffice?.id === office.id;
           return (
@@ -300,8 +300,8 @@ export function InteractiveGlobe({
               onClick={() => onSelectOffice(office)}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
                 isSelected
-                  ? 'bg-gradient-to-r from-brand-crimson to-rose-600 text-white shadow-md shadow-brand-crimson/25 scale-105'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  ? 'bg-gradient-to-r from-rose-600 to-rose-700 text-white shadow-md shadow-rose-600/25 scale-105'
+                  : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'
               }`}
             >
               <span className="text-sm">{office.flag}</span>
@@ -314,10 +314,10 @@ export function InteractiveGlobe({
 
       {/* Floating Beacon Tag for currently selected office */}
       {selectedOffice && (
-        <div className="absolute top-14 right-4 z-20 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-brand-crimson/30 shadow-lg text-xs text-white animate-fade-in">
-          <div className="w-2 h-2 rounded-full bg-brand-crimson animate-pulse" />
+        <div className="absolute top-14 right-4 z-20 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-300 dark:border-brand-crimson/30 shadow-lg text-xs text-slate-900 dark:text-white animate-fade-in">
+          <div className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
           <span className="font-semibold">{selectedOffice.city} Hub</span>
-          <span className="text-slate-400 text-[11px] font-mono">({selectedOffice.utcOffset})</span>
+          <span className="text-slate-500 dark:text-slate-400 text-[11px] font-mono">({selectedOffice.utcOffset})</span>
         </div>
       )}
     </div>

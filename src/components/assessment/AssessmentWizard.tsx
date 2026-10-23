@@ -70,19 +70,19 @@ export function AssessmentWizard() {
   }
 
   return (
-    <div className="p-8 sm:p-12 rounded-3xl bg-[#0F1626] border border-white/10 shadow-2xl relative overflow-hidden">
+    <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 shadow-xl relative overflow-hidden">
       {/* Step Progress Bar */}
       <div className="mb-8">
-        <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2.5">
-          <span className="flex items-center gap-1.5 text-sky-400 font-bold">
+        <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 mb-2.5">
+          <span className="flex items-center gap-1.5 text-rose-600 dark:text-sky-400 font-bold">
             <Sparkles className="w-3.5 h-3.5" />
             QUESTION {currentStep + 1} OF {totalSteps}
           </span>
           <span>{Math.round(((currentStep + 1) / totalSteps) * 100)}% COMPLETE</span>
         </div>
-        <div className="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-200 dark:bg-slate-800/80 h-2 rounded-full overflow-hidden">
           <div
-            className="bg-gradient-to-r from-orange-500 via-blue-500 to-emerald-500 h-full rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-rose-500 via-rose-600 to-emerald-500 h-full rounded-full transition-all duration-300"
             style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
           />
         </div>
@@ -99,11 +99,11 @@ export function AssessmentWizard() {
           className="space-y-6"
         >
           <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">
               {currentQuestion.question}
             </h3>
             {currentQuestion.subtext && (
-              <p className="text-xs sm:text-sm text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 {currentQuestion.subtext}
               </p>
             )}
@@ -121,16 +121,16 @@ export function AssessmentWizard() {
                   onClick={() => handleSelectOption(option.id)}
                   className={`w-full p-4 sm:p-5 rounded-2xl text-left transition-all duration-200 border flex items-start justify-between gap-4 ${
                     isSelected
-                      ? 'bg-white/10 border-sky-400 text-white shadow-lg ring-1 ring-sky-400/30'
-                      : 'bg-white/[0.02] border-white/8 hover:border-white/20 hover:bg-white/[0.05] text-slate-300'
+                      ? 'bg-rose-50/80 border-rose-500 text-slate-900 shadow-sm ring-1 ring-rose-500/30 dark:bg-white/10 dark:border-sky-400 dark:text-white dark:ring-sky-400/30'
+                      : 'bg-white dark:bg-white/[0.02] border-slate-200 dark:border-white/8 hover:border-slate-300 dark:hover:border-white/20 hover:bg-slate-50 dark:hover:bg-white/[0.05] text-slate-700 dark:text-slate-300 shadow-xs'
                   }`}
                 >
                   <div>
-                    <div className="text-sm sm:text-base font-semibold text-white mb-1">
+                    <div className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mb-1">
                       {option.label}
                     </div>
                     {option.description && (
-                      <div className="text-xs text-slate-400 leading-relaxed">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                         {option.description}
                       </div>
                     )}
@@ -139,8 +139,8 @@ export function AssessmentWizard() {
                   <div
                     className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
                       isSelected
-                        ? 'bg-sky-500 border-sky-400 text-white'
-                        : 'border-white/20 bg-transparent'
+                        ? 'bg-rose-600 border-rose-500 text-white dark:bg-sky-500 dark:border-sky-400'
+                        : 'border-slate-300 dark:border-white/20 bg-transparent'
                     }`}
                   >
                     {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -151,7 +151,7 @@ export function AssessmentWizard() {
           </div>
 
           {/* Wizard Controls */}
-          <div className="flex items-center justify-between pt-6 border-t border-white/8">
+          <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-white/8">
             <Button
               type="button"
               variant="ghost"

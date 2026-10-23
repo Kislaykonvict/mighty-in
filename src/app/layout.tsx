@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import { SiteChrome } from '@/components/layout/SiteChrome';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { siteConfig } from '@/config/site';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -110,7 +111,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`dark ${plusJakartaSans.variable} ${jetbrainsMono.variable} font-sans`}>
+    <html lang="en" suppressHydrationWarning className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} font-sans`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -119,8 +120,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#080C14] text-[#F8FAFC] antialiased selection:bg-sky-500/30 selection:text-white flex flex-col min-h-screen">
-        <SiteChrome>{children}</SiteChrome>
+      <body className="bg-white text-slate-900 dark:bg-[#080C14] dark:text-[#F8FAFC] antialiased selection:bg-rose-500/20 selection:text-rose-900 dark:selection:bg-sky-500/30 dark:selection:text-white flex flex-col min-h-screen transition-colors duration-150">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <SiteChrome>{children}</SiteChrome>
+        </ThemeProvider>
       </body>
     </html>
   );

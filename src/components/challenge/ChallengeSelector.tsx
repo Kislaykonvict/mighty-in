@@ -113,7 +113,7 @@ export function ChallengeSelector() {
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-[#080C14] relative">
+    <section className="py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#080C14] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="CHALLENGE SELECTOR"
@@ -132,10 +132,10 @@ export function ChallengeSelector() {
                 key={opt.id}
                 type="button"
                 onClick={() => handleSelect(opt)}
-                className={`p-4 rounded-xl text-left font-semibold text-sm transition-all duration-200 border flex items-center justify-between ${
+                className={`p-4 rounded-xl text-left font-semibold text-sm transition-all duration-200 border flex items-center justify-between cursor-pointer ${
                   isCurrent
-                    ? 'bg-white/10 text-white border-white/30 shadow-lg ring-1 ring-white/20'
-                    : 'bg-white/[0.02] text-slate-400 border-white/8 hover:border-white/20 hover:text-slate-200'
+                    ? 'bg-slate-50 dark:bg-white/10 text-slate-900 dark:text-white border-slate-300 dark:border-white/30 shadow-xs ring-1 ring-slate-200 dark:ring-white/20'
+                    : 'bg-white dark:bg-white/[0.02] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/8 hover:border-slate-300 dark:hover:border-white/20 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
                 style={{
                   borderColor: isCurrent ? opt.color : undefined,
@@ -159,17 +159,14 @@ export function ChallengeSelector() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
-            className="p-8 sm:p-10 rounded-3xl bg-[#0F1626] border border-white/10 shadow-2xl relative overflow-hidden"
-            style={{
-              boxShadow: `0 20px 50px -20px ${selected.color}25`,
-            }}
+            className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 shadow-sm relative overflow-hidden"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 space-y-5">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center font-bold"
-                    style={{ backgroundColor: `${selected.color}20`, color: selected.color }}
+                    style={{ backgroundColor: `${selected.color}15`, color: selected.color }}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
@@ -180,23 +177,23 @@ export function ChallengeSelector() {
                     >
                       RECOMMENDED SOLUTION: {selected.recommendedVertical}
                     </span>
-                    <span className="text-xs text-slate-400">{selected.badge}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">{selected.badge}</span>
                   </div>
                 </div>
 
-                <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                <p className="text-slate-700 dark:text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
                   {selected.diagnosis}
                 </p>
 
                 <div>
-                  <div className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-3 font-semibold">
+                  <div className="text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 font-semibold">
                     Strategic Focus Areas
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {selected.capabilities.map((cap) => (
                       <div
                         key={cap}
-                        className="flex items-start gap-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/5 text-xs text-slate-300 font-medium"
+                        className="flex items-start gap-2 p-2.5 rounded-lg bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5 text-xs text-slate-700 dark:text-slate-300 font-medium"
                       >
                         <CheckCircle2
                           className="w-4 h-4 mt-0.5 shrink-0"
@@ -229,14 +226,14 @@ export function ChallengeSelector() {
               </div>
 
               {/* Side Info Box */}
-              <div className="lg:col-span-5 p-6 rounded-2xl bg-white/[0.02] border border-white/8 space-y-4">
-                <div className="text-xs font-mono text-slate-400 uppercase tracking-widest">
+              <div className="lg:col-span-5 p-6 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/8 space-y-4">
+                <div className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
                   Why Mighty Warner Fixes This
                 </div>
-                <div className="text-sm text-slate-300 leading-relaxed">
+                <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                   Unlike single-discipline vendors who only see problems through their narrow lens, we diagnose whether your bottleneck is actually brand messaging, technological debt, or team execution capacity.
                 </div>
-                <div className="pt-2 border-t border-white/10 text-xs font-mono text-sky-400">
+                <div className="pt-2 border-t border-slate-200 dark:border-white/10 text-xs font-mono text-rose-600 dark:text-sky-400 font-semibold">
                   ⚡ Average turnaround to active deployment: &lt; 14 Days
                 </div>
               </div>

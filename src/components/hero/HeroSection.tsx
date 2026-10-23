@@ -115,7 +115,7 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             </motion.div>
           )}
 
-          {/* Two Action Buttons (Translucent Frosted Glass Styling) */}
+          {/* Two Action Buttons (Solid High-Contrast Corporate Styling) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -125,7 +125,7 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             {data.ctaText && (
               <Link
                 href={data.ctaLink || '/work'}
-                className="px-7 py-3.5 sm:px-8 sm:py-4 bg-white/20 hover:bg-white/30 text-white border border-white/40 hover:border-white/70 backdrop-blur-md font-extrabold text-xs sm:text-sm tracking-widest uppercase rounded-xs shadow-xl shadow-black/30 transition-all duration-200 active:scale-95 text-center inline-block cursor-pointer"
+                className="px-7 py-3.5 sm:px-8 sm:py-4 bg-rose-600 hover:bg-rose-700 text-white border border-rose-500 font-extrabold text-xs sm:text-sm tracking-widest uppercase rounded-lg shadow-xl shadow-rose-900/30 transition-all duration-200 active:scale-95 text-center inline-block cursor-pointer hover:scale-[1.02]"
               >
                 {data.ctaText}
               </Link>
@@ -134,7 +134,7 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             {data.secondaryCtaText && (
               <Link
                 href={data.secondaryCtaLink || '/contact'}
-                className="px-7 py-3.5 sm:px-8 sm:py-4 bg-white/5 hover:bg-white/15 text-white border border-white/25 hover:border-white/50 backdrop-blur-md font-extrabold text-xs sm:text-sm tracking-widest uppercase rounded-xs shadow-lg shadow-black/20 transition-all duration-200 active:scale-95 text-center inline-block cursor-pointer"
+                className="px-7 py-3.5 sm:px-8 sm:py-4 bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 hover:border-slate-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase rounded-lg shadow-lg transition-all duration-200 active:scale-95 text-center inline-block cursor-pointer hover:scale-[1.02]"
               >
                 {data.secondaryCtaText}
               </Link>

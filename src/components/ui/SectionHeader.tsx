@@ -40,7 +40,7 @@ export function SectionHeader({
       )}
       <h2
         className={cn(
-          'text-display-h2 font-bold tracking-tight text-white mb-4',
+          'text-display-h2 font-black tracking-tight text-slate-900 dark:text-white mb-4',
           titleClassName
         )}
       >
@@ -49,7 +49,7 @@ export function SectionHeader({
       {subtitle && (
         <p
           className={cn(
-            'text-body-lg text-slate-400 font-normal leading-relaxed',
+            'text-body-lg text-slate-600 dark:text-slate-400 font-normal leading-relaxed',
             subtitleClassName
           )}
         >

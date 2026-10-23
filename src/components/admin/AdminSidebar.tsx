@@ -63,29 +63,21 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           name: 'Hero Section',
           href: '/admin/hero',
           icon: Video,
-          badge: 'Video',
-          badgeType: 'indigo',
         },
         {
           name: 'Track Record',
           href: '/admin/track-record',
           icon: Award,
-          badge: 'Metrics',
-          badgeType: 'emerald',
         },
         {
           name: 'Core Business',
           href: '/admin/core-business',
           icon: Building2,
-          badge: 'Showcase',
-          badgeType: 'indigo',
         },
         {
           name: 'About Page',
           href: '/admin/about',
           icon: Sparkles,
-          badge: 'Dynamic',
-          badgeType: 'indigo',
         },
         {
           name: 'Site Sections (Builder)',
@@ -111,15 +103,11 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           name: 'Legal & Policies',
           href: '/admin/policies',
           icon: FileText,
-          badge: 'Dynamic',
-          badgeType: 'indigo',
         },
         {
           name: 'Testimonials',
           href: '/admin/testimonials',
           icon: MessageSquareQuote,
-          badge: 'Dynamic',
-          badgeType: 'indigo',
         },
       ],
     },
@@ -130,8 +118,6 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           name: 'SEO & Metadata Hub',
           href: '/admin/seo',
           icon: Globe,
-          badge: 'Live',
-          badgeType: 'emerald',
         },
         {
           name: 'Lead Submissions',
@@ -236,29 +222,8 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
                           <span className="truncate">{item.name}</span>
                         </div>
 
-                        {item.badge ? (
-                          <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide flex items-center gap-1 ${
-                              isActive
-                                ? 'bg-white/20 text-white'
-                                : item.badgeType === 'emerald'
-                                ? isDark
-                                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
-                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : isDark
-                                ? 'bg-indigo-950 text-indigo-300 border border-indigo-800'
-                                : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                            }`}
-                          >
-                            {item.badgeType === 'emerald' && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            )}
-                            <span>{item.badge}</span>
-                          </span>
-                        ) : (
-                          isActive && (
-                            <ChevronRight className="w-3.5 h-3.5 text-white/80 shrink-0" />
-                          )
+                        {isActive && (
+                          <ChevronRight className="w-3.5 h-3.5 text-white/80 shrink-0" />
                         )}
                       </Link>
                     );

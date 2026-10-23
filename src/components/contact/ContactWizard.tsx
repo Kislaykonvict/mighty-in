@@ -156,21 +156,21 @@ export function ContactWizard() {
 
   if (isSuccess) {
     return (
-      <div className="p-8 sm:p-14 rounded-3xl bg-[#0F1626] border border-emerald-500/30 text-center space-y-6 shadow-2xl animate-fade-in">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+      <div className="p-8 sm:p-14 rounded-3xl bg-white dark:bg-[#0F1626] border border-emerald-200 dark:border-emerald-500/30 text-center space-y-6 shadow-sm animate-fade-in">
+        <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
 
         <div>
-          <div className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold mb-2">
+          <div className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold mb-2">
             INQUIRY RECEIVED • REFERENCE #{referenceId}
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
             Thank you, {fullName}.
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
             Our strategic leadership team has received your details for{' '}
-            <strong className="text-white">{companyName}</strong>. We are reviewing your requirements and will reach out within 24 business hours.
+            <strong className="text-slate-900 dark:text-white">{companyName}</strong>. We are reviewing your requirements and will reach out within 24 business hours.
           </p>
         </div>
 
@@ -184,7 +184,7 @@ export function ContactWizard() {
           </Button>
 
           <Button
-            href="/work"
+            href="/portfolio"
             variant="primary"
             size="md"
           >
@@ -196,11 +196,11 @@ export function ContactWizard() {
   }
 
   return (
-    <div className="p-8 sm:p-12 rounded-3xl bg-[#0F1626] border border-white/10 shadow-2xl relative">
+    <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 shadow-sm relative">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Step 1: Vertical Selection */}
         <div>
-          <label className="block text-xs font-mono uppercase tracking-widest text-slate-400 mb-3 font-semibold">
+          <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 font-semibold">
             01. What can we help you move forward?
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -213,10 +213,10 @@ export function ContactWizard() {
                   key={opt.id}
                   type="button"
                   onClick={() => setTopic(opt.id)}
-                  className={`p-4 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between ${
+                  className={`p-4 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between cursor-pointer ${
                     isSelected
-                      ? 'bg-white/10 border-white/40 text-white shadow-lg ring-1 ring-white/20'
-                      : `bg-white/[0.02] border-white/8 ${opt.themeClass} text-slate-300`
+                      ? 'bg-slate-50 dark:bg-white/10 border-slate-400 dark:border-white/40 text-slate-900 dark:text-white shadow-xs ring-1 ring-slate-300 dark:ring-white/20'
+                      : `bg-white dark:bg-white/[0.02] border-slate-200 dark:border-white/8 ${opt.themeClass} text-slate-700 dark:text-slate-300`
                   }`}
                   style={{
                     borderColor: isSelected ? opt.color : undefined,
@@ -230,10 +230,10 @@ export function ContactWizard() {
                     />
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-white mb-0.5">
+                    <div className="text-sm font-bold text-slate-900 dark:text-white mb-0.5">
                       {opt.label}
                     </div>
-                    <div className="text-[11px] text-slate-400 leading-tight">
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       {opt.tagline}
                     </div>
                   </div>
@@ -245,18 +245,18 @@ export function ContactWizard() {
 
         {/* Talent Audience Toggle if Talent is selected */}
         {topic === 'talent-solutions' && (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs font-mono text-emerald-300 uppercase tracking-wider font-semibold">
+          <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-xs font-mono text-emerald-700 dark:text-emerald-300 uppercase tracking-wider font-semibold">
               I am reaching out as:
             </span>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={() => setTalentAudience('employer')}
-                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   talentAudience === 'employer'
-                    ? 'bg-emerald-500 text-slate-950 shadow'
-                    : 'bg-white/5 text-slate-300 hover:text-white'
+                    ? 'bg-emerald-600 text-white shadow'
+                    : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-transparent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 An Employer (Hiring)
@@ -264,10 +264,10 @@ export function ContactWizard() {
               <button
                 type="button"
                 onClick={() => setTalentAudience('candidate')}
-                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   talentAudience === 'candidate'
-                    ? 'bg-emerald-500 text-slate-950 shadow'
-                    : 'bg-white/5 text-slate-300 hover:text-white'
+                    ? 'bg-emerald-600 text-white shadow'
+                    : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-transparent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 A Candidate (Seeking Roles)
@@ -278,74 +278,74 @@ export function ContactWizard() {
 
         {/* Step 2: Core Contact Info */}
         <div className="space-y-4">
-          <label className="block text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold">
+          <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
             02. Your Contact Information
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-300 mb-1.5 font-medium">
-                Full Name <span className="text-rose-400">*</span>
+              <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
+                Full Name <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   required
                   placeholder="e.g. Sarah Jenkins"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-300 mb-1.5 font-medium">
-                Work Email <span className="text-rose-400">*</span>
+              <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
+                Work Email <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   required
                   placeholder="s.jenkins@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-300 mb-1.5 font-medium">
-                Company / Organization <span className="text-rose-400">*</span>
+              <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
+                Company / Organization <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <Building className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   required
                   placeholder="e.g. Acme Corp"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+              <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                 Phone Number (Optional)
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="tel"
                   placeholder="+1 (555) 000-0000"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
                 />
               </div>
             </div>
@@ -353,31 +353,31 @@ export function ContactWizard() {
         </div>
 
         {/* Step 3: Dynamic Tailored Fields based on Selected Vertical */}
-        <div className="space-y-4 pt-2 border-t border-white/8">
-          <label className="block text-xs font-mono uppercase tracking-widest text-slate-400 font-semibold">
-            03. Project & Requirements Details
+        <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-white/8">
+          <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
+            03. Project &amp; Requirements Details
           </label>
 
           {topic === 'digital-growth' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Current Website URL (If applicable)
                 </label>
                 <div className="relative">
-                  <Globe className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Globe className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="url"
                     placeholder="https://yourcompany.com"
                     value={websiteUrl}
                     onChange={(e) => setWebsiteUrl(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-400 transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-orange-400 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Primary Marketing Objective
                 </label>
                 <input
@@ -385,7 +385,7 @@ export function ContactWizard() {
                   placeholder="e.g. Brand redesign, SEO organic rankings, Lead gen"
                   value={marketingGoals}
                   onChange={(e) => setMarketingGoals(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-orange-400 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-orange-400 transition-all"
                 />
               </div>
             </div>
@@ -394,30 +394,30 @@ export function ContactWizard() {
           {topic === 'technology' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Project Type
                 </label>
                 <select
                   value={techProjectType}
                   onChange={(e) => setTechProjectType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#080C14] border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#080C14] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all"
                 >
                   <option value="web-app">Custom Web Application</option>
                   <option value="mobile-app">Mobile App (iOS / Android)</option>
                   <option value="enterprise-platform">Enterprise SaaS / Cloud Platform</option>
-                  <option value="api-automation">API Integration & Automation Mesh</option>
+                  <option value="api-automation">API Integration &amp; Automation Mesh</option>
                   <option value="modernization">Legacy Code Modernization</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Target Launch Timeline
                 </label>
                 <select
                   value={techTimeline}
                   onChange={(e) => setTechTimeline(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#080C14] border border-white/10 text-white text-sm focus:outline-none focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#080C14] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all"
                 >
                   <option value="immediate">Immediate / Next 30 Days</option>
                   <option value="1-3-months">1 to 3 Months</option>
@@ -431,13 +431,13 @@ export function ContactWizard() {
           {topic === 'talent-solutions' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Engagement Model
                 </label>
                 <select
                   value={talentModel}
                   onChange={(e) => setTalentModel(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#080C14] border border-white/10 text-white text-sm focus:outline-none focus:border-emerald-400 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#080C14] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-emerald-500 transition-all"
                 >
                   <option value="sow">Statement of Work (SOW) Pod</option>
                   <option value="contingent">Contingent Staff Augmentation</option>
@@ -447,7 +447,7 @@ export function ContactWizard() {
               </div>
 
               <div>
-                <label className="block text-xs text-slate-300 mb-1.5 font-medium">
+                <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
                   Target Roles / Technologies Needed
                 </label>
                 <input
@@ -455,7 +455,7 @@ export function ContactWizard() {
                   placeholder="e.g. Senior Full-Stack Node/React Engineers, DevOps"
                   value={talentRoles}
                   onChange={(e) => setTalentRoles(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-400 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-all"
                 />
               </div>
             </div>
@@ -463,29 +463,29 @@ export function ContactWizard() {
 
           {/* General Message */}
           <div>
-            <label className="block text-xs text-slate-300 mb-1.5 font-medium">
-              Brief Overview of Goals & Requirements
+            <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
+              Brief Overview of Goals &amp; Requirements
             </label>
             <textarea
               rows={4}
               placeholder="Tell us about the problem you are solving, your expected outcomes, or any specific constraints..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-sky-400 transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 transition-all resize-none"
             />
           </div>
         </div>
 
         {/* Error Feedback */}
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium">
+          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-medium">
             {errorMessage}
           </div>
         )}
 
         {/* Submit Button */}
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/8">
-          <span className="text-xs font-mono text-slate-400">
+        <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 dark:border-white/8">
+          <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
             🔒 All inquiries protected under standard mutual NDA
           </span>
 
