@@ -3,9 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Project } from '@/types/project';
-import { Badge } from '@/components/ui/Badge';
 import { analytics } from '@/lib/analytics';
 
 interface ProjectCardProps {
@@ -13,89 +12,49 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const badgeVariant =
-    project.verticalId === 'digital-growth'
-      ? 'growth'
-      : project.verticalId === 'technology'
-      ? 'tech'
-      : 'talent';
+  const targetUrl = project.liveUrl || `/work/${project.slug}`;
+  const isExternal = Boolean(project.liveUrl);
 
   return (
-    <div className="group rounded-2xl bg-[#0F1626] border border-white/8 hover:border-white/20 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-lg hover:shadow-2xl hover:-translate-y-1">
-      <div>
-        {/* Thumbnail Image Container */}
-        <div className="relative h-60 w-full overflow-hidden bg-slate-900">
-          <Image
-            src={project.thumbnailImage}
-            alt={project.title}
-            fill
-            className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+    <Link
+      href={targetUrl}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      onClick={() => analytics.trackProjectView(project.slug, project.verticalId)}
+      className="group block select-none focus:outline-none cursor-pointer"
+      aria-label={`${project.title} - ${project.industry}`}
+    >
+      {/* Visual Canvas (Awwwards Style 16:10 Aspect Ratio with Smooth Hover Zoom) */}
+      <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[#0D1322] border border-white/8 group-hover:border-white/20 transition-all duration-500 shadow-md group-hover:shadow-2xl">
+        <Image
+          src={project.thumbnailImage}
+          alt={project.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover object-center group-hover:scale-[1.04] transition-transform duration-700 ease-out"
+        />
+
+        {/* Subtle hover gradient vignette for contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        {/* Clean, prominent arrow (↗) redirecting to the live platform - No overlapping text badges */}
+        <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1.5 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+          <ArrowUpRight
+            className="w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] group-hover:scale-110 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300"
+            strokeWidth={2.25}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F1626] via-transparent to-transparent opacity-70" />
-          <div className="absolute top-4 left-4">
-            <Badge variant={badgeVariant as any} dot>
-              {project.verticalName}
-            </Badge>
-          </div>
-          <div className="absolute top-4 right-4 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-[11px] font-mono text-slate-300 border border-white/10">
-            {project.year}
-          </div>
-        </div>
-
-        {/* Card Body */}
-        <div className="p-6">
-          <div className="text-xs font-mono text-slate-400 mb-1.5 uppercase tracking-wider">
-            {project.client} • {project.industry}
-          </div>
-
-          <h3 className="text-xl font-bold text-white mb-2.5 group-hover:text-sky-300 transition-colors line-clamp-2">
-            {project.title}
-          </h3>
-
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6 line-clamp-3">
-            {project.shortDescription}
-          </p>
-
-          {/* Primary Metric Pill */}
-          {project.metrics && project.metrics.length > 0 && (
-            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between mb-4">
-              <div>
-                <span className="text-lg font-black text-white mr-2">
-                  {project.metrics[0].value}
-                </span>
-                <span className="text-xs text-slate-300 font-medium">
-                  {project.metrics[0].label}
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400 font-semibold">VERIFIED</span>
-            </div>
-          )}
-
-          {/* Tech stack tags */}
-          <div className="flex flex-wrap gap-1.5 mb-2">
-            {project.technologiesUsed.slice(0, 3).map((tech) => (
-              <span
-                key={tech}
-                className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/5"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 
-      {/* Footer CTA */}
-      <div className="px-6 pb-6 pt-2">
-        <Link
-          href={`/work/${project.slug}`}
-          onClick={() => analytics.trackProjectView(project.slug, project.verticalId)}
-          className="inline-flex items-center justify-between w-full pt-4 border-t border-white/8 text-xs font-bold text-slate-200 group-hover:text-white transition-colors"
-        >
-          <span>View Case Study</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform text-sky-400" />
-        </Link>
+      {/* Minimal Title Row (No business badge, No initial letter symbol) */}
+      <div className="mt-3 px-1">
+        <h4 className="text-sm sm:text-[15px] font-bold text-white tracking-tight truncate group-hover:text-sky-300 transition-colors">
+          {project.title}
+        </h4>
+        <p className="text-xs text-slate-400 truncate mt-0.5 font-normal">
+          {project.industry}
+        </p>
       </div>
-    </div>
+    </Link>
   );
 }

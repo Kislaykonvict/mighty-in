@@ -13,6 +13,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'mightywarners.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'res.cloudinary.com',
       },
     ],

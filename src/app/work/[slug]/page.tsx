@@ -143,6 +143,20 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <div className="text-sm font-bold text-white">{project.year}</div>
             </div>
           </div>
+
+          {project.liveUrl && (
+            <div className="mt-4 flex justify-end">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-sky-400 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 transition-colors"
+              >
+                <span>Visit Live Platform</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          )}
         </SectionContainer>
       </section>
 

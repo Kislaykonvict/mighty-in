@@ -16,7 +16,7 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'Strata Financial: Brand Transformation',
     rating: 5,
     highlightedPhrase: '$140M in new pipeline within 9 months',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 't-quantum',
@@ -33,7 +33,7 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'Quantum Cloud: SaaS Modernization',
     rating: 5,
     highlightedPhrase: '99.99% uptime and 50%+ cloud cost savings',
-    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 't-aurapay',
@@ -50,7 +50,7 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'AuraPay: Core Payments Pod',
     rating: 5,
     highlightedPhrase: 'Deployed 12 senior engineers in 18 days',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 't-elevate',
@@ -65,7 +65,7 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'Elevate Health: Digital Growth',
     rating: 5,
     highlightedPhrase: '38% reduction in CAC with 74% higher conversion',
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 't-nexus',
@@ -80,7 +80,7 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'Nexus: Logistics API Mesh',
     rating: 5,
     highlightedPhrase: 'Saved hundreds of manual hours every week',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 't-medvance',
@@ -95,6 +95,6 @@ export const testimonialsData: Testimonial[] = [
     relatedProjectTitle: 'MedVance: Clinical Engineering Team',
     rating: 5,
     highlightedPhrase: 'Shaved 5 months off FDA submission timeline',
-    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=85',
   },
 ];

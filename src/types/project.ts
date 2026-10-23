@@ -39,4 +39,5 @@ export interface Project {
   featured: boolean;
   testimonialId?: string;
   liveUrl?: string;
+  category?: string;
 }

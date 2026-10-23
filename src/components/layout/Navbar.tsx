@@ -51,7 +51,7 @@ export function Navbar() {
         ref={navRef}
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#080C14]/90 backdrop-blur-xl border-b border-white/10 py-3 shadow-lg shadow-black/20'
+            ? 'bg-[#060A12]/35 backdrop-blur-2xl border-b border-white/[0.08] py-3.5 shadow-[0_4px_30px_rgba(0,0,0,0.2)]'
             : 'bg-transparent py-5'
         }`}
       >

@@ -26,15 +26,11 @@ export function Skeleton({ className, variant = 'rectangular', ...props }: Skele
 
 export function ProjectCardSkeleton() {
   return (
-    <div className="bg-[#0F1626] border border-white/8 rounded-2xl overflow-hidden p-6">
-      <Skeleton className="w-full h-56 mb-5" />
-      <Skeleton variant="text" className="w-24 mb-3" />
-      <Skeleton variant="text" className="w-3/4 h-6 mb-2" />
-      <Skeleton variant="text" className="w-full mb-1" />
-      <Skeleton variant="text" className="w-2/3 mb-6" />
-      <div className="flex gap-2">
-        <Skeleton className="w-16 h-6 rounded-full" />
-        <Skeleton className="w-20 h-6 rounded-full" />
+    <div className="space-y-3">
+      <Skeleton className="w-full aspect-[16/10] rounded-2xl" />
+      <div className="px-1 space-y-1.5">
+        <Skeleton variant="text" className="w-36 h-4" />
+        <Skeleton variant="text" className="w-24 h-3" />
       </div>
     </div>
   );

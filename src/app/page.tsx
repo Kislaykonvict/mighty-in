@@ -11,6 +11,11 @@ import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultHeroData, HeroData } from '@/types/hero';
 import { defaultCoreBusinessData, CoreBusinessData } from '@/types/coreBusiness';
+import {
+  defaultTestimonialsSectionData,
+  TestimonialsSectionData,
+  TestimonialCard,
+} from '@/types/testimonialsSection';
 
 export const revalidate = 0;
 
@@ -78,6 +83,73 @@ async function getCoreBusinessData(): Promise<CoreBusinessData> {
   }
 }
 
+async function getTestimonialsData(): Promise<TestimonialsSectionData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'testimonials',
+        },
+      },
+    });
+
+    if (!section) {
+      // Check fallback in prisma.testimonial table
+      try {
+        const dbTestimonials = await prisma.testimonial.findMany({
+          orderBy: { order: 'asc' },
+        });
+
+        if (dbTestimonials && dbTestimonials.length > 0) {
+          const cards: TestimonialCard[] = dbTestimonials.map((t, idx) => ({
+            id: t.id,
+            clientName: t.clientName,
+            role: t.role,
+            company: t.company,
+            industry: t.industry,
+            quote: t.quote,
+            fullQuote: t.fullQuote || undefined,
+            verticalId: (t.verticalId || 'technology') as 'digital-growth' | 'technology' | 'talent-solutions',
+            relatedProjectSlug: t.relatedProjectSlug || undefined,
+            relatedProjectTitle: t.relatedProjectTitle || undefined,
+            avatarUrl: t.avatarUrl || undefined,
+            rating: t.rating ?? 5,
+            highlightedPhrase: t.highlightedPhrase || '',
+            featured: t.featured ?? true,
+            order: t.order ?? idx,
+          }));
+
+          return {
+            ...defaultTestimonialsSectionData,
+            cards,
+          };
+        }
+      } catch {
+        // Fallback to defaults
+      }
+
+      return defaultTestimonialsSectionData;
+    }
+
+    const content = (section.content as any) || {};
+    const rawCards: any[] =
+      Array.isArray(content.cards) && content.cards.length > 0
+        ? content.cards
+        : defaultTestimonialsSectionData.cards;
+
+    return {
+      badge: section.badge !== null && section.badge !== undefined ? section.badge : '',
+      title: section.title !== null && section.title !== undefined ? section.title : '',
+      subtitle: section.subtitle !== null && section.subtitle !== undefined ? section.subtitle : '',
+      cards: rawCards,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultTestimonialsSectionData;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
     title: 'One Company. Multiple Ways to Move Your Business Forward',
@@ -88,9 +160,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, coreBusinessData] = await Promise.all([
+  const [heroData, coreBusinessData, testimonialsData] = await Promise.all([
     getHeroData(),
     getCoreBusinessData(),
+    getTestimonialsData(),
   ]);
 
   return (
@@ -111,7 +184,7 @@ export default async function HomePage() {
       <WorkSection />
 
       {/* 5. Social Proof: Executive Endorsements & Reviews */}
-      <TestimonialsSection />
+      <TestimonialsSection initialData={testimonialsData} />
 
       {/* 6. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
       <GlobalOfficesSection />

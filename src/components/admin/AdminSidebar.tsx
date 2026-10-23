@@ -25,6 +25,7 @@ import {
   Award,
   Building2,
   FileText,
+  MessageSquareQuote,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -110,6 +111,13 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
           name: 'Legal & Policies',
           href: '/admin/policies',
           icon: FileText,
+          badge: 'Dynamic',
+          badgeType: 'indigo',
+        },
+        {
+          name: 'Testimonials',
+          href: '/admin/testimonials',
+          icon: MessageSquareQuote,
           badge: 'Dynamic',
           badgeType: 'indigo',
         },
