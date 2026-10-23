@@ -59,17 +59,17 @@ export function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-3 py-1 group"
+            className="flex items-center group py-1"
             aria-label="Mighty Warner Homepage"
           >
-            <div className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/12 backdrop-blur-md transition-all group-hover:border-white/25 flex items-center shadow-inner">
+            <div className="transition-transform group-hover:scale-[1.03] duration-200 flex items-center">
               <Image
                 src="/images/mw-logo.webp"
                 alt="Mighty Warner"
-                width={132}
-                height={34}
+                width={180}
+                height={52}
                 priority
-                className="h-7 sm:h-8 w-auto object-contain"
+                className="h-11 sm:h-12 w-auto object-contain"
               />
             </div>
           </Link>

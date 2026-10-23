@@ -32,16 +32,16 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           <Link
             href="/"
             onClick={onClose}
-            className="flex items-center gap-2.5"
+            className="flex items-center"
           >
-            <div className="px-3 py-1.5 rounded-xl bg-white/[0.08] border border-white/12 flex items-center">
+            <div className="transition-transform active:scale-95 duration-200 flex items-center">
               <Image
                 src="/images/mw-logo.webp"
                 alt="Mighty Warner"
-                width={125}
-                height={32}
+                width={170}
+                height={48}
                 priority
-                className="h-7 w-auto object-contain"
+                className="h-10 w-auto object-contain"
               />
             </div>
           </Link>

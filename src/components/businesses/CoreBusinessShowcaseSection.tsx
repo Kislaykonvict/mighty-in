@@ -16,30 +16,30 @@ function getCardKeyframes(index: number, totalCards: number) {
       progressPoints: [0, 1],
       yPoints: [0, 0],
       scalePoints: [1, 1],
-      opacityPoints: [1, 1],
+      dimPoints: [0, 0],
     };
   }
 
   const N = totalCards;
-  const intro = 0.06;
-  const exitBuffer = 0.10;
+  const intro = 0.05;
+  const exitBuffer = 0.18;
   const travelBudget = 1 - intro - exitBuffer;
   const step = travelBudget / (N - 1);
 
   const progressPoints: number[] = [0, intro];
   const yPoints: number[] = [];
   const scalePoints: number[] = [];
-  const opacityPoints: number[] = [];
+  const dimPoints: number[] = [];
 
   // Initial & Intro states
   if (index === 0) {
     yPoints.push(0, 0);
     scalePoints.push(1, 1);
-    opacityPoints.push(1, 1);
+    dimPoints.push(0, 0);
   } else {
-    yPoints.push(700, 700);
+    yPoints.push(1100, 1100);
     scalePoints.push(1, 1);
-    opacityPoints.push(0, 0);
+    dimPoints.push(0, 0);
   }
 
   // Arrival points for each card k
@@ -50,16 +50,16 @@ function getCardKeyframes(index: number, totalCards: number) {
     if (index === k) {
       yPoints.push(0);
       scalePoints.push(1);
-      opacityPoints.push(1);
+      dimPoints.push(0);
     } else if (index < k) {
       const depth = k - index;
       yPoints.push(-depth * 20);
       scalePoints.push(Math.max(0.88, 1 - depth * 0.04));
-      opacityPoints.push(1);
+      dimPoints.push(Math.min(0.45, depth * 0.22));
     } else {
-      yPoints.push(700);
+      yPoints.push(1100);
       scalePoints.push(1);
-      opacityPoints.push(0);
+      dimPoints.push(0);
     }
   }
 
@@ -68,13 +68,13 @@ function getCardKeyframes(index: number, totalCards: number) {
   const finalDepth = N - 1 - index;
   yPoints.push(-finalDepth * 20);
   scalePoints.push(Math.max(0.88, 1 - finalDepth * 0.04));
-  opacityPoints.push(1);
+  dimPoints.push(index === N - 1 ? 0 : Math.min(0.45, finalDepth * 0.22));
 
   return {
     progressPoints,
     yPoints,
     scalePoints,
-    opacityPoints,
+    dimPoints,
   };
 }
 
@@ -90,50 +90,52 @@ function StackingCard({
   progress: MotionValue<number>;
 }) {
   const hasImage = Boolean(card.imageUrl && card.imageUrl.trim() !== '');
-  const { progressPoints, yPoints, scalePoints, opacityPoints } = getCardKeyframes(index, totalCards);
+  const { progressPoints, yPoints, scalePoints, dimPoints } = getCardKeyframes(index, totalCards);
 
   const y = useTransform(progress, progressPoints, yPoints);
   const scale = useTransform(progress, progressPoints, scalePoints);
-  const opacity = useTransform(progress, progressPoints, opacityPoints);
+  const dim = useTransform(progress, progressPoints, dimPoints);
 
   return (
     <motion.div
       style={{
         y,
         scale,
-        opacity,
         zIndex: 10 + index,
       }}
-      className="group absolute inset-0 rounded-3xl sm:rounded-[36px] bg-[#1E293B] border border-slate-700/80 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.85)] hover:border-slate-600 overflow-hidden"
+      className="group absolute inset-0 rounded-3xl sm:rounded-[36px] bg-[#0F172A] border border-slate-700/80 shadow-[0_-12px_36px_rgba(0,0,0,0.65),0_25px_60px_-10px_rgba(0,0,0,0.95)] hover:border-slate-600 overflow-hidden"
     >
-      {/* Top Subtle Edge Reflection Glow */}
-      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-20" />
-
       {/* Full-Bleed Extended Uploaded Image Cover across the Whole Card */}
       {hasImage && (
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#0F172A]">
           <img
             src={card.imageUrl!}
             alt={card.title}
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
           />
-          {/* Dark Charcoal/Slate Grey Gradient Scrim (Removes milky white film entirely) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A]/85 via-[#0F172A]/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/70 via-transparent to-transparent opacity-80" />
+          {/* Dark Charcoal/Slate Grey Gradient Scrim for high-contrast legibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/75 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/85 via-transparent to-transparent opacity-80" />
         </div>
       )}
 
       {/* Subtle Surface Texture when no image is uploaded (Dark Slate Grey Card) */}
       {!hasImage && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#0F172A]">
           <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-rose-500/5 rounded-full blur-3xl" />
           <div className="absolute inset-0 bg-[radial-gradient(#64748B_1px,transparent_1px)] [background-size:24px_24px] opacity-20" />
         </div>
       )}
 
+      {/* Solid Dimmer Overlay for Covered/Underlying Cards */}
+      <motion.div
+        style={{ opacity: dim }}
+        className="absolute inset-0 bg-[#080C14] pointer-events-none z-15"
+      />
+
       {/* Card Content */}
-      <div className="relative z-10 p-6 sm:p-10 lg:p-12 h-full flex flex-col justify-between">
+      <div className="relative z-20 p-6 sm:p-10 lg:p-12 h-full flex flex-col justify-between">
         <div className={hasImage ? 'max-w-2xl' : 'max-w-3xl'}>
           {/* Red Step Index Number */}
           <div className="flex items-center gap-2 mb-2 sm:mb-3">
@@ -141,7 +143,7 @@ function StackingCard({
               {card.indexNumber || String(index + 1).padStart(2, '0')}
             </span>
             {hasImage && (
-              <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-slate-200 backdrop-blur-md border border-white/15">
+              <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-800/90 text-[10px] font-mono text-slate-200 border border-slate-700">
                 <Sparkles className="w-2.5 h-2.5 text-rose-400" />
                 <span>Featured Business</span>
               </span>
@@ -215,7 +217,7 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
     <section
       ref={containerRef}
       className="relative w-full bg-[#080C14] text-white border-t border-white/[0.08]"
-      style={{ height: `${Math.max(cards.length, 1) * 95 + 60}vh` }}
+      style={{ height: `${Math.max(cards.length, 1) * 105 + 50}vh` }}
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -247,7 +249,7 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
         </div>
 
         {/* Centered Stacking Stage (Enlarged overlapping cards with cinematic presence) */}
-        <div className="relative w-full max-w-6xl h-[360px] sm:h-[415px] shrink-0 flex items-center justify-center">
+        <div className="relative w-full max-w-6xl h-[380px] sm:h-[430px] shrink-0 flex items-center justify-center">
           {cards.map((card, idx) => (
             <StackingCard
               key={card.id || idx}

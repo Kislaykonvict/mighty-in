@@ -12,14 +12,14 @@ export function Footer() {
         {/* Top Brand Statement */}
         <div className="pb-12 mb-12 border-b border-white/8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-6 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <div className="px-3.5 py-2 rounded-xl bg-white/[0.08] border border-white/12 flex items-center shadow-md">
+            <Link href="/" className="inline-flex items-center group">
+              <div className="transition-transform group-hover:scale-105 duration-200 flex items-center">
                 <Image
                   src="/images/mw-logo.webp"
                   alt="Mighty Warner"
-                  width={140}
-                  height={36}
-                  className="h-8 w-auto object-contain"
+                  width={160}
+                  height={44}
+                  className="h-10 w-auto object-contain"
                 />
               </div>
             </Link>

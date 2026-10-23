@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Star,
-  ArrowRight,
   Quote,
 } from 'lucide-react';
 import {
@@ -263,21 +261,6 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                         </blockquote>
                       )}
                     </div>
-
-                    {/* Bottom Row: Read Case Study Link */}
-                    {t.relatedProjectSlug && (
-                      <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-white/8">
-                        <Link
-                          href={`/work/${t.relatedProjectSlug}`}
-                          className={`inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-sky-400 hover:text-sky-300 transition-colors group ${
-                            isActive ? '' : 'pointer-events-none opacity-60'
-                          }`}
-                        >
-                          <span>Read case study</span>
-                          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                        </Link>
-                      </div>
-                    )}
                   </div>
                 </div>
               </motion.div>

@@ -22,9 +22,7 @@ import {
   Monitor,
   Smartphone,
   Loader2,
-  ArrowRight,
   Sparkles,
-  Link2,
   Building,
   User,
   Briefcase,
@@ -915,34 +913,6 @@ export function TestimonialsManagementView() {
                           />
                         </div>
 
-                        {/* Row 6: Related Case Study Slug */}
-                        <div>
-                          <label
-                            className={`block text-xs font-semibold mb-1 flex items-center gap-1.5 ${
-                              isDark ? 'text-slate-300' : 'text-slate-700'
-                            }`}
-                          >
-                            <Link2 className="w-3.5 h-3.5 text-sky-400" />
-                            <span>Related Case Study Slug (Optional)</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={card.relatedProjectSlug || ''}
-                            onChange={(e) =>
-                              handleCardChange(card.id, 'relatedProjectSlug', e.target.value)
-                            }
-                            placeholder="e.g. strata-financial-brand-transformation"
-                            className={`w-full px-3 py-2 rounded-lg text-xs font-medium border ${
-                              isDark
-                                ? 'bg-slate-900 border-slate-700 text-white focus:border-sky-400'
-                                : 'bg-white border-slate-300 text-slate-900 focus:border-sky-500'
-                            }`}
-                          />
-                          <p className="text-[10px] text-slate-500 mt-1">
-                            Links the &ldquo;Read case study &rarr;&rdquo; button to
-                            /work/[relatedProjectSlug]. Leave blank to hide the link.
-                          </p>
-                        </div>
                       </div>
                     )}
                   </div>
@@ -1106,16 +1076,6 @@ export function TestimonialsManagementView() {
                         </blockquote>
                       )}
                     </div>
-
-                    {/* Case study link */}
-                    {activeCard.relatedProjectSlug && (
-                      <div className="pt-3 mt-3 border-t border-white/8">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-400">
-                          <span>Read case study</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </div>
               ) : (

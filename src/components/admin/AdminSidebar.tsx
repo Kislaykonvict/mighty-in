@@ -165,72 +165,33 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
         <div className="flex flex-col min-h-0 flex-1">
           {/* Logo Brand Header */}
           <div
-            className={`h-20 px-6 flex items-center justify-between border-b shrink-0 ${
+            className={`relative h-[76px] px-6 flex items-center justify-center border-b shrink-0 ${
               isDark
-                ? 'border-slate-800/80 bg-[#080D18]/70 backdrop-blur-md'
-                : 'border-slate-200/80 bg-slate-50/50 backdrop-blur-md'
+                ? 'border-slate-800 bg-[#0B101D]'
+                : 'border-slate-200 bg-white'
             }`}
           >
-            <Link href="/admin/users" className="flex items-center gap-3 group">
+            <Link href="/admin/users" className="flex items-center justify-center group">
               <div className="transition-transform group-hover:scale-[1.02] duration-200">
                 <Image
                   src="/images/mw-logo.webp"
                   alt="Mighty Warner"
-                  width={132}
-                  height={34}
+                  width={160}
+                  height={44}
                   priority
-                  className="h-7 w-auto object-contain"
+                  className="h-11 w-auto object-contain"
                 />
-              </div>
-
-              <div
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase border transition-colors ${
-                  isDark
-                    ? 'bg-slate-900 border-slate-700/80 text-slate-200'
-                    : 'bg-slate-100 border-slate-200 text-slate-700'
-                }`}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Console</span>
               </div>
             </Link>
 
             <button
               onClick={onCloseMobile}
-              className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="absolute right-4 lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Workspace Pill */}
-          <div className="px-4 pt-4 shrink-0">
-            <div
-              className={`p-3 rounded-2xl border flex items-center justify-between transition-all ${
-                isDark
-                  ? 'bg-slate-900/60 border-slate-800/80 text-slate-200'
-                  : 'bg-slate-50/80 border-slate-200/90 text-slate-800 shadow-xs'
-              }`}
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-sky-500 text-white flex items-center justify-center font-extrabold text-xs shadow-sm shrink-0">
-                  MW
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-slate-900 dark:text-white truncate tracking-tight">
-                    Mighty Warner Inc.
-                  </div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <span>Global Production</span>
-                  </div>
-                </div>
-              </div>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 shrink-0">
-                PRO
-              </span>
-            </div>
-          </div>
 
           {/* Navigation Links Scrollable Area */}
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
