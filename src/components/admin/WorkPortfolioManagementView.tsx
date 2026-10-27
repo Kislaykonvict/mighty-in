@@ -20,7 +20,6 @@ import {
   Sliders,
   Layers,
   ArrowUpRight,
-  TrendingUp,
   Tag,
   Star,
   Globe,
@@ -656,14 +655,6 @@ export function WorkPortfolioManagementView() {
                     <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
                       {project.shortDescription || project.summary}
                     </p>
-
-                    {/* Metrics preview */}
-                    {project.metrics && project.metrics.length > 0 && (
-                      <div className="flex items-center gap-2 pt-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        <TrendingUp className="w-3.5 h-3.5" />
-                        <span>{project.metrics[0].value} {project.metrics[0].label}</span>
-                      </div>
-                    )}
                   </div>
                 </div>
 

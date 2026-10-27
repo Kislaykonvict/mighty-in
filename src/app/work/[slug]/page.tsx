@@ -179,32 +179,34 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </SectionContainer>
       </section>
 
-      {/* 3. Verified Outcomes Metrics Banner */}
-      <section className="py-12 bg-[#DBDBDB] dark:bg-[#060A12] border-y border-neutral-300 dark:border-white/8">
-        <SectionContainer width="default" paddingY="none">
-          <div className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-4 font-semibold text-center sm:text-left">
-            VERIFIED PRODUCTION RESULTS
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {project.metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="p-5 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-300 dark:border-white/8 shadow-xs"
-              >
-                <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono mb-1">
-                  {metric.value}
-                </div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">{metric.label}</div>
-                {metric.description && (
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
-                    {metric.description}
+      {/* 3. Verified Outcomes Metrics Banner (rendered only if metrics exist) */}
+      {project.metrics && project.metrics.length > 0 && (
+        <section className="py-12 bg-[#DBDBDB] dark:bg-[#060A12] border-y border-neutral-300 dark:border-white/8">
+          <SectionContainer width="default" paddingY="none">
+            <div className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-4 font-semibold text-center sm:text-left">
+              VERIFIED PRODUCTION RESULTS
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {project.metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="p-5 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-300 dark:border-white/8 shadow-xs"
+                >
+                  <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono mb-1">
+                    {metric.value}
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </SectionContainer>
-      </section>
+                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">{metric.label}</div>
+                  {metric.description && (
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                      {metric.description}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </SectionContainer>
+        </section>
+      )}
 
       {/* 4. Challenge & Objectives */}
       <SectionContainer width="default" paddingY="lg">
