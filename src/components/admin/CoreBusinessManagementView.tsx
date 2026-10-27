@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { CoreBusinessData, CoreBusinessCard, defaultCoreBusinessData } from '@/types/coreBusiness';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 export function CoreBusinessManagementView() {
   const { theme } = useAdminTheme();
@@ -301,15 +302,11 @@ export function CoreBusinessManagementView() {
               <label className="block text-xs font-bold mb-1.5">
                 Main Title Headline (All Caps Centered)
               </label>
-              <input
-                type="text"
-                placeholder="CORE BUSINESSES"
+              <MinimalRichTextEditor
                 value={formData.title}
-                onChange={(e) => handleFieldChange('title', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-sm font-black tracking-tight uppercase transition-all focus:outline-none border ${isDark
-                    ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                  }`}
+                onChange={(val) => handleFieldChange('title', val)}
+                placeholder="CORE BUSINESSES"
+                variant="inline"
               />
             </div>
 
@@ -317,30 +314,22 @@ export function CoreBusinessManagementView() {
               {/* Eyebrow Badge (optional) */}
               <div>
                 <label className="block text-xs font-bold mb-1.5">Eyebrow Pill Badge (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="WHAT WE DO"
+                <MinimalRichTextEditor
                   value={formData.badge || ''}
-                  onChange={(e) => handleFieldChange('badge', e.target.value)}
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all focus:outline-none border ${isDark
-                      ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                      : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                    }`}
+                  onChange={(val) => handleFieldChange('badge', val)}
+                  placeholder="WHAT WE DO"
+                  variant="inline"
                 />
               </div>
 
               {/* Subtitle (optional) */}
               <div>
                 <label className="block text-xs font-bold mb-1.5">Section Subtitle (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="Three integrated disciplines engineered for commercial growth."
+                <MinimalRichTextEditor
                   value={formData.subtitle || ''}
-                  onChange={(e) => handleFieldChange('subtitle', e.target.value)}
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs transition-all focus:outline-none border ${isDark
-                      ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                      : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                    }`}
+                  onChange={(val) => handleFieldChange('subtitle', val)}
+                  placeholder="Three integrated disciplines engineered for commercial growth."
+                  variant="inline"
                 />
               </div>
             </div>
@@ -455,15 +444,11 @@ export function CoreBusinessManagementView() {
                         >
                           Card Title
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={card.title}
-                          onChange={(e) => handleCardChange(card.id, 'title', e.target.value)}
+                          onChange={(val) => handleCardChange(card.id, 'title', val)}
                           placeholder="Digital & Growth"
-                          className={`w-full px-3 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none border ${isDark
-                              ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500'
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-indigo-600'
-                            }`}
+                          variant="inline"
                         />
                       </div>
                     </div>
@@ -476,15 +461,12 @@ export function CoreBusinessManagementView() {
                       >
                         Description
                       </label>
-                      <textarea
-                        rows={3}
+                      <MinimalRichTextEditor
                         value={card.description}
-                        onChange={(e) => handleCardChange(card.id, 'description', e.target.value)}
+                        onChange={(val) => handleCardChange(card.id, 'description', val)}
                         placeholder="Detail the capabilities and value proposition of this business vertical..."
-                        className={`w-full px-3 py-2 rounded-lg text-xs leading-relaxed transition-all focus:outline-none border ${isDark
-                            ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500'
-                            : 'bg-white border-slate-300 text-slate-900 focus:border-indigo-600'
-                          }`}
+                        variant="multiline"
+                        minHeight="68px"
                       />
                     </div>
 

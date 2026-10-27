@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { ProjectCard } from '@/components/work/ProjectCard';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface CaseStudyPageProps {
   params: {
@@ -121,12 +122,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
 
           <h1 className="text-display-h1 font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-4xl">
-            {project.title}
+            <RichTextContent content={project.title} inline />
           </h1>
 
-          <p className="text-body-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed mb-8">
-            {project.tagline}
-          </p>
+          <div className="text-body-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed mb-8">
+            <RichTextContent content={project.tagline} />
+          </div>
 
           {/* Quick Meta Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 shadow-xs">
@@ -218,9 +219,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
               The operational and market friction holding the business back.
             </h2>
-            <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-              {project.challenge}
-            </p>
+            <div className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              <RichTextContent content={project.challenge} />
+            </div>
           </div>
 
           <div className="lg:col-span-6 p-8 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-300 dark:border-white/8 shadow-xs space-y-4">
@@ -268,9 +269,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Engineered for immediate commercial impact.
               </h2>
-              <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                {project.solution}
-              </p>
+              <div className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                <RichTextContent content={project.solution} />
+              </div>
 
               {/* Technologies Used */}
               <div className="pt-4">

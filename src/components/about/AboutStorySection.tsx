@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { AboutStoryData, defaultAboutStoryData } from '@/types/aboutStory';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface AboutStorySectionProps {
   initialData?: AboutStoryData;
@@ -30,17 +31,19 @@ export function AboutStorySection({ initialData }: AboutStorySectionProps) {
           {data.badge && (
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono tracking-widest uppercase bg-rose-50 dark:bg-white/5 border border-rose-200 dark:border-white/10 text-rose-600 dark:text-sky-400 font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-sky-400 animate-pulse" />
-              {data.badge}
+              <RichTextContent content={data.badge} inline />
             </div>
           )}
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
-            {data.title}
+            <RichTextContent content={data.title} inline />
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
-            {data.subtitle}
-          </p>
+          <RichTextContent
+            content={data.subtitle}
+            as="p"
+            className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto"
+          />
         </div>
 
         {/* Alternating Story Cards */}
@@ -70,12 +73,14 @@ export function AboutStorySection({ initialData }: AboutStorySectionProps) {
                   )}
 
                   <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
-                    {card.title}
+                    <RichTextContent content={card.title} inline />
                   </h3>
 
                   <div className="space-y-4 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed font-normal">
                     {card.paragraphs.map((p, pIdx) => (
-                      <p key={pIdx}>{p}</p>
+                      <div key={pIdx}>
+                        <RichTextContent content={p} />
+                      </div>
                     ))}
                   </div>
                 </div>

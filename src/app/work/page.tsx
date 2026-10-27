@@ -7,6 +7,7 @@ import { PortfolioClientView } from '@/app/portfolio/PortfolioClientView';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultWorkPageSettings, WorkPageSettings } from '@/types/workPage';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 export const revalidate = 0;
 
@@ -83,14 +84,17 @@ export default async function WorkPage() {
         <SectionContainer width="default" paddingY="none" className="relative z-10">
           <div className="max-w-3xl">
             <Badge variant="subtle" dot className="mb-4">
-              {settings.badge}
+              <RichTextContent content={settings.badge} inline />
             </Badge>
             <h1 className="text-display-h1 font-black text-white tracking-tight mb-5">
-              {settings.title} <span className="gradient-text-brand">{settings.highlightedTitle}</span>
+              <RichTextContent content={settings.title} inline />{' '}
+              <RichTextContent content={settings.highlightedTitle} className="gradient-text-brand" inline />
             </h1>
-            <p className="text-body-lg text-slate-300 leading-relaxed font-normal">
-              {settings.description}
-            </p>
+            <RichTextContent
+              content={settings.description}
+              as="p"
+              className="text-body-lg text-slate-300 leading-relaxed font-normal"
+            />
           </div>
         </SectionContainer>
       </section>

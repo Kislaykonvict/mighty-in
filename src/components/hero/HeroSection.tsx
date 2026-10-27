@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { HeroData, defaultHeroData } from '@/types/hero';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface HeroSectionProps {
   data?: HeroData;
@@ -97,7 +98,7 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             className="mb-6 text-left"
           >
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-[1.04] drop-shadow-md text-left">
-              {data.title || 'Creative staffing for what\'s next.'}
+              <RichTextContent content={data.title || "Creative staffing for what's next."} inline />
             </h1>
           </motion.div>
 
@@ -109,9 +110,11 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-10 max-w-2xl text-left"
             >
-              <p className="text-base sm:text-lg md:text-xl text-slate-200 font-normal leading-relaxed drop-shadow-sm text-left">
-                {data.subtitle}
-              </p>
+              <RichTextContent
+                content={data.subtitle}
+                as="p"
+                className="text-base sm:text-lg md:text-xl text-slate-200 font-normal leading-relaxed drop-shadow-sm text-left"
+              />
             </motion.div>
           )}
 

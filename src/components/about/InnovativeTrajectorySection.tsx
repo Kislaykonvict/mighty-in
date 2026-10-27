@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { MapPin } from 'lucide-react';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { TrajectoryData, defaultTrajectoryData } from '@/types/trajectory';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface InnovativeTrajectorySectionProps {
   initialData?: TrajectoryData;
@@ -103,12 +104,12 @@ export function InnovativeTrajectorySection({ initialData }: InnovativeTrajector
               </div>
 
               <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
-                {activeEpoch.headline}
+                <RichTextContent content={activeEpoch.headline} inline />
               </h3>
 
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-normal leading-relaxed">
-                {activeEpoch.narrative}
-              </p>
+              <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-normal leading-relaxed">
+                <RichTextContent content={activeEpoch.narrative} />
+              </div>
             </div>
 
             {/* Right Column: Key Metrics & Deliverables */}

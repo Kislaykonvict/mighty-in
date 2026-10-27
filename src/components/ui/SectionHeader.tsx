@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils/cn';
 import { Badge, BadgeVariant } from './Badge';
+import { RichTextContent } from './RichTextContent';
 
 export interface SectionHeaderProps {
   eyebrow?: string;
@@ -34,7 +35,7 @@ export function SectionHeader({
       {eyebrow && (
         <div className="mb-4">
           <Badge variant={badgeVariant} dot>
-            {eyebrow}
+            {typeof eyebrow === 'string' ? <RichTextContent content={eyebrow} inline /> : eyebrow}
           </Badge>
         </div>
       )}
@@ -44,7 +45,7 @@ export function SectionHeader({
           titleClassName
         )}
       >
-        {title}
+        {typeof title === 'string' ? <RichTextContent content={title} inline /> : title}
       </h2>
       {subtitle && (
         <p
@@ -53,7 +54,7 @@ export function SectionHeader({
             subtitleClassName
           )}
         >
-          {subtitle}
+          {typeof subtitle === 'string' ? <RichTextContent content={subtitle} /> : subtitle}
         </p>
       )}
     </div>

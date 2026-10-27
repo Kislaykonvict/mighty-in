@@ -36,6 +36,7 @@ import {
   defaultTestimonialsSectionData,
   TestimonialCard,
 } from '@/types/testimonialsSection';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 export function TestimonialsManagementView() {
   const { theme } = useAdminTheme();
@@ -432,16 +433,11 @@ export function TestimonialsManagementView() {
                 >
                   Section Eyebrow Badge
                 </label>
-                <input
-                  type="text"
+                <MinimalRichTextEditor
                   value={formData.badge}
-                  onChange={(e) => handleFieldChange('badge', e.target.value)}
+                  onChange={(val) => handleFieldChange('badge', val)}
                   placeholder="e.g. CLIENT REPUTATION & PROOF"
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-medium border transition-colors ${
-                    isDark
-                      ? 'bg-slate-900/90 border-slate-700 text-white focus:border-sky-400'
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-sky-500'
-                  }`}
+                  variant="inline"
                 />
               </div>
 
@@ -454,16 +450,11 @@ export function TestimonialsManagementView() {
                 >
                   Section Main Headline
                 </label>
-                <input
-                  type="text"
+                <MinimalRichTextEditor
                   value={formData.title}
-                  onChange={(e) => handleFieldChange('title', e.target.value)}
+                  onChange={(val) => handleFieldChange('title', val)}
                   placeholder="e.g. Endorsed by executive leadership."
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-medium border transition-colors ${
-                    isDark
-                      ? 'bg-slate-900/90 border-slate-700 text-white focus:border-sky-400'
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-sky-500'
-                  }`}
+                  variant="inline"
                 />
               </div>
 
@@ -476,16 +467,12 @@ export function TestimonialsManagementView() {
                 >
                   Section Subtitle / Description
                 </label>
-                <textarea
-                  rows={2}
+                <MinimalRichTextEditor
                   value={formData.subtitle}
-                  onChange={(e) => handleFieldChange('subtitle', e.target.value)}
+                  onChange={(val) => handleFieldChange('subtitle', val)}
                   placeholder="Supporting narrative describing your client proof and reputation..."
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-medium border transition-colors ${
-                    isDark
-                      ? 'bg-slate-900/90 border-slate-700 text-white focus:border-sky-400'
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-sky-500'
-                  }`}
+                  variant="multiline"
+                  minHeight="68px"
                 />
               </div>
             </div>
@@ -887,16 +874,12 @@ export function TestimonialsManagementView() {
                           >
                             Testimonial Endorsement Quote
                           </label>
-                          <textarea
-                            rows={3}
+                          <MinimalRichTextEditor
                             value={card.quote}
-                            onChange={(e) => handleCardChange(card.id, 'quote', e.target.value)}
+                            onChange={(val) => handleCardChange(card.id, 'quote', val)}
                             placeholder="Quote text describing outcomes, impact, and executive feedback..."
-                            className={`w-full px-3 py-2 rounded-lg text-xs font-medium border leading-relaxed ${
-                              isDark
-                                ? 'bg-slate-900 border-slate-700 text-white focus:border-sky-400'
-                                : 'bg-white border-slate-300 text-slate-900 focus:border-sky-500'
-                            }`}
+                            variant="multiline"
+                            minHeight="72px"
                           />
                         </div>
 

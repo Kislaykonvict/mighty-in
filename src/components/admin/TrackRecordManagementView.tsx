@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { defaultTrackRecordData, TrackRecordData, TrackRecordCard } from '@/types/trackRecord';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 // Icon mapping for presets
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -343,16 +344,11 @@ export function TrackRecordManagementView() {
             {/* Eyebrow Badge Text */}
             <div>
               <label className="block text-xs font-bold mb-1.5">Eyebrow Pill Badge</label>
-              <input
-                type="text"
-                placeholder="PROVEN TRACK RECORD"
+              <MinimalRichTextEditor
                 value={formData.badge}
-                onChange={(e) => handleFieldChange('badge', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all focus:outline-none border ${
-                  isDark
-                    ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                }`}
+                onChange={(val) => handleFieldChange('badge', val)}
+                placeholder="PROVEN TRACK RECORD"
+                variant="inline"
               />
             </div>
 
@@ -360,31 +356,21 @@ export function TrackRecordManagementView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold mb-1.5">Headline Line 1</label>
-                <input
-                  type="text"
-                  placeholder="Building businesses"
+                <MinimalRichTextEditor
                   value={formData.headlineLine1}
-                  onChange={(e) => handleFieldChange('headlineLine1', e.target.value)}
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-sm font-extrabold transition-all focus:outline-none border ${
-                    isDark
-                      ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                      : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                  }`}
+                  onChange={(val) => handleFieldChange('headlineLine1', val)}
+                  placeholder="Building businesses"
+                  variant="inline"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold mb-1.5">Headline Line 2</label>
-                <input
-                  type="text"
-                  placeholder="since 2013."
+                <MinimalRichTextEditor
                   value={formData.headlineLine2}
-                  onChange={(e) => handleFieldChange('headlineLine2', e.target.value)}
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-sm font-extrabold transition-all focus:outline-none border ${
-                    isDark
-                      ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                      : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                  }`}
+                  onChange={(val) => handleFieldChange('headlineLine2', val)}
+                  placeholder="since 2013."
+                  variant="inline"
                 />
               </div>
             </div>
@@ -392,16 +378,12 @@ export function TrackRecordManagementView() {
             {/* Description Subtitle */}
             <div>
               <label className="block text-xs font-bold mb-1.5">Institutional Track Record Description</label>
-              <textarea
-                rows={3}
-                placeholder="Verified institutional track record across enterprise software delivery..."
+              <MinimalRichTextEditor
                 value={formData.subtitle}
-                onChange={(e) => handleFieldChange('subtitle', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-xs leading-relaxed transition-all focus:outline-none border ${
-                  isDark
-                    ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                }`}
+                onChange={(val) => handleFieldChange('subtitle', val)}
+                placeholder="Verified institutional track record across enterprise software delivery..."
+                variant="multiline"
+                minHeight="72px"
               />
             </div>
           </div>
@@ -504,16 +486,11 @@ export function TrackRecordManagementView() {
                         >
                           Card Title / Label
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={card.label}
-                          onChange={(e) => handleCardChange(card.id, 'label', e.target.value)}
+                          onChange={(val) => handleCardChange(card.id, 'label', val)}
                           placeholder="Years in Business"
-                          className={`w-full px-3 py-2 rounded-lg text-xs font-bold transition-all focus:outline-none border ${
-                            isDark
-                              ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500'
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-indigo-600'
-                          }`}
+                          variant="inline"
                         />
                       </div>
                     </div>
@@ -528,16 +505,11 @@ export function TrackRecordManagementView() {
                         >
                           Subtext / Description
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={card.subtext}
-                          onChange={(e) => handleCardChange(card.id, 'subtext', e.target.value)}
+                          onChange={(val) => handleCardChange(card.id, 'subtext', val)}
                           placeholder="Continuous innovation since 2013"
-                          className={`w-full px-3 py-2 rounded-lg text-xs transition-all focus:outline-none border ${
-                            isDark
-                              ? 'bg-slate-900 border-slate-700 text-white focus:border-indigo-500'
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-indigo-600'
-                          }`}
+                          variant="inline"
                         />
                       </div>
 

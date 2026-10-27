@@ -32,6 +32,8 @@ import {
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { WorkPageSettings, defaultWorkPageSettings } from '@/types/workPage';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface ProjectRecord {
   id: string;
@@ -596,13 +598,11 @@ export function WorkPortfolioManagementView() {
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
               Badge Eyebrow
             </label>
-            <input
-              type="text"
+            <MinimalRichTextEditor
               value={headerSettings.badge}
-              onChange={(e) => setHeaderSettings({ ...headerSettings, badge: e.target.value })}
-              className={`w-full px-3 py-2 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
-                isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
-              }`}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, badge: val })}
+              placeholder="PROVEN TRACK RECORD"
+              variant="inline"
             />
           </div>
 
@@ -610,13 +610,11 @@ export function WorkPortfolioManagementView() {
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
               Headline Title
             </label>
-            <input
-              type="text"
+            <MinimalRichTextEditor
               value={headerSettings.title}
-              onChange={(e) => setHeaderSettings({ ...headerSettings, title: e.target.value })}
-              className={`w-full px-3 py-2 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
-                isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
-              }`}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, title: val })}
+              placeholder="We've built things worth"
+              variant="inline"
             />
           </div>
 
@@ -624,13 +622,11 @@ export function WorkPortfolioManagementView() {
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
               Highlighted Title Gradient
             </label>
-            <input
-              type="text"
+            <MinimalRichTextEditor
               value={headerSettings.highlightedTitle}
-              onChange={(e) => setHeaderSettings({ ...headerSettings, highlightedTitle: e.target.value })}
-              className={`w-full px-3 py-2 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
-                isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
-              }`}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, highlightedTitle: val })}
+              placeholder="talking about."
+              variant="inline"
             />
           </div>
 
@@ -638,13 +634,12 @@ export function WorkPortfolioManagementView() {
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
               Description Paragraph
             </label>
-            <textarea
-              rows={2}
+            <MinimalRichTextEditor
               value={headerSettings.description}
-              onChange={(e) => setHeaderSettings({ ...headerSettings, description: e.target.value })}
-              className={`w-full px-3 py-2 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
-                isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
-              }`}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, description: val })}
+              placeholder="Explore the complete showcase of high-performing e-commerce platforms..."
+              variant="multiline"
+              minHeight="68px"
             />
           </div>
         </div>
@@ -1044,7 +1039,7 @@ export function WorkPortfolioManagementView() {
                       title={project.title}
                       className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors"
                     >
-                      {project.title}
+                      <RichTextContent content={project.title} inline />
                     </h3>
                   </div>
                 </div>
@@ -1091,15 +1086,11 @@ export function WorkPortfolioManagementView() {
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         Project Title *
                       </label>
-                      <input
-                        type="text"
-                        required
+                      <MinimalRichTextEditor
                         value={editingProject.title}
-                        onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
+                        onChange={(val) => setEditingProject({ ...editingProject, title: val })}
                         placeholder="e.g. Apex Global Logistics Platform"
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
+                        variant="inline"
                       />
                     </div>
 
@@ -1261,16 +1252,14 @@ export function WorkPortfolioManagementView() {
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                       Short Summary / Tagline
                     </label>
-                    <textarea
-                      rows={2}
+                    <MinimalRichTextEditor
                       value={editingProject.shortDescription}
-                      onChange={(e) =>
-                        setEditingProject({ ...editingProject, shortDescription: e.target.value })
+                      onChange={(val) =>
+                        setEditingProject({ ...editingProject, shortDescription: val })
                       }
                       placeholder="High-concurrency global trading platform scaled to 1.2M daily active users."
-                      className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                        isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                      }`}
+                      variant="multiline"
+                      minHeight="56px"
                     />
                   </div>
 
@@ -1280,16 +1269,14 @@ export function WorkPortfolioManagementView() {
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         The Challenge
                       </label>
-                      <textarea
-                        rows={3}
+                      <MinimalRichTextEditor
                         value={editingProject.challenge}
-                        onChange={(e) =>
-                          setEditingProject({ ...editingProject, challenge: e.target.value })
+                        onChange={(val) =>
+                          setEditingProject({ ...editingProject, challenge: val })
                         }
                         placeholder="Legacy infrastructure bottlenecking transaction throughput..."
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
+                        variant="multiline"
+                        minHeight="68px"
                       />
                     </div>
 
@@ -1297,16 +1284,14 @@ export function WorkPortfolioManagementView() {
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         The Solution Delivered
                       </label>
-                      <textarea
-                        rows={3}
+                      <MinimalRichTextEditor
                         value={editingProject.solution}
-                        onChange={(e) =>
-                          setEditingProject({ ...editingProject, solution: e.target.value })
+                        onChange={(val) =>
+                          setEditingProject({ ...editingProject, solution: val })
                         }
                         placeholder="Engineered high-speed microservices architecture with Next.js edge caching..."
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
+                        variant="multiline"
+                        minHeight="68px"
                       />
                     </div>
                   </div>

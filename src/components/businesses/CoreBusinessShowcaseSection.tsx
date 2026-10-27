@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import { CoreBusinessData, CoreBusinessCard, defaultCoreBusinessData } from '@/types/coreBusiness';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface CoreBusinessShowcaseSectionProps {
   initialData?: CoreBusinessData;
@@ -152,13 +153,15 @@ function StackingCard({
 
           {/* Card Title */}
           <h3 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.12] mb-3 sm:mb-4 drop-shadow-sm">
-            {card.title}
+            <RichTextContent content={card.title} inline />
           </h3>
 
           {/* Card Description */}
-          <p className="text-slate-300 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 sm:line-clamp-none mb-4 sm:mb-6 drop-shadow-sm">
-            {card.description}
-          </p>
+          <RichTextContent
+            content={card.description}
+            as="p"
+            className="text-slate-300 text-xs sm:text-sm lg:text-base leading-relaxed line-clamp-3 sm:line-clamp-none mb-4 sm:mb-6 drop-shadow-sm"
+          />
         </div>
 
         {/* Bottom Action Pill Button */}
@@ -233,18 +236,20 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
           {data.badge && (
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-700 dark:text-slate-300 uppercase mb-2.5 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-              <span>{data.badge}</span>
+              <RichTextContent content={data.badge} inline />
             </div>
           )}
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight leading-tight drop-shadow-xs">
-            {data.title || 'CORE BUSINESSES'}
+            <RichTextContent content={data.title || 'CORE BUSINESSES'} inline />
           </h2>
 
           {data.subtitle && (
-            <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed line-clamp-2">
-              {data.subtitle}
-            </p>
+            <RichTextContent
+              content={data.subtitle}
+              as="p"
+              className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed line-clamp-2"
+            />
           )}
         </div>
 

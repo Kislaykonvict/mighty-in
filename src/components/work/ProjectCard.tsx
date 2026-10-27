@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { Project } from '@/types/project';
 import { analytics } from '@/lib/analytics';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface ProjectCardProps {
   project: Project;
@@ -49,7 +50,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       {/* Minimal Title Row */}
       <div className="mt-3 px-1">
         <h4 className="text-sm sm:text-[15px] font-bold text-slate-900 dark:text-white tracking-tight truncate group-hover:text-rose-600 dark:group-hover:text-sky-300 transition-colors">
-          {project.title}
+          <RichTextContent content={project.title} inline />
         </h4>
         <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-normal">
           {project.industry}

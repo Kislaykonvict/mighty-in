@@ -15,6 +15,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { TrackRecordData, defaultTrackRecordData, TrackRecordCard } from '@/types/trackRecord';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Award,
@@ -140,7 +141,7 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
                 className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-white/15 bg-white dark:bg-white/[0.04] text-[11px] font-mono tracking-widest text-slate-700 dark:text-slate-300 uppercase mb-6 shadow-xs"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-600 dark:bg-white shadow-[0_0_8px_rgba(225,29,72,0.8)] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                <span>{data.badge}</span>
+                <RichTextContent content={data.badge} inline />
               </motion.div>
             )}
 
@@ -152,11 +153,15 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
               transition={{ duration: 0.55, delay: 0.1 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.08]"
             >
-              {data.headlineLine1 || 'Building businesses'}
+              <RichTextContent content={data.headlineLine1 || 'Building businesses'} inline />
               {data.headlineLine2 && (
                 <>
                   <br />
-                  <span className="text-slate-900 dark:text-white">{data.headlineLine2}</span>
+                  <RichTextContent
+                    content={data.headlineLine2}
+                    className="text-slate-900 dark:text-white"
+                    inline
+                  />
                 </>
               )}
             </motion.h2>
@@ -172,9 +177,11 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
               className="flex items-center md:max-w-md lg:max-w-lg"
             >
               <div className="border-l border-slate-300 dark:border-white/20 pl-6 py-1">
-                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-                  {data.subtitle}
-                </p>
+                <RichTextContent
+                  content={data.subtitle}
+                  as="p"
+                  className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal"
+                />
               </div>
             </motion.div>
           )}
@@ -218,7 +225,7 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
                   </div>
 
                   <span className="px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-white/[0.04] text-[10px] font-mono tracking-wider text-slate-600 dark:text-slate-400 uppercase font-semibold">
-                    {stat.tag || 'VERIFIED'}
+                    <RichTextContent content={stat.tag || 'VERIFIED'} inline />
                   </span>
                 </div>
 
@@ -229,12 +236,12 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
 
                 {/* 3. Title: Fixed spacing */}
                 <div className="text-sm font-bold text-slate-900 dark:text-white mb-1.5 tracking-tight">
-                  {stat.label}
+                  <RichTextContent content={stat.label} inline />
                 </div>
 
                 {/* 4. Subtitle: Description */}
                 <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-                  {stat.subtext}
+                  <RichTextContent content={stat.subtext} />
                 </div>
               </motion.div>
             );

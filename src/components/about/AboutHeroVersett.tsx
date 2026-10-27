@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowDown } from 'lucide-react';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface AboutHeroVersettProps {
   initialData?: AboutHeroData;
@@ -49,13 +50,15 @@ export function AboutHeroVersett({ initialData }: AboutHeroVersettProps) {
         <SectionContainer width="default" paddingY="none">
           <div className="max-w-3xl lg:max-w-4xl space-y-6 sm:space-y-8 -ml-6 sm:-ml-12 lg:-ml-20">
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[3.85rem] font-normal text-white tracking-tight leading-[1.12] drop-shadow-sm">
-              {data.headline}
+              <RichTextContent content={data.headline} inline />
             </h1>
 
             {data.subheadline && (
-              <p className="text-base sm:text-xl text-slate-300 font-light leading-relaxed max-w-2xl">
-                {data.subheadline}
-              </p>
+              <RichTextContent
+                content={data.subheadline}
+                as="p"
+                className="text-base sm:text-xl text-slate-300 font-light leading-relaxed max-w-2xl"
+              />
             )}
 
             {data.ctaText && (

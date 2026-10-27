@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDown, ArrowRight, ShieldCheck, Clock, FileText, ChevronRight, Mail } from 'lucide-react';
 import { PolicyPageData } from '@/types/policyPage';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface PolicyPageViewProps {
   page: PolicyPageData;
@@ -56,26 +57,26 @@ export function PolicyPageView({ page }: PolicyPageViewProps) {
             {page.heroBadge && (
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-900/90 text-white border border-white/20 shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-                <span>{page.heroBadge}</span>
+                <RichTextContent content={page.heroBadge} inline />
               </div>
             )}
 
             {/* Optional Headline (aligned bottom-left) */}
             {page.heroTitle ? (
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-normal text-white tracking-tight leading-[1.12] drop-shadow-md">
-                {page.heroTitle}
+                <RichTextContent content={page.heroTitle} inline />
               </h1>
             ) : (
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-normal text-white tracking-tight leading-[1.12] drop-shadow-md">
-                {page.title}
+                <RichTextContent content={page.title} inline />
               </h1>
             )}
 
             {/* Optional Subtitle */}
             {page.heroSubtitle && (
-              <p className="text-base sm:text-xl text-slate-200 font-light leading-relaxed drop-shadow-sm max-w-2xl">
-                {page.heroSubtitle}
-              </p>
+              <div className="text-base sm:text-xl text-slate-200 font-light leading-relaxed drop-shadow-sm max-w-2xl">
+                <RichTextContent content={page.heroSubtitle} />
+              </div>
             )}
 
             {/* Meta Pill + Scroll Indicator Arrow */}

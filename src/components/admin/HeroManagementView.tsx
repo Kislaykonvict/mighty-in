@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { defaultHeroData, HeroData } from '@/types/hero';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 interface VideoPreset {
   label: string;
@@ -569,17 +570,12 @@ export function HeroManagementView() {
                   {formData.title.length} characters
                 </span>
               </div>
-              <textarea
-                required
-                rows={2}
-                placeholder="Creative staffing for what's next."
+              <MinimalRichTextEditor
                 value={formData.title}
-                onChange={(e) => handleChange('title', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-base font-extrabold transition-all focus:outline-none border ${
-                  isDark
-                    ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                }`}
+                onChange={(val) => handleChange('title', val)}
+                placeholder="Creative staffing for what's next."
+                variant="multiline"
+                minHeight="56px"
               />
               <p className="text-[11px] text-slate-400 mt-1">
                 Large, chunky display typography shown prominently over the video.
@@ -594,16 +590,12 @@ export function HeroManagementView() {
                   {formData.subtitle.length} characters
                 </span>
               </div>
-              <textarea
-                rows={3}
-                placeholder="Our proprietary recruitment technology, decades of expertise..."
+              <MinimalRichTextEditor
                 value={formData.subtitle}
-                onChange={(e) => handleChange('subtitle', e.target.value)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-xs leading-relaxed transition-all focus:outline-none border ${
-                  isDark
-                    ? 'bg-slate-800/80 border-slate-700 text-white placeholder:text-slate-500 focus:border-indigo-500'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-indigo-600'
-                }`}
+                onChange={(val) => handleChange('subtitle', val)}
+                placeholder="Our proprietary recruitment technology, decades of expertise..."
+                variant="multiline"
+                minHeight="72px"
               />
             </div>
           </div>

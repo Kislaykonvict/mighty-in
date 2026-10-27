@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { HomepageWorkData, defaultHomepageWorkData } from '@/types/homepageWork';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 interface ProjectListItem {
   id: string;
@@ -249,19 +250,14 @@ export function HomepageProjectsManagementView() {
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Eyebrow Badge Text
               </label>
-              <input
-                type="text"
+              <MinimalRichTextEditor
                 value={formData.badge}
-                onChange={(e) => {
+                onChange={(val) => {
                   setIsDirty(true);
-                  setFormData({ ...formData, badge: e.target.value });
+                  setFormData({ ...formData, badge: val });
                 }}
                 placeholder="PROVEN CLIENT CASE STUDIES"
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-colors ${
-                  isDark
-                    ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
-                }`}
+                variant="inline"
               />
             </div>
 
@@ -270,19 +266,14 @@ export function HomepageProjectsManagementView() {
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Headline Title
               </label>
-              <textarea
-                rows={2}
+              <MinimalRichTextEditor
                 value={formData.title}
-                onChange={(e) => {
+                onChange={(val) => {
                   setIsDirty(true);
-                  setFormData({ ...formData, title: e.target.value });
+                  setFormData({ ...formData, title: val });
                 }}
                 placeholder="We've built things worth talking about."
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-colors ${
-                  isDark
-                    ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
-                }`}
+                variant="inline"
               />
             </div>
 
@@ -291,19 +282,15 @@ export function HomepageProjectsManagementView() {
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Supporting Subtitle
               </label>
-              <textarea
-                rows={3}
+              <MinimalRichTextEditor
                 value={formData.subtitle}
-                onChange={(e) => {
+                onChange={(val) => {
                   setIsDirty(true);
-                  setFormData({ ...formData, subtitle: e.target.value });
+                  setFormData({ ...formData, subtitle: val });
                 }}
                 placeholder="Explore the businesses, products, experiences, and technical solutions we've helped bring to life."
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-colors ${
-                  isDark
-                    ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
-                    : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
-                }`}
+                variant="multiline"
+                minHeight="72px"
               />
             </div>
 

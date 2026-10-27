@@ -12,6 +12,7 @@ import {
   defaultTestimonialsSectionData,
   TestimonialCard,
 } from '@/types/testimonialsSection';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 
 interface TestimonialsSectionProps {
@@ -257,7 +258,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
                       {/* Testimonial Quote */}
                       {t.quote && (
                         <blockquote className="text-base sm:text-lg lg:text-[19px] font-normal text-slate-800 dark:text-slate-100 leading-relaxed tracking-tight py-1 sm:py-2">
-                          &ldquo;{t.quote}&rdquo;
+                          &ldquo;<RichTextContent content={t.quote} inline />&rdquo;
                         </blockquote>
                       )}
                     </div>

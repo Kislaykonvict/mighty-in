@@ -30,6 +30,7 @@ import { useAdminTheme } from './AdminThemeContext';
 import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
 import { TrajectoryData, TrajectoryEpoch, defaultTrajectoryData } from '@/types/trajectory';
 import { AboutStoryData, AboutStoryCard, defaultAboutStoryData } from '@/types/aboutStory';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 type ActiveTab = 'hero' | 'trajectory' | 'story';
 
@@ -459,12 +460,12 @@ export function AboutManagementView() {
                 <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
                   Main Headline (H1)
                 </label>
-                <textarea
-                  rows={3}
+                <MinimalRichTextEditor
                   value={heroData.headline}
-                  onChange={(e) => setHeroData((p) => ({ ...p, headline: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
+                  onChange={(val) => setHeroData((p) => ({ ...p, headline: val }))}
                   placeholder="Enter the main hero headline..."
+                  variant="multiline"
+                  minHeight="64px"
                 />
               </div>
 
@@ -473,12 +474,12 @@ export function AboutManagementView() {
                 <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
                   Subheadline / Narrative (Optional)
                 </label>
-                <textarea
-                  rows={2}
+                <MinimalRichTextEditor
                   value={heroData.subheadline || ''}
-                  onChange={(e) => setHeroData((p) => ({ ...p, subheadline: e.target.value }))}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  onChange={(val) => setHeroData((p) => ({ ...p, subheadline: val }))}
                   placeholder="Optional supporting narrative below headline..."
+                  variant="multiline"
+                  minHeight="56px"
                 />
               </div>
 
@@ -717,11 +718,11 @@ export function AboutManagementView() {
                         <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
                           Milestone Headline
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={epoch.headline}
-                          onChange={(e) => handleUpdateEpoch(idx, 'headline', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-semibold"
+                          onChange={(val) => handleUpdateEpoch(idx, 'headline', val)}
+                          placeholder="e.g. Scaled Enterprise Next.js Engineering Architecture"
+                          variant="inline"
                         />
                       </div>
 
@@ -729,11 +730,12 @@ export function AboutManagementView() {
                         <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
                           Narrative Description
                         </label>
-                        <textarea
-                          rows={2}
+                        <MinimalRichTextEditor
                           value={epoch.narrative}
-                          onChange={(e) => handleUpdateEpoch(idx, 'narrative', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white leading-relaxed"
+                          onChange={(val) => handleUpdateEpoch(idx, 'narrative', val)}
+                          placeholder="Epoch narrative description..."
+                          variant="multiline"
+                          minHeight="56px"
                         />
                       </div>
 
@@ -838,12 +840,11 @@ export function AboutManagementView() {
                   <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
                     Badge Pill Tag (Optional)
                   </label>
-                  <input
-                    type="text"
+                  <MinimalRichTextEditor
                     value={storyData.badge || ''}
-                    onChange={(e) => setStoryData((p) => ({ ...p, badge: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono"
+                    onChange={(val) => setStoryData((p) => ({ ...p, badge: val }))}
                     placeholder="OUR PHILOSOPHY"
+                    variant="inline"
                   />
                 </div>
 
@@ -851,12 +852,11 @@ export function AboutManagementView() {
                   <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
                     Section Title
                   </label>
-                  <input
-                    type="text"
+                  <MinimalRichTextEditor
                     value={storyData.title}
-                    onChange={(e) => setStoryData((p) => ({ ...p, title: e.target.value }))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-bold"
+                    onChange={(val) => setStoryData((p) => ({ ...p, title: val }))}
                     placeholder="Our Philosophy & Craft"
+                    variant="inline"
                   />
                 </div>
               </div>
@@ -865,11 +865,12 @@ export function AboutManagementView() {
                 <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
                   Subtitle / Mission Statement
                 </label>
-                <textarea
-                  rows={2}
+                <MinimalRichTextEditor
                   value={storyData.subtitle}
-                  onChange={(e) => setStoryData((p) => ({ ...p, subtitle: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white leading-relaxed"
+                  onChange={(val) => setStoryData((p) => ({ ...p, subtitle: val }))}
+                  placeholder="Mission statement and philosophy narrative..."
+                  variant="multiline"
+                  minHeight="68px"
                 />
               </div>
             </div>
@@ -944,12 +945,11 @@ export function AboutManagementView() {
                         <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
                           Card Badge
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={card.badge || ''}
-                          onChange={(e) => handleUpdateStoryCard(idx, 'badge', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono"
+                          onChange={(val) => handleUpdateStoryCard(idx, 'badge', val)}
                           placeholder="e.g. 01 / SYSTEMIC DEPTH"
+                          variant="inline"
                         />
                       </div>
 
@@ -957,12 +957,11 @@ export function AboutManagementView() {
                         <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
                           Card Headline
                         </label>
-                        <input
-                          type="text"
+                        <MinimalRichTextEditor
                           value={card.title}
-                          onChange={(e) => handleUpdateStoryCard(idx, 'title', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-bold"
+                          onChange={(val) => handleUpdateStoryCard(idx, 'title', val)}
                           placeholder="Headline"
+                          variant="inline"
                         />
                       </div>
                     </div>
@@ -970,20 +969,28 @@ export function AboutManagementView() {
                     {/* Paragraphs */}
                     <div>
                       <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                        Paragraphs (Separate paragraphs with a blank line)
+                        Paragraphs
                       </label>
-                      <textarea
-                        rows={4}
-                        value={card.paragraphs.join('\n\n')}
-                        onChange={(e) =>
-                          handleUpdateStoryCard(
-                            idx,
-                            'paragraphs',
-                            e.target.value.split('\n\n').filter((p) => p.trim().length > 0)
-                          )
-                        }
-                        className="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white leading-relaxed"
-                        placeholder="First paragraph...&#10;&#10;Second paragraph..."
+                      <MinimalRichTextEditor
+                        value={card.paragraphs.map((p) => (p.startsWith('<p') ? p : `<p>${p}</p>`)).join('')}
+                        onChange={(val) => {
+                          const pMatches = val.match(/<p[^>]*>([\s\S]*?)<\/p>/gi);
+                          if (pMatches && pMatches.length > 0) {
+                            const cleaned = pMatches
+                              .map((m) => m.replace(/<\/?p[^>]*>/gi, '').trim())
+                              .filter((p) => p.length > 0);
+                            handleUpdateStoryCard(idx, 'paragraphs', cleaned.length > 0 ? cleaned : [val]);
+                          } else {
+                            handleUpdateStoryCard(
+                              idx,
+                              'paragraphs',
+                              val.split('\n\n').filter((p) => p.trim().length > 0)
+                            );
+                          }
+                        }}
+                        placeholder="First paragraph... Enter to start second paragraph..."
+                        variant="multiline"
+                        minHeight="96px"
                       />
                     </div>
 

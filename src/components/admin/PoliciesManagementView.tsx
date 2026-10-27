@@ -26,6 +26,7 @@ import { useAdminTheme } from './AdminThemeContext';
 import { PolicyPageData } from '@/types/policyPage';
 import { defaultPolicyPages } from '@/data/defaultPolicyPages';
 import { TipTapEditor } from './TipTapEditor';
+import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 const POLICY_TABS = [
   { slug: 'terms-and-conditions', label: 'Terms & Conditions', icon: Shield, badge: 'Contract' },
@@ -451,16 +452,11 @@ export function PoliciesManagementView() {
                     <span>Page Name (Title)</span>
                     <span className="text-[10px] text-slate-400 font-normal">Primary title</span>
                   </label>
-                  <input
-                    type="text"
+                  <MinimalRichTextEditor
                     value={formData.title}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                    onChange={(val) => setFormData((prev) => ({ ...prev, title: val }))}
                     placeholder="e.g. Terms and Conditions"
-                    className={`w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 ${
-                      isDark
-                        ? 'bg-slate-900 border-slate-700 text-white'
-                        : 'bg-slate-50 border-slate-300 text-slate-900'
-                    }`}
+                    variant="inline"
                   />
                 </div>
 
@@ -470,16 +466,11 @@ export function PoliciesManagementView() {
                     <span>Optional Hero Badge</span>
                     <span className="text-[10px] text-slate-400 font-normal">Optional tag</span>
                   </label>
-                  <input
-                    type="text"
+                  <MinimalRichTextEditor
                     value={formData.heroBadge || ''}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, heroBadge: e.target.value }))}
+                    onChange={(val) => setFormData((prev) => ({ ...prev, heroBadge: val }))}
                     placeholder="e.g. Legal Agreement"
-                    className={`w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 ${
-                      isDark
-                        ? 'bg-slate-900 border-slate-700 text-white'
-                        : 'bg-slate-50 border-slate-300 text-slate-900'
-                    }`}
+                    variant="inline"
                   />
                 </div>
               </div>
@@ -515,16 +506,11 @@ export function PoliciesManagementView() {
                   <span>Optional Hero Headline (Bottom-Left)</span>
                   <span className="text-[10px] text-slate-400 font-normal">Leave blank if no text wanted</span>
                 </label>
-                <input
-                  type="text"
+                <MinimalRichTextEditor
                   value={formData.heroTitle || ''}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, heroTitle: e.target.value }))}
+                  onChange={(val) => setFormData((prev) => ({ ...prev, heroTitle: val }))}
                   placeholder="e.g. Terms Of Use"
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 ${
-                    isDark
-                      ? 'bg-slate-900 border-slate-700 text-white'
-                      : 'bg-slate-50 border-slate-300 text-slate-900'
-                  }`}
+                  variant="inline"
                 />
               </div>
 
@@ -533,16 +519,11 @@ export function PoliciesManagementView() {
                   <span>Optional Hero Subheadline (Bottom-Left)</span>
                   <span className="text-[10px] text-slate-400 font-normal">Leave blank if none</span>
                 </label>
-                <input
-                  type="text"
+                <MinimalRichTextEditor
                   value={formData.heroSubtitle || ''}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, heroSubtitle: e.target.value }))}
+                  onChange={(val) => setFormData((prev) => ({ ...prev, heroSubtitle: val }))}
                   placeholder="e.g. Clear, transparent guidelines for Mighty Warner solutions"
-                  className={`w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 ${
-                    isDark
-                      ? 'bg-slate-900 border-slate-700 text-white'
-                      : 'bg-slate-50 border-slate-300 text-slate-900'
-                  }`}
+                  variant="inline"
                 />
               </div>
             </div>
