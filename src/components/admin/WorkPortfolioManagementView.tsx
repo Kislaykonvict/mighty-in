@@ -27,6 +27,8 @@ import {
   Check,
   Upload,
   Image as ImageIcon,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { WorkPageSettings, defaultWorkPageSettings } from '@/types/workPage';
@@ -76,6 +78,12 @@ export function WorkPortfolioManagementView() {
   const [editingCategoryValue, setEditingCategoryValue] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  // Category Showcase 2-row limit & expansion state
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
+  const [hasMoreThanTwoRows, setHasMoreThanTwoRows] = useState(false);
+  const [twoRowsHeight, setTwoRowsHeight] = useState<number | null>(null);
+  const categoriesContainerRef = useRef<HTMLDivElement>(null);
+
   // Filters (Search by Title)
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -103,6 +111,56 @@ export function WorkPortfolioManagementView() {
       document.body.style.overflow = '';
     };
   }, [isModalOpen]);
+
+  // Measure if categories wrap to more than 2 rows
+  useEffect(() => {
+    const checkCategoryRows = () => {
+      if (!categoriesContainerRef.current) return;
+      const items = categoriesContainerRef.current.children;
+      if (items.length <= 1) {
+        setHasMoreThanTwoRows(false);
+        setTwoRowsHeight(null);
+        return;
+      }
+
+      const row1Top = (items[0] as HTMLElement).offsetTop;
+      let row2Top: number | null = null;
+      let row2Item: HTMLElement | null = null;
+      let hasRow3 = false;
+
+      for (let i = 1; i < items.length; i++) {
+        const item = items[i] as HTMLElement;
+        const top = item.offsetTop;
+        if (top > row1Top) {
+          if (row2Top === null) {
+            row2Top = top;
+            row2Item = item;
+          } else if (top > row2Top) {
+            hasRow3 = true;
+            break;
+          }
+        }
+      }
+
+      if (row2Top !== null && row2Item) {
+        // Height needed to cleanly show row 1 and row 2 plus padding margin
+        const calculatedTwoRowHeight = (row2Top - row1Top) + row2Item.offsetHeight + 4;
+        setTwoRowsHeight(calculatedTwoRowHeight);
+      } else {
+        setTwoRowsHeight(null);
+      }
+
+      setHasMoreThanTwoRows(hasRow3);
+    };
+
+    checkCategoryRows();
+    const timer = setTimeout(checkCategoryRows, 150);
+    window.addEventListener('resize', checkCategoryRows);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkCategoryRows);
+    };
+  }, [categories, isCategoriesExpanded]);
 
   // Handle Thumbnail File Upload
   const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -601,7 +659,7 @@ export function WorkPortfolioManagementView() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Manage portfolio categories. These populate the project dropdown and display horizontally on the live site.
+                Manage portfolio categories. These populate the project dropdown and display horizontally on the live site. Hover any pill to rename or delete.
               </p>
             </div>
           </div>
@@ -640,32 +698,31 @@ export function WorkPortfolioManagementView() {
           </form>
         </div>
 
-        {/* Horizontal Showcase (Matching Second Screenshot) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-            <span>Horizontal Showcase</span>
-            <span className="text-[10px] lowercase text-slate-500 font-normal">
-              hover any pill to rename or delete
-            </span>
-          </div>
-
+        {/* Categories Showcase (Max 2 rows with 'See All' toggle) */}
+        <div
+          className={`p-5 rounded-2xl border transition-colors ${
+            isDark
+              ? 'bg-[#080C14]/80 border-slate-800'
+              : 'bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-slate-200'
+          }`}
+        >
           <div
-            className={`p-5 rounded-2xl border transition-colors ${
-              isDark
-                ? 'bg-[#080C14]/80 border-slate-800'
-                : 'bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-slate-200'
+            className={`transition-all duration-300 ease-in-out ${
+              !isCategoriesExpanded && hasMoreThanTwoRows
+                ? 'overflow-hidden'
+                : 'overflow-visible'
             }`}
+            style={
+              !isCategoriesExpanded && hasMoreThanTwoRows && twoRowsHeight
+                ? { maxHeight: `${twoRowsHeight}px` }
+                : undefined
+            }
           >
-            <div className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3">
-              {/* Leading Line Accent & Monospace Label */}
-              <div className="flex items-center gap-3 mr-1">
-                <span className="w-12 h-[1px] bg-slate-300 dark:bg-white/20 hidden sm:block" />
-                <span className="text-[11px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase font-semibold whitespace-nowrap">
-                  {categoriesTitle}
-                </span>
-              </div>
-
-              {/* Category Pills */}
+            <div
+              ref={categoriesContainerRef}
+              className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3"
+            >
+              {/* Category Pills (No leading doodled text) */}
               {categories.map((cat, index) => {
                 const isEditing = editingCategoryIndex === index;
 
@@ -740,6 +797,28 @@ export function WorkPortfolioManagementView() {
               })}
             </div>
           </div>
+
+          {/* See All / Show Less Button */}
+          {hasMoreThanTwoRows && (
+            <div className="flex items-center justify-center pt-3 mt-3 border-t border-slate-200/60 dark:border-slate-800/60">
+              <button
+                type="button"
+                onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-sky-600 dark:text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 transition-colors cursor-pointer"
+              >
+                <span>
+                  {isCategoriesExpanded
+                    ? 'Show Less'
+                    : `See All Categories (${categories.length})`}
+                </span>
+                {isCategoriesExpanded ? (
+                  <ChevronUp className="w-3.5 h-3.5" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
