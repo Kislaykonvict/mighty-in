@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import {
   Briefcase,
@@ -25,6 +26,8 @@ import {
   Globe,
   Eye,
   Check,
+  Upload,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { WorkPageSettings, defaultWorkPageSettings } from '@/types/workPage';
@@ -78,6 +81,76 @@ export function WorkPortfolioManagementView() {
   const [editingProject, setEditingProject] = useState<ProjectRecord | null>(null);
   const [isSavingProject, setIsSavingProject] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when modal is open to eliminate background shifting
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isModalOpen]);
+
+  // Handle Thumbnail File Upload
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editingProject) return;
+
+    setIsUploadingThumbnail(true);
+    try {
+      const data = new FormData();
+      data.append('file', file);
+      data.append('folder', 'mighty-warner/work');
+      data.append('resource_type', 'image');
+
+      if (editingProject.thumbnailImage) {
+        data.append('previousUrl', editingProject.thumbnailImage);
+      }
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: data,
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || 'Upload failed');
+      }
+
+      const newImageUrl = json.url || json.secureUrl;
+      setEditingProject((prev) =>
+        prev
+          ? {
+              ...prev,
+              thumbnailImage: newImageUrl,
+              heroImage:
+                prev.heroImage && prev.heroImage !== '/images/hero/mw-hero-bg.webp'
+                  ? prev.heroImage
+                  : newImageUrl,
+            }
+          : null
+      );
+      setFeedback({ type: 'success', message: 'Thumbnail image uploaded successfully!' });
+    } catch (err: any) {
+      setFeedback({
+        type: 'error',
+        message: err.message || 'Error uploading thumbnail image',
+      });
+    } finally {
+      setIsUploadingThumbnail(false);
+      if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
+    }
+  };
 
   // Load all projects and header settings
   const loadData = async () => {
@@ -142,16 +215,14 @@ export function WorkPortfolioManagementView() {
       industry: '',
       year: new Date().getFullYear().toString(),
       heroImage: '/images/hero/mw-hero-bg.webp',
-      thumbnailImage: '/images/hero/mw-hero-bg.webp',
+      thumbnailImage: '',
       shortDescription: '',
       tagline: '',
       summary: '',
       challenge: '',
       solution: '',
       technologiesUsed: [],
-      metrics: [
-        { value: '+140%', label: 'Efficiency Gain', description: 'Immediate operational impact' },
-      ],
+      metrics: [],
       featured: false,
       liveUrl: '',
       order: projects.length + 1,
@@ -657,305 +728,298 @@ export function WorkPortfolioManagementView() {
         )}
       </div>
 
-      {/* Add / Edit Project Modal Drawer */}
-      {isModalOpen && editingProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs overflow-y-auto">
-          <div
-            className={`w-full max-w-3xl my-8 rounded-3xl border shadow-2xl overflow-hidden transition-all ${
-              isDark ? 'bg-[#0E1526] border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
-            }`}
-          >
-            {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-black">
-                  {editingProject.id ? 'Edit Case Study Project' : 'Add New Production Project'}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Fill in the client outcome, metrics, and showcase details.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white"
+      {/* Add / Edit Project Modal Drawer (Portaled to body to remove layout shift and top gap) */}
+      {isModalOpen && editingProject && mounted && typeof document !== 'undefined'
+        ? createPortal(
+            <div className="fixed inset-0 !m-0 !top-0 !left-0 !right-0 !bottom-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+              <div
+                className={`w-full max-w-3xl my-8 rounded-3xl border shadow-2xl overflow-hidden transition-all ${
+                  isDark ? 'bg-[#0E1526] border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
+                }`}
               >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+                {/* Modal Header */}
+                <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-black">
+                      {editingProject.id ? 'Edit Case Study Project' : 'Add New Production Project'}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Fill in the client outcome, showcase visuals, and case study details.
+                    </p>
+                  </div>
 
-            {/* Modal Body */}
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              {/* Row 1: Title & Client */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Project Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editingProject.title}
-                    onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
-                    placeholder="e.g. Apex Global Logistics Platform"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Client Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editingProject.client}
-                    onChange={(e) => setEditingProject({ ...editingProject, client: e.target.value })}
-                    placeholder="e.g. Apex Freight International"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
+                {/* Modal Body */}
+                <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                  {/* Row 1: Title & Client */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Project Title *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProject.title}
+                        onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
+                        placeholder="e.g. Apex Global Logistics Platform"
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Client Name
+                      </label>
+                      <input
+                        type="text"
+                        value={editingProject.client}
+                        onChange={(e) => setEditingProject({ ...editingProject, client: e.target.value })}
+                        placeholder="e.g. Apex Freight International"
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2: Industry & Year */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Industry Domain *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProject.industry}
+                        onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
+                        placeholder="e.g. Supply Chain / SaaS, Fintech, E-Commerce"
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Delivery Year
+                      </label>
+                      <input
+                        type="text"
+                        value={editingProject.year}
+                        onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
+                        placeholder="2026"
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 3: Images & Live URL (Upload Button Replacing Text Field) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                          Thumbnail Image
+                        </label>
+                        {editingProject.thumbnailImage && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditingProject({ ...editingProject, thumbnailImage: '' })
+                            }
+                            className="text-[11px] text-rose-500 hover:text-rose-600 font-medium cursor-pointer"
+                          >
+                            Remove Image
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        {/* Thumbnail Preview Box */}
+                        <div
+                          className={`w-16 h-11 rounded-xl border flex items-center justify-center shrink-0 overflow-hidden ${
+                            isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-300'
+                          }`}
+                        >
+                          {editingProject.thumbnailImage ? (
+                            <img
+                              src={editingProject.thumbnailImage}
+                              alt="Thumbnail preview"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <ImageIcon className="w-5 h-5 text-slate-400" />
+                          )}
+                        </div>
+
+                        {/* File Upload Hidden Input + Button */}
+                        <div className="flex-1 min-w-0">
+                          <input
+                            ref={thumbnailInputRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleThumbnailUpload}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => thumbnailInputRef.current?.click()}
+                            disabled={isUploadingThumbnail}
+                            className={`w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer disabled:opacity-50 ${
+                              isDark
+                                ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'
+                                : 'bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-800'
+                            }`}
+                          >
+                            {isUploadingThumbnail ? (
+                              <>
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                <span>Uploading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-3.5 h-3.5 text-indigo-500" />
+                                <span>
+                                  {editingProject.thumbnailImage ? 'Change Image' : 'Upload Image'}
+                                </span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Live Client URL (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingProject.liveUrl || ''}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, liveUrl: e.target.value })
+                        }
+                        placeholder="https://client-domain.com"
+                        className={`w-full px-3 py-2.5 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Short Description */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      Short Summary / Tagline
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={editingProject.shortDescription}
+                      onChange={(e) =>
+                        setEditingProject({ ...editingProject, shortDescription: e.target.value })
+                      }
+                      placeholder="High-concurrency global trading platform scaled to 1.2M daily active users."
+                      className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                        isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                      }`}
+                    />
+                  </div>
+
+                  {/* Challenge & Solution */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        The Challenge
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={editingProject.challenge}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, challenge: e.target.value })
+                        }
+                        placeholder="Legacy infrastructure bottlenecking transaction throughput..."
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        The Solution Delivered
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={editingProject.solution}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, solution: e.target.value })
+                        }
+                        placeholder="Engineered high-speed microservices architecture with Next.js edge caching..."
+                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Toggles: Featured Case Study */}
+                  <div className="pt-2">
+                    <label className="flex items-center gap-2 text-xs font-bold cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={editingProject.featured}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, featured: e.target.checked })
+                        }
+                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                      />
+                      <span>Featured Case Study (Pinned with priority badge)</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Modal Footer */}
+                <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleSaveProject}
+                    disabled={isSavingProject}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {isSavingProject ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )}
+                    <span>{editingProject.id ? 'Save Project Changes' : 'Create Project'}</span>
+                  </button>
                 </div>
               </div>
-
-              {/* Row 2: Industry & Year */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Industry Domain *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editingProject.industry}
-                    onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
-                    placeholder="e.g. Supply Chain / SaaS, Fintech, E-Commerce"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Delivery Year
-                  </label>
-                  <input
-                    type="text"
-                    value={editingProject.year}
-                    onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
-                    placeholder="2026"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Row 3: Images & Live URL */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Thumbnail Image URL
-                  </label>
-                  <input
-                    type="text"
-                    value={editingProject.thumbnailImage}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, thumbnailImage: e.target.value })
-                    }
-                    placeholder="/images/hero/mw-hero-bg.webp"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Live Client URL (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingProject.liveUrl || ''}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, liveUrl: e.target.value })
-                    }
-                    placeholder="https://client-domain.com"
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Short Description */}
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Short Summary / Tagline
-                </label>
-                <textarea
-                  rows={2}
-                  value={editingProject.shortDescription}
-                  onChange={(e) =>
-                    setEditingProject({ ...editingProject, shortDescription: e.target.value })
-                  }
-                  placeholder="High-concurrency global trading platform scaled to 1.2M daily active users."
-                  className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                    isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                  }`}
-                />
-              </div>
-
-              {/* Challenge & Solution */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    The Challenge
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={editingProject.challenge}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, challenge: e.target.value })
-                    }
-                    placeholder="Legacy infrastructure bottlenecking transaction throughput..."
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    The Solution Delivered
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={editingProject.solution}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, solution: e.target.value })
-                    }
-                    placeholder="Engineered high-speed microservices architecture with Next.js edge caching..."
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Primary Metric */}
-              <div className="p-4 rounded-xl border space-y-2 bg-slate-500/5">
-                <div className="flex items-center gap-2 text-xs font-bold">
-                  <TrendingUp className="w-4 h-4 text-emerald-500" />
-                  <span>Highlight Metric (e.g. +310% Conversion)</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <input
-                    type="text"
-                    value={editingProject.metrics?.[0]?.value || ''}
-                    onChange={(e) => {
-                      const m = [...(editingProject.metrics || [{ value: '', label: '', description: '' }])];
-                      m[0] = { ...m[0], value: e.target.value };
-                      setEditingProject({ ...editingProject, metrics: m });
-                    }}
-                    placeholder="Value (e.g. +310%)"
-                    className={`px-3 py-1.5 rounded-lg border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300'
-                    }`}
-                  />
-
-                  <input
-                    type="text"
-                    value={editingProject.metrics?.[0]?.label || ''}
-                    onChange={(e) => {
-                      const m = [...(editingProject.metrics || [{ value: '', label: '', description: '' }])];
-                      m[0] = { ...m[0], label: e.target.value };
-                      setEditingProject({ ...editingProject, metrics: m });
-                    }}
-                    placeholder="Label (e.g. Conversion Lift)"
-                    className={`px-3 py-1.5 rounded-lg border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300'
-                    }`}
-                  />
-
-                  <input
-                    type="text"
-                    value={editingProject.metrics?.[0]?.description || ''}
-                    onChange={(e) => {
-                      const m = [...(editingProject.metrics || [{ value: '', label: '', description: '' }])];
-                      m[0] = { ...m[0], description: e.target.value };
-                      setEditingProject({ ...editingProject, metrics: m });
-                    }}
-                    placeholder="Description (e.g. Measured 90d post-launch)"
-                    className={`px-3 py-1.5 rounded-lg border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-300'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Toggles: Featured & Order */}
-              <div className="flex items-center justify-between pt-2">
-                <label className="flex items-center gap-2 text-xs font-bold cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={editingProject.featured}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, featured: e.target.checked })
-                    }
-                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <span>Featured Case Study (Pinned with priority badge)</span>
-                </label>
-
-                <div className="flex items-center gap-2 text-xs font-semibold">
-                  <span>Display Order:</span>
-                  <input
-                    type="number"
-                    value={editingProject.order}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, order: Number(e.target.value) })
-                    }
-                    className={`w-16 px-2 py-1 rounded-lg border text-xs text-center ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={handleSaveProject}
-                disabled={isSavingProject}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition-all cursor-pointer disabled:opacity-50"
-              >
-                {isSavingProject ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4" />
-                )}
-                <span>{editingProject.id ? 'Save Project Changes' : 'Create Project'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
