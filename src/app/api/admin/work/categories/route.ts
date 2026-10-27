@@ -25,16 +25,16 @@ export async function GET() {
     });
 
     if (!section) {
-      // Find distinct industries from projects if available
+      // Find distinct categories from projects if available
       const projs = await prisma.project.findMany({
-        select: { industry: true },
-        distinct: ['industry'],
+        select: { category: true },
+        distinct: ['category'],
       });
-      const dbIndustries = projs
-        .map((p) => p.industry?.trim())
-        .filter((ind): ind is string => Boolean(ind));
+      const dbCategories = projs
+        .map((p) => p.category?.trim())
+        .filter((cat): cat is string => Boolean(cat));
 
-      const categories = dbIndustries.length > 0 ? dbIndustries : DEFAULT_WORK_CATEGORIES;
+      const categories = dbCategories.length > 0 ? dbCategories : DEFAULT_WORK_CATEGORIES;
 
       return NextResponse.json({
         success: true,

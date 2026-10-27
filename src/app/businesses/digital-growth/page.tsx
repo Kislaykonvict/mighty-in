@@ -25,7 +25,10 @@ export default async function DigitalGrowthPage() {
   let relatedProjects: any[] = [];
   try {
     relatedProjects = await prisma.project.findMany({
-      where: { verticalId: 'digital-growth' },
+      where: {
+        published: true,
+        category: { contains: 'Growth', mode: 'insensitive' },
+      },
       take: 2,
     });
   } catch (e) {}

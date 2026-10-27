@@ -37,6 +37,7 @@ async function getWorkPageData() {
         },
       }),
       prisma.project.findMany({
+        where: { published: true },
         orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
       }),
     ]);
@@ -53,7 +54,7 @@ async function getWorkPageData() {
     const catContent = (catSection?.content as any) || {};
     const categories: string[] = Array.isArray(catContent.categories) && catContent.categories.length > 0
       ? catContent.categories
-      : Array.from(new Set(dbProjects.map((p) => p.industry?.trim()).filter(Boolean)));
+      : Array.from(new Set(dbProjects.map((p) => p.category?.trim()).filter(Boolean)));
     const categoriesTitle: string = catSection?.title || catContent.title || 'TRUSTED ACROSS:';
 
     const projects = dbProjects as any;

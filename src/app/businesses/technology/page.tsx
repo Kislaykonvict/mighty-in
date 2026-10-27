@@ -25,7 +25,10 @@ export default async function TechnologyPage() {
   let relatedProjects: any[] = [];
   try {
     relatedProjects = await prisma.project.findMany({
-      where: { verticalId: 'technology' },
+      where: {
+        published: true,
+        category: { contains: 'Tech', mode: 'insensitive' },
+      },
       take: 2,
     });
   } catch (e) {}

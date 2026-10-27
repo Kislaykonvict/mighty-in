@@ -28,13 +28,12 @@ import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 interface ProjectListItem {
   id: string;
-  slug: string;
   title: string;
-  client: string;
-  industry: string;
-  verticalId?: string;
-  verticalName?: string;
+  category: string;
+  industry?: string;
   thumbnailImage: string;
+  liveUrl?: string;
+  published?: boolean;
   featured: boolean;
   order: number;
 }
@@ -145,8 +144,7 @@ export function HomepageProjectsManagementView() {
       const q = searchQuery.toLowerCase();
       return (
         p.title.toLowerCase().includes(q) ||
-        p.client.toLowerCase().includes(q) ||
-        (p.industry && p.industry.toLowerCase().includes(q))
+        ((p.category || p.industry) && (p.category || p.industry)!.toLowerCase().includes(q))
       );
     });
 
@@ -403,12 +401,14 @@ export function HomepageProjectsManagementView() {
                             {project.title}
                           </h4>
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shrink-0">
-                            {project.industry}
+                            {project.category || project.industry}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                          Client: <span className="font-semibold">{project.client}</span>
-                        </p>
+                        {project.liveUrl && (
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                            URL: <span className="font-mono">{project.liveUrl}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -509,7 +509,7 @@ export function HomepageProjectsManagementView() {
                           {project.title}
                         </p>
                         <p className="text-[10px] text-slate-500 truncate">
-                          {project.client} • {project.industry}
+                          {project.category || project.industry}
                         </p>
                       </div>
                     </div>

@@ -28,6 +28,7 @@ async function getPortfolioPageData() {
         },
       }),
       prisma.project.findMany({
+        where: { published: true },
         orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
       }),
     ]);

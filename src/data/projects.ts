@@ -1,6 +1,4 @@
-import { Project } from '@/types/project';
-
-export const projectsData: Project[] = [
+export const projectsData: any[] = [
   {
     id: 'smart-shop',
     slug: 'the-smart-shop-ecommerce',

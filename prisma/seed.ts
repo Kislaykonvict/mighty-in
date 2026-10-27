@@ -175,67 +175,8 @@ async function main() {
   }
   console.log(`✅ Seeded ${businessesData.length} Business Verticals`);
 
-  // 4. Seed Projects / Case Studies (Section 7 & 8)
-  for (let i = 0; i < projectsData.length; i++) {
-    const p = projectsData[i];
-    await prisma.project.upsert({
-      where: { slug: p.slug },
-      update: {
-        title: p.title,
-        client: p.client,
-        industry: p.industry,
-        verticalId: p.verticalId,
-        verticalName: p.verticalName,
-        year: p.year,
-        heroImage: p.heroImage,
-        thumbnailImage: p.thumbnailImage,
-        galleryImages: p.galleryImages as any,
-        shortDescription: p.shortDescription,
-        tagline: p.tagline,
-        summary: p.summary,
-        challenge: p.challenge,
-        objectives: p.objectives as any,
-        strategy: p.strategy as any,
-        solution: p.solution,
-        technologiesUsed: p.technologiesUsed as any,
-        metrics: p.metrics as any,
-        featured: i < 3,
-        order: i,
-        metaTitle: `${p.title} | ${p.client} Case Study | Mighty Warner`,
-        metaDescription: p.summary,
-        metaKeywords: `${p.industry}, ${p.verticalName}, Case Study, Digital Transformation`,
-        canonicalUrl: `/work/${p.slug}`,
-      },
-      create: {
-        slug: p.slug,
-        title: p.title,
-        client: p.client,
-        industry: p.industry,
-        verticalId: p.verticalId,
-        verticalName: p.verticalName,
-        year: p.year,
-        heroImage: p.heroImage,
-        thumbnailImage: p.thumbnailImage,
-        galleryImages: p.galleryImages as any,
-        shortDescription: p.shortDescription,
-        tagline: p.tagline,
-        summary: p.summary,
-        challenge: p.challenge,
-        objectives: p.objectives as any,
-        strategy: p.strategy as any,
-        solution: p.solution,
-        technologiesUsed: p.technologiesUsed as any,
-        metrics: p.metrics as any,
-        featured: i < 3,
-        order: i,
-        metaTitle: `${p.title} | ${p.client} Case Study | Mighty Warner`,
-        metaDescription: p.summary,
-        metaKeywords: `${p.industry}, ${p.verticalName}, Case Study, Digital Transformation`,
-        canonicalUrl: `/work/${p.slug}`,
-      },
-    });
-  }
-  console.log(`✅ Seeded ${projectsData.length} Projects`);
+  // 4. Projects: Managed dynamically via Admin Panel (no static seed data)
+  console.log('✅ Projects: Managed solely via Admin Panel');
 
   // 5. Seed Testimonials (Section 14)
   for (let i = 0; i < testimonialsData.length; i++) {

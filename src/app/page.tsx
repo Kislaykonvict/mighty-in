@@ -163,6 +163,7 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
         },
       }),
       prisma.project.findMany({
+        where: { published: true },
         orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
       }),
     ]);

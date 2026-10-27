@@ -13,26 +13,28 @@ export function PortfolioClientView({ initialProjects }: PortfolioClientViewProp
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const categories = [
-    { id: 'all', label: 'All Projects' },
-    { id: 'ecommerce', label: 'Ecommerce' },
-    { id: 'web-design', label: 'Web Applications' },
-    { id: 'real-estate', label: 'Real Estate' },
-    { id: 'branding', label: 'Branding & Corporate' },
-  ];
+  const categories = useMemo(() => {
+    const unique = Array.from(
+      new Set(initialProjects.map((p) => p.category?.trim()).filter(Boolean))
+    );
+    return [
+      { id: 'all', label: 'All Projects' },
+      ...unique.map((cat) => ({ id: cat, label: cat })),
+    ];
+  }, [initialProjects]);
 
   // Filter projects by both category tab and search query
   const filteredProjects = useMemo(() => {
     return initialProjects.filter((project) => {
       const matchesCategory =
-        activeCategory === 'all' || project.category === activeCategory;
+        activeCategory === 'all' ||
+        project.category?.toLowerCase() === activeCategory.toLowerCase();
 
       const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
         query === '' ||
         project.title.toLowerCase().includes(query) ||
-        project.client.toLowerCase().includes(query) ||
-        project.industry.toLowerCase().includes(query);
+        (project.category && project.category.toLowerCase().includes(query));
 
       return matchesCategory && matchesSearch;
     });
@@ -48,7 +50,9 @@ export function PortfolioClientView({ initialProjects }: PortfolioClientViewProp
             const count =
               cat.id === 'all'
                 ? initialProjects.length
-                : initialProjects.filter((p) => p.category === cat.id).length;
+                : initialProjects.filter(
+                    (p) => p.category?.toLowerCase() === cat.id.toLowerCase()
+                  ).length;
 
             const isSelected = activeCategory === cat.id;
 

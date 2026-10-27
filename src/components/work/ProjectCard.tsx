@@ -13,22 +13,22 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const targetUrl = project.liveUrl || `/work/${project.slug}`;
-  const isExternal = Boolean(project.liveUrl);
+  const targetUrl = project.liveUrl || '#';
+  const isExternal = Boolean(project.liveUrl && project.liveUrl !== '#');
 
   return (
     <Link
       href={targetUrl}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
-      onClick={() => analytics.trackProjectView(project.slug, project.verticalId || '')}
+      onClick={() => analytics.trackProjectView(project.id, project.category || '')}
       className="group block select-none focus:outline-none cursor-pointer"
-      aria-label={`${project.title} - ${project.industry}`}
+      aria-label={`${project.title} - ${project.category}`}
     >
       {/* Visual Canvas (Awwwards Style 16:10 Aspect Ratio with Smooth Hover Zoom) */}
       <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#0D1322] border border-slate-200 dark:border-white/8 group-hover:border-slate-300 dark:group-hover:border-white/20 transition-all duration-500 shadow-xs group-hover:shadow-xl">
         <Image
-          src={project.thumbnailImage}
+          src={project.thumbnailImage || '/images/hero/mw-hero-bg.webp'}
           alt={project.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -53,7 +53,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <RichTextContent content={project.title} inline />
         </h4>
         <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-normal">
-          {project.industry}
+          {project.category}
         </p>
       </div>
     </Link>

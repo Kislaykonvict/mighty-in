@@ -37,30 +37,15 @@ import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface ProjectRecord {
   id: string;
-  slug: string;
   title: string;
-  client: string;
-  industry: string;
-  verticalId?: string;
-  verticalName?: string;
-  year: string;
-  heroImage: string;
+  category: string;
   thumbnailImage: string;
-  galleryImages?: string[];
-  shortDescription: string;
-  tagline: string;
-  summary: string;
-  challenge: string;
-  solution: string;
-  objectives?: string[];
-  strategy?: string[];
-  technologiesUsed?: string[];
-  metrics?: { value: string; label: string; description?: string }[];
+  liveUrl: string;
+  published: boolean;
   featured: boolean;
-  liveUrl?: string;
   order: number;
-  metaTitle?: string;
-  metaDescription?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export function WorkPortfolioManagementView() {
@@ -197,10 +182,6 @@ export function WorkPortfolioManagementView() {
           ? {
               ...prev,
               thumbnailImage: newImageUrl,
-              heroImage:
-                prev.heroImage && prev.heroImage !== '/images/hero/mw-hero-bg.webp'
-                  ? prev.heroImage
-                  : newImageUrl,
             }
           : null
       );
@@ -283,22 +264,12 @@ export function WorkPortfolioManagementView() {
   const handleOpenCreate = () => {
     setEditingProject({
       id: '',
-      slug: '',
       title: '',
-      client: '',
-      industry: categories[0] || '',
-      year: new Date().getFullYear().toString(),
-      heroImage: '/images/hero/mw-hero-bg.webp',
+      category: categories[0] || 'General',
       thumbnailImage: '',
-      shortDescription: '',
-      tagline: '',
-      summary: '',
-      challenge: '',
-      solution: '',
-      technologiesUsed: [],
-      metrics: [],
-      featured: false,
       liveUrl: '',
+      published: true,
+      featured: false,
       order: projects.length + 1,
     });
     setIsModalOpen(true);
@@ -308,8 +279,10 @@ export function WorkPortfolioManagementView() {
   const handleOpenEdit = (project: ProjectRecord) => {
     setEditingProject({
       ...project,
-      technologiesUsed: project.technologiesUsed || [],
-      metrics: project.metrics || [],
+      category: project.category || categories[0] || 'General',
+      liveUrl: project.liveUrl || '',
+      published: project.published !== undefined ? project.published : true,
+      featured: Boolean(project.featured),
     });
     setIsModalOpen(true);
   };
@@ -371,6 +344,25 @@ export function WorkPortfolioManagementView() {
       }
     } catch (err) {
       console.error('Error toggling featured state:', err);
+    }
+  };
+
+  // Quick toggle published
+  const handleTogglePublished = async (project: ProjectRecord) => {
+    try {
+      const res = await fetch(`/api/admin/projects/${project.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: !project.published }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setProjects((prev) =>
+          prev.map((p) => (p.id === project.id ? { ...p, published: !project.published } : p))
+        );
+      }
+    } catch (err) {
+      console.error('Error toggling published state:', err);
     }
   };
 
@@ -1021,12 +1013,12 @@ export function WorkPortfolioManagementView() {
                         </div>
 
                         <a
-                          href={`/work`}
+                          href={project.liveUrl || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold bg-black/50 hover:bg-black/70 text-white border border-white/10 backdrop-blur-md transition-all"
                         >
-                          <span>Preview</span>
+                          <span>Visit URL</span>
                           <ArrowUpRight className="w-2.5 h-2.5" />
                         </a>
                       </div>
@@ -1062,10 +1054,10 @@ export function WorkPortfolioManagementView() {
                 <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-black">
-                      {editingProject.id ? 'Edit Case Study Project' : 'Add New Production Project'}
+                      {editingProject.id ? 'Edit Showcase Project' : 'Add New Showcase Project'}
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Fill in the client outcome, showcase visuals, and case study details.
+                      Configure the product showcase, live redirect link, category, and display status.
                     </p>
                   </div>
 
@@ -1080,54 +1072,36 @@ export function WorkPortfolioManagementView() {
 
                 {/* Modal Body */}
                 <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                  {/* Row 1: Title & Client */}
+                  {/* Row 1: Title & Category */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Project Title *
+                        Product / Project Name *
                       </label>
                       <MinimalRichTextEditor
                         value={editingProject.title}
                         onChange={(val) => setEditingProject({ ...editingProject, title: val })}
-                        placeholder="e.g. Apex Global Logistics Platform"
+                        placeholder="e.g. SmartShop E-Commerce"
                         variant="inline"
                       />
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Client Name
-                      </label>
-                      <input
-                        type="text"
-                        value={editingProject.client}
-                        onChange={(e) => setEditingProject({ ...editingProject, client: e.target.value })}
-                        placeholder="e.g. Apex Freight International"
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 2: Category & Year */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         Project Category *
                       </label>
                       <select
                         required
-                        value={editingProject.industry}
-                        onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
+                        value={editingProject.category}
+                        onChange={(e) => setEditingProject({ ...editingProject, category: e.target.value })}
                         className={`w-full px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
                           isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                         }`}
                       >
-                        <option value="" disabled>Select a Project Category</option>
-                        {editingProject.industry && !categories.includes(editingProject.industry) && (
-                          <option value={editingProject.industry}>
-                            {editingProject.industry} (Current)
+                        <option value="" disabled>Select a Category</option>
+                        {editingProject.category && !categories.includes(editingProject.category) && (
+                          <option value={editingProject.category}>
+                            {editingProject.category} (Current)
                           </option>
                         )}
                         {categories.map((cat) => (
@@ -1137,167 +1111,118 @@ export function WorkPortfolioManagementView() {
                         ))}
                       </select>
                     </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Delivery Year
-                      </label>
-                      <input
-                        type="text"
-                        value={editingProject.year}
-                        onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
-                        placeholder="2026"
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
-                      />
-                    </div>
                   </div>
 
-                  {/* Row 3: Images & Live URL (Upload Button Replacing Text Field) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                          Thumbnail Image
-                        </label>
-                        {editingProject.thumbnailImage && (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setEditingProject({ ...editingProject, thumbnailImage: '' })
-                            }
-                            className="text-[11px] text-rose-500 hover:text-rose-600 font-medium cursor-pointer"
-                          >
-                            Remove Image
-                          </button>
+                  {/* Row 2: Live Redirect URL */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      Live Destination / Product URL *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      value={editingProject.liveUrl}
+                      onChange={(e) =>
+                        setEditingProject({ ...editingProject, liveUrl: e.target.value })
+                      }
+                      placeholder="https://the-smart-shop.com"
+                      className={`w-full px-3 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
+                        isDark ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500' : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
+                      }`}
+                    />
+                    <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                      Clicking this card anywhere on the homepage or portfolio will redirect visitors directly to this link.
+                    </p>
+                  </div>
+
+                  {/* Row 3: Showcase Thumbnail Image */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        Showcase Thumbnail Image *
+                      </label>
+                      {editingProject.thumbnailImage && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEditingProject({ ...editingProject, thumbnailImage: '' })
+                          }
+                          className="text-[11px] text-rose-500 hover:text-rose-600 font-medium cursor-pointer"
+                        >
+                          Remove Image
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {/* Thumbnail Preview Box */}
+                      <div
+                        className={`w-20 h-14 rounded-xl border flex items-center justify-center shrink-0 overflow-hidden ${
+                          isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-300'
+                        }`}
+                      >
+                        {editingProject.thumbnailImage ? (
+                          <img
+                            src={editingProject.thumbnailImage}
+                            alt="Thumbnail preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <ImageIcon className="w-5 h-5 text-slate-400" />
                         )}
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        {/* Thumbnail Preview Box */}
-                        <div
-                          className={`w-16 h-11 rounded-xl border flex items-center justify-center shrink-0 overflow-hidden ${
-                            isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-slate-300'
+                      {/* File Upload Hidden Input + Button */}
+                      <div className="flex-1 min-w-0">
+                        <input
+                          ref={thumbnailInputRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleThumbnailUpload}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => thumbnailInputRef.current?.click()}
+                          disabled={isUploadingThumbnail}
+                          className={`w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold border transition-colors cursor-pointer disabled:opacity-50 ${
+                            isDark
+                              ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'
+                              : 'bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-800'
                           }`}
                         >
-                          {editingProject.thumbnailImage ? (
-                            <img
-                              src={editingProject.thumbnailImage}
-                              alt="Thumbnail preview"
-                              className="w-full h-full object-cover"
-                            />
+                          {isUploadingThumbnail ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              <span>Uploading...</span>
+                            </>
                           ) : (
-                            <ImageIcon className="w-5 h-5 text-slate-400" />
+                            <>
+                              <Upload className="w-3.5 h-3.5 text-indigo-500" />
+                              <span>
+                                {editingProject.thumbnailImage ? 'Change Showcase Image' : 'Upload Showcase Image'}
+                              </span>
+                            </>
                           )}
-                        </div>
-
-                        {/* File Upload Hidden Input + Button */}
-                        <div className="flex-1 min-w-0">
-                          <input
-                            ref={thumbnailInputRef}
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleThumbnailUpload}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => thumbnailInputRef.current?.click()}
-                            disabled={isUploadingThumbnail}
-                            className={`w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer disabled:opacity-50 ${
-                              isDark
-                                ? 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'
-                                : 'bg-slate-50 hover:bg-slate-100 border-slate-300 text-slate-800'
-                            }`}
-                          >
-                            {isUploadingThumbnail ? (
-                              <>
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                <span>Uploading...</span>
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="w-3.5 h-3.5 text-indigo-500" />
-                                <span>
-                                  {editingProject.thumbnailImage ? 'Change Image' : 'Upload Image'}
-                                </span>
-                              </>
-                            )}
-                          </button>
-                        </div>
+                        </button>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Live Client URL (Optional)
-                      </label>
+                  {/* Row 4: Listing Controls (Published, Featured, Order) */}
+                  <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-slate-200/60 dark:border-slate-800/80">
+                    <label className="flex items-center gap-2 text-xs font-bold cursor-pointer">
                       <input
-                        type="text"
-                        value={editingProject.liveUrl || ''}
+                        type="checkbox"
+                        checked={editingProject.published}
                         onChange={(e) =>
-                          setEditingProject({ ...editingProject, liveUrl: e.target.value })
+                          setEditingProject({ ...editingProject, published: e.target.checked })
                         }
-                        placeholder="https://client-domain.com"
-                        className={`w-full px-3 py-2.5 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                        }`}
+                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
                       />
-                    </div>
-                  </div>
-
-                  {/* Short Description */}
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      Short Summary / Tagline
+                      <span>Published (Visible)</span>
                     </label>
-                    <MinimalRichTextEditor
-                      value={editingProject.shortDescription}
-                      onChange={(val) =>
-                        setEditingProject({ ...editingProject, shortDescription: val })
-                      }
-                      placeholder="High-concurrency global trading platform scaled to 1.2M daily active users."
-                      variant="multiline"
-                      minHeight="56px"
-                    />
-                  </div>
 
-                  {/* Challenge & Solution */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        The Challenge
-                      </label>
-                      <MinimalRichTextEditor
-                        value={editingProject.challenge}
-                        onChange={(val) =>
-                          setEditingProject({ ...editingProject, challenge: val })
-                        }
-                        placeholder="Legacy infrastructure bottlenecking transaction throughput..."
-                        variant="multiline"
-                        minHeight="68px"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        The Solution Delivered
-                      </label>
-                      <MinimalRichTextEditor
-                        value={editingProject.solution}
-                        onChange={(val) =>
-                          setEditingProject({ ...editingProject, solution: val })
-                        }
-                        placeholder="Engineered high-speed microservices architecture with Next.js edge caching..."
-                        variant="multiline"
-                        minHeight="68px"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Toggles: Featured Case Study */}
-                  <div className="pt-2">
                     <label className="flex items-center gap-2 text-xs font-bold cursor-pointer">
                       <input
                         type="checkbox"
@@ -1307,8 +1232,24 @@ export function WorkPortfolioManagementView() {
                         }
                         className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
                       />
-                      <span>Featured Case Study (Pinned with priority badge)</span>
+                      <span>Featured (Homepage)</span>
                     </label>
+
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300 shrink-0">
+                        Order:
+                      </label>
+                      <input
+                        type="number"
+                        value={editingProject.order}
+                        onChange={(e) =>
+                          setEditingProject({ ...editingProject, order: parseInt(e.target.value) || 0 })
+                        }
+                        className={`w-20 px-2 py-1 rounded-lg border text-xs font-mono text-center ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        }`}
+                      />
+                    </div>
                   </div>
                 </div>
 

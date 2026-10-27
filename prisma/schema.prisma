@@ -96,50 +96,26 @@ model BusinessVertical {
 }
 
 // -------------------------------------------------------------
-// Section 7 & 8: Projects & Case Studies (Featured Work & Before/After)
+// Section 7 & 8: Projects & Products Showcase (External Redirect)
 // -------------------------------------------------------------
 model Project {
-  id                String            @id @default(cuid())
-  slug              String            @unique
-  title             String
-  client            String
-  industry          String
-  verticalId        String?
-  verticalName      String?
-  year              String            @default("2024")
-  heroImage         String
-  thumbnailImage    String
-  galleryImages     Json?             // Array of image URLs
-  shortDescription  String
-  tagline           String
-  summary           String            @db.Text
-  challenge         String            @db.Text
-  objectives        Json              // Array of strings
-  strategy          Json              // Array of strings
-  solution          String            @db.Text
-  technologiesUsed  Json              // Array of strings
-  metrics           Json              // Array of { value, label, description }
-  featured          Boolean           @default(false)
-  testimonialId     String?
-  liveUrl           String?
-  beforeImage       String?           // For before/after slider
-  afterImage        String?           // For before/after slider
-  order             Int               @default(0)
+  id             String   @id @default(cuid())
+  title          String
+  category       String
+  thumbnailImage String
+  liveUrl        String
 
-  // Custom SEO & Meta Tags (Item Level)
-  metaTitle         String?
-  metaDescription   String?           @db.Text
-  metaKeywords      String?
-  canonicalUrl      String?
-  headCode          String?           @db.Text
+  // Listing management
+  published      Boolean  @default(true)
+  featured       Boolean  @default(false)
+  order          Int      @default(0)
 
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  testimonials      Testimonial[]
-
-  @@index([industry, featured])
-  @@index([order, featured])
+  @@index([published, order])
+  @@index([featured, published])
+  @@index([category])
 }
 
 // -------------------------------------------------------------
@@ -157,7 +133,6 @@ model Testimonial {
   vertical            BusinessVertical? @relation(fields: [verticalId], references: [id])
   relatedProjectSlug  String?
   relatedProjectTitle String?
-  project             Project?          @relation(fields: [relatedProjectSlug], references: [slug])
   rating              Int               @default(5)
   highlightedPhrase   String
   avatarUrl           String?

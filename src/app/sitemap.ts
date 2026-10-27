@@ -8,9 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
 
   try {
-    const [seoPages, dbProjects, dbInsights] = await Promise.all([
+    const [seoPages, dbInsights] = await Promise.all([
       prisma.pageSeo.findMany({ where: { noIndex: false } }),
-      prisma.project.findMany({ select: { slug: true, updatedAt: true } }),
       prisma.insight.findMany({ select: { slug: true, updatedAt: true } }),
     ]);
 
@@ -30,19 +29,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'weekly',
         priority,
       });
-    }
-
-    // 2. Add projects (if not already defined in PageSeo)
-    for (const proj of dbProjects) {
-      const url = `${baseUrl}/work/${proj.slug}`;
-      if (!sitemapMap.has(url)) {
-        sitemapMap.set(url, {
-          url,
-          lastModified: proj.updatedAt ? proj.updatedAt.toISOString() : currentDate,
-          changeFrequency: 'weekly',
-          priority: 0.85,
-        });
-      }
     }
 
     // 3. Add insights (if not already defined in PageSeo)

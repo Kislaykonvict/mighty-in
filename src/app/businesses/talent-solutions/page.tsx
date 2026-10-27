@@ -25,7 +25,10 @@ export default async function TalentSolutionsPage() {
   let relatedProjects: any[] = [];
   try {
     relatedProjects = await prisma.project.findMany({
-      where: { verticalId: 'talent-solutions' },
+      where: {
+        published: true,
+        category: { contains: 'Talent', mode: 'insensitive' },
+      },
       take: 2,
     });
   } catch (e) {}

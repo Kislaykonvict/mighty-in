@@ -19,11 +19,11 @@ export async function GET() {
       prisma.project.findMany({
         select: {
           id: true,
-          slug: true,
           title: true,
-          client: true,
-          industry: true,
+          category: true,
           thumbnailImage: true,
+          liveUrl: true,
+          published: true,
           featured: true,
           order: true,
         },

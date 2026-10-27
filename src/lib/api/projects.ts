@@ -2,9 +2,9 @@ import { Project } from '@/types/project';
 import { apiClient } from './client';
 
 export const projectsApi = {
-  async getAll(filterVertical?: string): Promise<Project[]> {
+  async getAll(filterCategory?: string): Promise<Project[]> {
     try {
-      const query = filterVertical && filterVertical !== 'all' ? `?vertical=${filterVertical}` : '';
+      const query = filterCategory && filterCategory !== 'all' ? `?category=${filterCategory}` : '';
       return await apiClient<Project[]>(`/projects${query}`);
     } catch {
       return [];
@@ -13,19 +13,19 @@ export const projectsApi = {
 
   async getFeatured(): Promise<Project[]> {
     const all = await this.getAll();
-    return all.filter((p) => p.featured);
+    return all.filter((p) => p.featured && p.published);
   },
 
-  async getBySlug(slug: string): Promise<Project | null> {
+  async getById(id: string): Promise<Project | null> {
     try {
-      return await apiClient<Project>(`/projects/${slug}`);
+      return await apiClient<Project>(`/projects/${id}`);
     } catch {
       return null;
     }
   },
 
-  async getRelated(verticalId: string, currentSlug: string): Promise<Project[]> {
+  async getRelated(category: string, currentId: string): Promise<Project[]> {
     const all = await this.getAll();
-    return all.filter((p) => p.verticalId === verticalId && p.slug !== currentSlug).slice(0, 2);
+    return all.filter((p) => p.category === category && p.id !== currentId).slice(0, 2);
   },
 };
