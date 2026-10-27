@@ -66,6 +66,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage structured knowledge base, interactive accordions and FAQPage schema',
       };
     }
+    if (pathname?.startsWith('/admin/testimonials')) {
+      return {
+        title: 'Testimonials & Reviews',
+        subtitle: 'Manage client endorsements, verified reviews, author credentials and ratings',
+      };
+    }
     if (pathname?.startsWith('/admin/policies')) {
       return {
         title: 'Legal & Policy Pages',
