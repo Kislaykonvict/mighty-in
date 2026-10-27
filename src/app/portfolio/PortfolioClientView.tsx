@@ -101,7 +101,16 @@ export function PortfolioClientView({ initialProjects }: PortfolioClientViewProp
       </div>
 
       {/* Projects Grid */}
-      {filteredProjects.length > 0 ? (
+      {initialProjects.length === 0 ? (
+        <div className="p-16 text-center rounded-2xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 shadow-sm space-y-2">
+          <p className="text-slate-800 dark:text-slate-200 font-semibold text-sm">
+            No projects published yet.
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 text-xs">
+            Projects published in the admin panel will appear here automatically.
+          </p>
+        </div>
+      ) : filteredProjects.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
@@ -118,7 +127,7 @@ export function PortfolioClientView({ initialProjects }: PortfolioClientViewProp
               setSearchQuery('');
               setActiveCategory('all');
             }}
-            className="mt-3 text-xs font-semibold text-rose-600 dark:text-sky-400 hover:underline"
+            className="mt-3 text-xs font-semibold text-rose-600 dark:text-sky-400 hover:underline cursor-pointer"
           >
             Clear filters and view all projects
           </button>

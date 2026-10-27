@@ -1,6 +1,5 @@
 import React from 'react';
 import { constructMetadata } from '@/lib/utils/seo';
-import { projectsData } from '@/data/projects';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { PortfolioClientView } from './PortfolioClientView';
@@ -42,11 +41,11 @@ async function getPortfolioPageData() {
       description: section?.subtitle || content.description || defaultWorkPageSettings.description,
     };
 
-    const projects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
+    const projects = dbProjects as any;
 
     return { settings, projects };
   } catch (err) {
-    return { settings: defaultWorkPageSettings, projects: projectsData };
+    return { settings: defaultWorkPageSettings, projects: [] };
   }
 }
 

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { ArrowLeft, ArrowRight, CheckCircle2, Star, Quote, ExternalLink, Calendar, Building, Layers } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
-import { projectsData } from '@/data/projects';
 import { testimonialsData } from '@/data/testimonials';
 import { constructDynamicMetadata } from '@/lib/utils/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
@@ -15,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { ProjectCard } from '@/components/work/ProjectCard';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { RichTextContent } from '@/components/ui/RichTextContent';
+import { CaseStudyMetric } from '@/types/project';
 
 interface CaseStudyPageProps {
   params: {
@@ -23,69 +23,70 @@ interface CaseStudyPageProps {
 }
 
 export async function generateStaticParams() {
-  return projectsData.map((project) => ({
-    slug: project.slug,
-  }));
+  try {
+    const dbProjects = await prisma.project.findMany({ select: { slug: true } });
+    if (dbProjects && dbProjects.length > 0) {
+      return dbProjects.map((project) => ({
+        slug: project.slug,
+      }));
+    }
+  } catch (e) {}
+  return [];
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
-  const project = projectsData.find((p) => p.slug === params.slug);
+  let project: any = null;
+  try {
+    project = await prisma.project.findUnique({
+      where: { slug: params.slug },
+    });
+  } catch (e) {}
+
   if (!project) return { title: 'Case Study Not Found' };
 
-  let dbProject = null;
-  try {
-    dbProject = await prisma.project.findUnique({
-      where: { slug: params.slug },
-      select: {
-        metaTitle: true,
-        metaDescription: true,
-        metaKeywords: true,
-        canonicalUrl: true,
-      },
-    });
-  } catch (e) {
-    // Fallback if db offline or during static build
-  }
-
-  const fallbackKeywords = dbProject?.metaKeywords
-    ? dbProject.metaKeywords.split(',').map((k) => k.trim())
+  const fallbackKeywords = project.metaKeywords
+    ? project.metaKeywords.split(',').map((k: string) => k.trim())
     : undefined;
 
   return constructDynamicMetadata(`/work/${project.slug}`, {
-    title: dbProject?.metaTitle || `${project.title} | Case Study`,
-    description: dbProject?.metaDescription || project.summary,
-    canonical: dbProject?.canonicalUrl || `/work/${project.slug}`,
+    title: project.metaTitle || `${project.title} | Case Study`,
+    description: project.metaDescription || project.summary || project.shortDescription,
+    canonical: project.canonicalUrl || `/work/${project.slug}`,
     keywords: fallbackKeywords,
-    ogImage: project.heroImage,
+    ogImage: project.heroImage || project.thumbnailImage,
   });
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
-  const project = projectsData.find((p) => p.slug === params.slug);
+  let project: any = null;
+  try {
+    project = await prisma.project.findUnique({
+      where: { slug: params.slug },
+    });
+  } catch (e) {}
 
   if (!project) {
     notFound();
   }
 
-  let dbHeadCode: string | null = null;
-  try {
-    const dbProject = await prisma.project.findUnique({
-      where: { slug: params.slug },
-      select: { headCode: true },
-    });
-    dbHeadCode = dbProject?.headCode || null;
-  } catch (e) {
-    // Fallback gracefully
-  }
+  const dbHeadCode = project.headCode || null;
+  const testimonial = project.testimonialId
+    ? testimonialsData.find((t) => t.id === project.testimonialId)
+    : null;
 
-  const testimonial = testimonialsData.find((t) => t.id === project.testimonialId);
-  const relatedProjects = projectsData
-    .filter(
-      (p) =>
-        (p.industry === project.industry || (project.verticalId && p.verticalId === project.verticalId)) &&
-        p.slug !== project.slug
-    )
-    .slice(0, 2);
+  let relatedProjects: any[] = [];
+  try {
+    relatedProjects = await prisma.project.findMany({
+      where: {
+        slug: { not: project.slug },
+        OR: [
+          ...(project.industry ? [{ industry: project.industry }] : []),
+          ...(project.verticalId ? [{ verticalId: project.verticalId }] : []),
+        ],
+      },
+      take: 2,
+    });
+  } catch (e) {}
 
   const themeBadgeVariant =
     project.verticalId === 'digital-growth'
@@ -93,6 +94,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       : project.verticalId === 'talent-solutions'
       ? 'talent'
       : 'tech';
+
+  const metrics: CaseStudyMetric[] = Array.isArray(project.metrics) ? (project.metrics as any) : [];
+  const objectives: string[] = Array.isArray(project.objectives) ? (project.objectives as any) : [];
+  const strategy: string[] = Array.isArray(project.strategy) ? (project.strategy as any) : [];
+  const technologiesUsed: string[] = Array.isArray(project.technologiesUsed) ? (project.technologiesUsed as any) : [];
+  const galleryImages: string[] = Array.isArray(project.galleryImages) ? (project.galleryImages as any) : [];
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
@@ -181,14 +188,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </section>
 
       {/* 3. Verified Outcomes Metrics Banner (rendered only if metrics exist) */}
-      {project.metrics && project.metrics.length > 0 && (
+      {metrics.length > 0 && (
         <section className="py-12 bg-[#DBDBDB] dark:bg-[#060A12] border-y border-neutral-300 dark:border-white/8">
           <SectionContainer width="default" paddingY="none">
             <div className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-4 font-semibold text-center sm:text-left">
               VERIFIED PRODUCTION RESULTS
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {project.metrics.map((metric) => (
+              {metrics.map((metric: CaseStudyMetric) => (
                 <div
                   key={metric.label}
                   className="p-5 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-300 dark:border-white/8 shadow-xs"
@@ -230,7 +237,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Target Milestones</h3>
             <div className="space-y-3">
-              {project.objectives.map((obj) => (
+              {objectives.map((obj: string) => (
                 <div key={obj} className="flex items-start gap-3 text-sm text-slate-800 dark:text-slate-200">
                   <CheckCircle2 className="w-5 h-5 text-rose-600 dark:text-sky-400 shrink-0 mt-0.5" />
                   <span>{obj}</span>
@@ -253,7 +260,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 Our architectural and commercial roadmap.
               </h2>
               <div className="space-y-3 pt-2">
-                {project.strategy.map((strat, idx) => (
+                {strategy.map((strat: string, idx: number) => (
                   <div key={strat} className="p-4 rounded-xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 shadow-xs space-y-1">
                     <div className="text-xs font-mono text-slate-500">PHASE 0{idx + 1}</div>
                     <div className="text-sm text-slate-800 dark:text-slate-200 font-medium">{strat}</div>
@@ -279,7 +286,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   Technologies &amp; Frameworks Deployed
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {project.technologiesUsed.map((tech) => (
+                  {technologiesUsed.map((tech: string) => (
                     <span
                       key={tech}
                       className="px-3 py-1 rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-xs"
@@ -295,13 +302,13 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </section>
 
       {/* 6. Gallery / Visual Work */}
-      {project.galleryImages && project.galleryImages.length > 0 && (
+      {galleryImages.length > 0 && (
         <SectionContainer width="default" paddingY="lg">
           <div className="text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4 font-bold">
             05. VISUAL ARTIFACTS &amp; INTERFACES
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {project.galleryImages.map((imgUrl, i) => (
+            {galleryImages.map((imgUrl: string, i: number) => (
               <div
                 key={i}
                 className="relative h-72 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-md"

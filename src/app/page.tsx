@@ -17,7 +17,6 @@ import {
   TestimonialCard,
 } from '@/types/testimonialsSection';
 import { defaultHomepageWorkData, HomepageWorkData } from '@/types/homepageWork';
-import { projectsData } from '@/data/projects';
 
 export const revalidate = 0;
 
@@ -168,12 +167,10 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
       }),
     ]);
 
-    const fallbackProjects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
-
     if (!section) {
       return {
         ...defaultHomepageWorkData,
-        projects: fallbackProjects.slice(0, 6),
+        projects: [],
       };
     }
 
@@ -181,17 +178,12 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
     const selectedIds: string[] = Array.isArray(content.selectedProjectIds)
       ? content.selectedProjectIds
       : [];
-    const maxDisplay = typeof content.maxDisplay === 'number' ? content.maxDisplay : 6;
 
     let orderedProjects: any[] = [];
     if (selectedIds.length > 0 && dbProjects.length > 0) {
       const map = new Map<string, any>();
       dbProjects.forEach((p) => map.set(p.id, p));
       orderedProjects = selectedIds.map((id) => map.get(id)).filter(Boolean);
-    }
-
-    if (orderedProjects.length === 0) {
-      orderedProjects = fallbackProjects.slice(0, 6);
     }
 
     return {
@@ -223,7 +215,7 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
   } catch (err) {
     return {
       ...defaultHomepageWorkData,
-      projects: projectsData.slice(0, 6),
+      projects: [],
     };
   }
 }

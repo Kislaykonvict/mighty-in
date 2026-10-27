@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowRight, Sparkles, CheckCircle2, TrendingUp, Search, Layout, Compass, ShieldCheck } from 'lucide-react';
 import { constructMetadata } from '@/lib/utils/seo';
 import { businessesData } from '@/data/businesses';
-import { projectsData } from '@/data/projects';
+import { prisma } from '@/lib/db/prisma';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
@@ -13,7 +13,6 @@ import { ProjectCard } from '@/components/work/ProjectCard';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 
 const digitalData = businessesData.find((b) => b.id === 'digital-growth')!;
-const relatedProjects = projectsData.filter((p) => p.verticalId === 'digital-growth');
 
 export const metadata = constructMetadata({
   title: 'Digital & Growth | Make Your Business Impossible to Ignore',
@@ -22,7 +21,15 @@ export const metadata = constructMetadata({
   canonical: '/businesses/digital-growth',
 });
 
-export default function DigitalGrowthPage() {
+export default async function DigitalGrowthPage() {
+  let relatedProjects: any[] = [];
+  try {
+    relatedProjects = await prisma.project.findMany({
+      where: { verticalId: 'digital-growth' },
+      take: 2,
+    });
+  } catch (e) {}
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC] dark:bg-[#080C14]">
       {/* Hero Section */}
@@ -146,23 +153,25 @@ export default function DigitalGrowthPage() {
       </SectionContainer>
 
       {/* Case Studies in this vertical */}
-      <section className="py-20 bg-white dark:bg-[#060A12] border-t border-slate-200 dark:border-white/8">
-        <SectionContainer width="default" paddingY="none">
-          <SectionHeader
-            eyebrow="SELECTED CASE STUDIES"
-            badgeVariant="growth"
-            title="Real brands. Measurable market momentum."
-            subtitle="Explore how our digital and growth initiatives created verified revenue pipeline for our clients."
-            align="left"
-          />
+      {relatedProjects.length > 0 && (
+        <section className="py-20 bg-white dark:bg-[#060A12] border-t border-slate-200 dark:border-white/8">
+          <SectionContainer width="default" paddingY="none">
+            <SectionHeader
+              eyebrow="SELECTED CASE STUDIES"
+              badgeVariant="growth"
+              title="Real brands. Measurable market momentum."
+              subtitle="Explore how our digital and growth initiatives created verified revenue pipeline for our clients."
+              align="left"
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {relatedProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        </SectionContainer>
-      </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {relatedProjects.map((project) => (
+                <ProjectCard key={project.id} project={project as any} />
+              ))}
+            </div>
+          </SectionContainer>
+        </section>
+      )}
 
       <FinalCtaSection />
     </div>

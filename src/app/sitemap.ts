@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/db/prisma';
-import { projectsData } from '@/data/projects';
 import { insightsData } from '@/data/insights';
 import { businessesData } from '@/data/businesses';
 
@@ -86,12 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  const projectRoutes: MetadataRoute.Sitemap = projectsData.map((p) => ({
-    url: `${baseUrl}/work/${p.slug}`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.8,
-  }));
+  const projectRoutes: MetadataRoute.Sitemap = [];
 
   const insightRoutes: MetadataRoute.Sitemap = insightsData.map((i) => ({
     url: `${baseUrl}/insights/${i.slug}`,

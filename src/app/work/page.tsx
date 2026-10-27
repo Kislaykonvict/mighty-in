@@ -1,6 +1,5 @@
 import React from 'react';
 import { constructMetadata } from '@/lib/utils/seo';
-import { projectsData } from '@/data/projects';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { PortfolioClientView } from '@/app/portfolio/PortfolioClientView';
@@ -57,13 +56,13 @@ async function getWorkPageData() {
       : Array.from(new Set(dbProjects.map((p) => p.industry?.trim()).filter(Boolean)));
     const categoriesTitle: string = catSection?.title || catContent.title || 'TRUSTED ACROSS:';
 
-    const projects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
+    const projects = dbProjects as any;
 
     return { settings, projects, categories, categoriesTitle };
   } catch (err) {
     return {
       settings: defaultWorkPageSettings,
-      projects: projectsData,
+      projects: [],
       categories: [],
       categoriesTitle: 'TRUSTED ACROSS:',
     };
