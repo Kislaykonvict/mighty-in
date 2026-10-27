@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       where.industry = industryFilter;
     }
 
-    const [projects, distinctIndustries] = await Promise.all([
+    const [projects, distinctIndustries, categorySection] = await Promise.all([
       prisma.project.findMany({
         where,
         orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
@@ -31,11 +31,22 @@ export async function GET(req: NextRequest) {
         select: { industry: true },
         distinct: ['industry'],
       }),
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'work',
+            sectionKey: 'categories',
+          },
+        },
+      }),
     ]);
 
-    const industries = distinctIndustries
-      .map((p) => p.industry?.trim())
-      .filter((ind): ind is string => Boolean(ind));
+    const sectionCategories = (categorySection?.content as any)?.categories;
+    const industries = Array.isArray(sectionCategories) && sectionCategories.length > 0
+      ? sectionCategories
+      : distinctIndustries
+          .map((p) => p.industry?.trim())
+          .filter((ind): ind is string => Boolean(ind));
 
     return NextResponse.json({
       success: true,

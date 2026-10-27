@@ -19,12 +19,20 @@ export const metadata = constructMetadata({
 
 async function getWorkPageData() {
   try {
-    const [section, dbProjects] = await Promise.all([
+    const [section, catSection, dbProjects] = await Promise.all([
       prisma.siteSection.findUnique({
         where: {
           pageSlug_sectionKey: {
             pageSlug: 'work',
             sectionKey: 'header',
+          },
+        },
+      }),
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'work',
+            sectionKey: 'categories',
           },
         },
       }),
@@ -42,16 +50,27 @@ async function getWorkPageData() {
       description: section?.subtitle || content.description || defaultWorkPageSettings.description,
     };
 
+    const catContent = (catSection?.content as any) || {};
+    const categories: string[] = Array.isArray(catContent.categories) && catContent.categories.length > 0
+      ? catContent.categories
+      : Array.from(new Set(dbProjects.map((p) => p.industry?.trim()).filter(Boolean)));
+    const categoriesTitle: string = catSection?.title || catContent.title || 'TRUSTED ACROSS:';
+
     const projects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
 
-    return { settings, projects };
+    return { settings, projects, categories, categoriesTitle };
   } catch (err) {
-    return { settings: defaultWorkPageSettings, projects: projectsData };
+    return {
+      settings: defaultWorkPageSettings,
+      projects: projectsData,
+      categories: [],
+      categoriesTitle: 'TRUSTED ACROSS:',
+    };
   }
 }
 
 export default async function WorkPage() {
-  const { settings, projects } = await getWorkPageData();
+  const { settings, projects, categories, categoriesTitle } = await getWorkPageData();
 
   return (
     <div className="flex flex-col min-h-screen bg-[#060A12]">
@@ -75,6 +94,33 @@ export default async function WorkPage() {
           </div>
         </SectionContainer>
       </section>
+
+      {/* Horizontal Categories Showcase (Styled like the screenshot) */}
+      {categories.length > 0 && (
+        <section className="py-6 bg-[#080C14]/90 border-b border-white/8 backdrop-blur-xs relative z-10">
+          <SectionContainer width="default" paddingY="none">
+            <div className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3">
+              {/* Leading Line Accent & Monospace Label */}
+              <div className="flex items-center gap-3 mr-1">
+                <span className="w-12 h-[1px] bg-white/20 hidden sm:block" />
+                <span className="text-[11px] font-mono tracking-widest text-slate-400 uppercase font-semibold whitespace-nowrap">
+                  {categoriesTitle}
+                </span>
+              </div>
+
+              {/* Category Capsule Pills */}
+              {categories.map((cat) => (
+                <div
+                  key={cat}
+                  className="px-4 py-2 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/30 text-xs font-semibold text-slate-200 transition-all duration-200 cursor-default shadow-xs"
+                >
+                  {cat}
+                </div>
+              ))}
+            </div>
+          </SectionContainer>
+        </section>
+      )}
 
       {/* Projects Grid with Interactive Search & Category Filter */}
       <section className="py-14 sm:py-20 relative">

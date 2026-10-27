@@ -65,15 +65,19 @@ export function WorkPortfolioManagementView() {
 
   // State
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
-  const [industries, setIndustries] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [categoriesTitle, setCategoriesTitle] = useState('TRUSTED ACROSS:');
   const [headerSettings, setHeaderSettings] = useState<WorkPageSettings>(defaultWorkPageSettings);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingHeader, setIsSavingHeader] = useState(false);
+  const [isSavingCategories, setIsSavingCategories] = useState(false);
+  const [newCategoryInput, setNewCategoryInput] = useState('');
+  const [editingCategoryIndex, setEditingCategoryIndex] = useState<number | null>(null);
+  const [editingCategoryValue, setEditingCategoryValue] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  // Filters
+  // Filters (Search by Title)
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedIndustry, setSelectedIndustry] = useState('ALL');
 
   // Modal / Editor State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -151,22 +155,32 @@ export function WorkPortfolioManagementView() {
     }
   };
 
-  // Load all projects and header settings
+  // Load all projects, header settings, and categories
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [projRes, setRes] = await Promise.all([
+      const [projRes, setRes, catRes] = await Promise.all([
         fetch('/api/admin/projects'),
         fetch('/api/admin/work/settings'),
+        fetch('/api/admin/work/categories'),
       ]);
-      const [projJson, setJson] = await Promise.all([projRes.json(), setRes.json()]);
+      const [projJson, setJson, catJson] = await Promise.all([
+        projRes.json(),
+        setRes.json(),
+        catRes.json(),
+      ]);
 
       if (projJson.success) {
         setProjects(projJson.projects || []);
-        setIndustries(projJson.industries || []);
       }
       if (setJson.success) {
         setHeaderSettings(setJson.data || defaultWorkPageSettings);
+      }
+      if (catJson.success) {
+        setCategories(catJson.categories || []);
+        if (catJson.title) setCategoriesTitle(catJson.title);
+      } else if (projJson.industries) {
+        setCategories(projJson.industries || []);
       }
     } catch (err: any) {
       setFeedback({ type: 'error', message: err.message || 'Error loading portfolio data' });
@@ -211,7 +225,7 @@ export function WorkPortfolioManagementView() {
       slug: '',
       title: '',
       client: '',
-      industry: '',
+      industry: categories[0] || '',
       year: new Date().getFullYear().toString(),
       heroImage: '/images/hero/mw-hero-bg.webp',
       thumbnailImage: '',
@@ -320,18 +334,81 @@ export function WorkPortfolioManagementView() {
     }
   };
 
-  // Filtered projects
+  // Category CRUD Handlers
+  const handleSaveCategories = async (updatedCategories: string[], newTitle?: string) => {
+    setIsSavingCategories(true);
+    try {
+      const res = await fetch('/api/admin/work/categories', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          categories: updatedCategories,
+          title: newTitle || categoriesTitle,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setCategories(json.categories);
+        if (json.title) setCategoriesTitle(json.title);
+        setFeedback({ type: 'success', message: 'Categories updated successfully!' });
+      } else {
+        setFeedback({ type: 'error', message: json.error || 'Failed to update categories' });
+      }
+    } catch (err: any) {
+      setFeedback({ type: 'error', message: err.message || 'Error updating categories' });
+    } finally {
+      setIsSavingCategories(false);
+      setTimeout(() => setFeedback(null), 3000);
+    }
+  };
+
+  const handleAddCategory = async () => {
+    const trimmed = newCategoryInput.trim();
+    if (!trimmed) return;
+    if (categories.some((c) => c.toLowerCase() === trimmed.toLowerCase())) {
+      setFeedback({ type: 'error', message: 'Category already exists' });
+      return;
+    }
+    const next = [...categories, trimmed];
+    setCategories(next);
+    setNewCategoryInput('');
+    await handleSaveCategories(next);
+  };
+
+  const handleStartEditCategory = (index: number) => {
+    setEditingCategoryIndex(index);
+    setEditingCategoryValue(categories[index]);
+  };
+
+  const handleSaveEditCategory = async (index: number) => {
+    const trimmed = editingCategoryValue.trim();
+    if (!trimmed) return;
+    const oldCat = categories[index];
+    if (oldCat === trimmed) {
+      setEditingCategoryIndex(null);
+      return;
+    }
+    const next = [...categories];
+    next[index] = trimmed;
+    setCategories(next);
+    setEditingCategoryIndex(null);
+    await handleSaveCategories(next);
+  };
+
+  const handleDeleteCategory = async (catToDelete: string) => {
+    if (categories.length <= 1) {
+      setFeedback({ type: 'error', message: 'You must keep at least one category.' });
+      return;
+    }
+    const next = categories.filter((c) => c !== catToDelete);
+    setCategories(next);
+    await handleSaveCategories(next);
+  };
+
+  // Filtered projects (strictly by title)
   const filteredProjects = projects.filter((p) => {
-    const matchesSearch =
-      !searchQuery.trim() ||
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.industry && p.industry.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const matchesIndustry =
-      selectedIndustry === 'ALL' || p.industry === selectedIndustry;
-
-    return matchesSearch && matchesIndustry;
+    if (!searchQuery.trim()) return true;
+    return p.title.toLowerCase().includes(searchQuery.toLowerCase().trim());
   });
 
   if (isLoading) {
@@ -502,6 +579,170 @@ export function WorkPortfolioManagementView() {
         </div>
       </div>
 
+      {/* Category Management & Horizontal Showcase Section */}
+      <div
+        className={`p-6 rounded-2xl border space-y-6 ${
+          isDark ? 'bg-[#0B101D] border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+        }`}
+      >
+        {/* Category Header & Add Input */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
+              <Tag className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-black text-slate-900 dark:text-white">
+                  Work Categories &amp; Industry Taxonomy
+                </h2>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  {categories.length} Active
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Manage portfolio categories. These populate the project dropdown and display horizontally on the live site.
+              </p>
+            </div>
+          </div>
+
+          {/* Add Category Form */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleAddCategory();
+            }}
+            className="flex items-center gap-2"
+          >
+            <input
+              type="text"
+              placeholder="New category name..."
+              value={newCategoryInput}
+              onChange={(e) => setNewCategoryInput(e.target.value)}
+              className={`px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-sky-500/20 focus:outline-none w-52 sm:w-64 ${
+                isDark
+                  ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
+                  : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
+              }`}
+            />
+            <button
+              type="submit"
+              disabled={!newCategoryInput.trim() || isSavingCategories}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white transition-all cursor-pointer shrink-0"
+            >
+              {isSavingCategories ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Plus className="w-3.5 h-3.5" />
+              )}
+              <span>Add Category</span>
+            </button>
+          </form>
+        </div>
+
+        {/* Horizontal Showcase (Matching Second Screenshot) */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <span>Horizontal Showcase</span>
+            <span className="text-[10px] lowercase text-slate-500 font-normal">
+              hover any pill to rename or delete
+            </span>
+          </div>
+
+          <div
+            className={`p-5 rounded-2xl border transition-colors ${
+              isDark
+                ? 'bg-[#080C14]/80 border-slate-800'
+                : 'bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-slate-200'
+            }`}
+          >
+            <div className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3">
+              {/* Leading Line Accent & Monospace Label */}
+              <div className="flex items-center gap-3 mr-1">
+                <span className="w-12 h-[1px] bg-slate-300 dark:bg-white/20 hidden sm:block" />
+                <span className="text-[11px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase font-semibold whitespace-nowrap">
+                  {categoriesTitle}
+                </span>
+              </div>
+
+              {/* Category Pills */}
+              {categories.map((cat, index) => {
+                const isEditing = editingCategoryIndex === index;
+
+                if (isEditing) {
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-sky-500 bg-white dark:bg-slate-900 shadow-md ring-2 ring-sky-500/20"
+                    >
+                      <input
+                        type="text"
+                        autoFocus
+                        value={editingCategoryValue}
+                        onChange={(e) => setEditingCategoryValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSaveEditCategory(index);
+                          } else if (e.key === 'Escape') {
+                            setEditingCategoryIndex(null);
+                          }
+                        }}
+                        className="text-xs font-semibold bg-transparent border-none outline-none text-slate-900 dark:text-white w-36 sm:w-44"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleSaveEditCategory(index)}
+                        className="p-1 rounded-full text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                        title="Save name"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingCategoryIndex(null)}
+                        className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                        title="Cancel"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={cat}
+                    className="group relative px-4 py-2 rounded-full border border-slate-200 dark:border-white/20 bg-white dark:bg-white/[0.05] hover:bg-slate-50 dark:hover:bg-white/[0.1] hover:border-slate-300 dark:hover:border-white/40 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all duration-200 shadow-xs flex items-center gap-2"
+                  >
+                    <span>{cat}</span>
+
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-1 pl-1.5 border-l border-slate-200 dark:border-white/10">
+                      <button
+                        type="button"
+                        onClick={() => handleStartEditCategory(index)}
+                        className="p-0.5 rounded text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                        title={`Rename "${cat}"`}
+                      >
+                        <Edit2 className="w-3 h-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCategory(cat)}
+                        className="p-0.5 rounded text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                        title={`Delete "${cat}"`}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Projects Table & Management Section */}
       <div
         className={`p-6 rounded-2xl border space-y-5 ${
@@ -534,52 +775,34 @@ export function WorkPortfolioManagementView() {
           </button>
         </div>
 
-        {/* Filter & Search Bar */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        {/* Search Bar (Searches by Title Only) */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search projects by title, client, or industry..."
+              placeholder="Search projects by title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`w-full pl-9 pr-4 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
-                isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+              className={`w-full pl-9 pr-8 py-2.5 rounded-xl border text-xs focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all ${
+                isDark
+                  ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
+                  : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
               }`}
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
-          {/* Vertical Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-            <button
-              type="button"
-              onClick={() => setSelectedIndustry('ALL')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
-                selectedIndustry === 'ALL'
-                  ? 'bg-indigo-600 text-white'
-                  : isDark
-                  ? 'bg-slate-800 text-slate-400 hover:text-white'
-                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              All Industries
-            </button>
-            {industries.map((ind) => (
-              <button
-                key={ind}
-                type="button"
-                onClick={() => setSelectedIndustry(ind)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
-                  selectedIndustry === ind
-                    ? 'bg-indigo-600 text-white'
-                    : isDark
-                    ? 'bg-slate-800 text-slate-400 hover:text-white'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                {ind}
-              </button>
-            ))}
+          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Showing {filteredProjects.length} of {projects.length} {projects.length === 1 ? 'project' : 'projects'}
           </div>
         </div>
 
@@ -784,22 +1007,32 @@ export function WorkPortfolioManagementView() {
                     </div>
                   </div>
 
-                  {/* Row 2: Industry & Year */}
+                  {/* Row 2: Category & Year */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        Industry Domain *
+                        Project Category *
                       </label>
-                      <input
-                        type="text"
+                      <select
                         required
                         value={editingProject.industry}
                         onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
-                        placeholder="e.g. Supply Chain / SaaS, Fintech, E-Commerce"
-                        className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
+                        className={`w-full px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-indigo-500/20 focus:outline-none ${
+                          isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                         }`}
-                      />
+                      >
+                        <option value="" disabled>Select a Project Category</option>
+                        {editingProject.industry && !categories.includes(editingProject.industry) && (
+                          <option value={editingProject.industry}>
+                            {editingProject.industry} (Current)
+                          </option>
+                        )}
+                        {categories.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     <div className="space-y-1">
