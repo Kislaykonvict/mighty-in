@@ -21,8 +21,8 @@ export interface Project {
   title: string;
   client: string;
   industry: string;
-  verticalId: BusinessVerticalId;
-  verticalName: string;
+  verticalId?: string;
+  verticalName?: string;
   year: string;
   heroImage: string;
   thumbnailImage: string;

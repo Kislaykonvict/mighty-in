@@ -14,9 +14,6 @@ export async function GET(req: NextRequest, context: RouteContext) {
 
     const project = await prisma.project.findUnique({
       where: { id },
-      include: {
-        vertical: true,
-      },
     });
 
     if (!project) {
@@ -46,15 +43,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ success: false, error: 'Project not found' }, { status: 404 });
     }
 
-    // Determine verticalName if verticalId changed
-    let verticalName = body.verticalName || existing.verticalName;
-    if (body.verticalId && body.verticalId !== existing.verticalId) {
-      const v = await prisma.businessVertical.findUnique({
-        where: { id: body.verticalId },
-      });
-      if (v) verticalName = v.name;
-    }
-
     // Check slug uniqueness if changed
     if (body.slug && body.slug !== existing.slug) {
       const slugTaken = await prisma.project.findUnique({
@@ -72,8 +60,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
         slug: body.slug !== undefined ? body.slug : existing.slug,
         client: body.client !== undefined ? body.client : existing.client,
         industry: body.industry !== undefined ? body.industry : existing.industry,
-        verticalId: body.verticalId !== undefined ? body.verticalId : existing.verticalId,
-        verticalName,
         year: body.year !== undefined ? body.year : existing.year,
         heroImage: body.heroImage !== undefined ? body.heroImage : existing.heroImage,
         thumbnailImage: body.thumbnailImage !== undefined ? body.thumbnailImage : existing.thumbnailImage,
@@ -92,9 +78,6 @@ export async function PUT(req: NextRequest, context: RouteContext) {
         order: body.order !== undefined ? Number(body.order) : existing.order,
         metaTitle: body.metaTitle !== undefined ? body.metaTitle : existing.metaTitle,
         metaDescription: body.metaDescription !== undefined ? body.metaDescription : existing.metaDescription,
-      },
-      include: {
-        vertical: true,
       },
     });
 

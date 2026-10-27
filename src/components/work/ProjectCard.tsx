@@ -20,7 +20,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       href={targetUrl}
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
-      onClick={() => analytics.trackProjectView(project.slug, project.verticalId)}
+      onClick={() => analytics.trackProjectView(project.slug, project.verticalId || '')}
       className="group block select-none focus:outline-none cursor-pointer"
       aria-label={`${project.title} - ${project.industry}`}
     >

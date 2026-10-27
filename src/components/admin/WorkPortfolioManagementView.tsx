@@ -29,21 +29,14 @@ import {
 import { useAdminTheme } from './AdminThemeContext';
 import { WorkPageSettings, defaultWorkPageSettings } from '@/types/workPage';
 
-interface VerticalOption {
-  id: string;
-  name: string;
-  themeColor: string;
-  accentHex: string;
-}
-
 interface ProjectRecord {
   id: string;
   slug: string;
   title: string;
   client: string;
   industry: string;
-  verticalId: string;
-  verticalName: string;
+  verticalId?: string;
+  verticalName?: string;
   year: string;
   heroImage: string;
   thumbnailImage: string;
@@ -62,7 +55,6 @@ interface ProjectRecord {
   order: number;
   metaTitle?: string;
   metaDescription?: string;
-  vertical?: VerticalOption;
 }
 
 export function WorkPortfolioManagementView() {
@@ -71,7 +63,7 @@ export function WorkPortfolioManagementView() {
 
   // State
   const [projects, setProjects] = useState<ProjectRecord[]>([]);
-  const [verticals, setVerticals] = useState<VerticalOption[]>([]);
+  const [industries, setIndustries] = useState<string[]>([]);
   const [headerSettings, setHeaderSettings] = useState<WorkPageSettings>(defaultWorkPageSettings);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingHeader, setIsSavingHeader] = useState(false);
@@ -79,7 +71,7 @@ export function WorkPortfolioManagementView() {
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedVertical, setSelectedVertical] = useState('ALL');
+  const [selectedIndustry, setSelectedIndustry] = useState('ALL');
 
   // Modal / Editor State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,7 +91,7 @@ export function WorkPortfolioManagementView() {
 
       if (projJson.success) {
         setProjects(projJson.projects || []);
-        setVerticals(projJson.verticals || []);
+        setIndustries(projJson.industries || []);
       }
       if (setJson.success) {
         setHeaderSettings(setJson.data || defaultWorkPageSettings);
@@ -142,15 +134,12 @@ export function WorkPortfolioManagementView() {
 
   // Open modal for Create
   const handleOpenCreate = () => {
-    const defaultVertical = verticals[0]?.id || 'technology';
     setEditingProject({
       id: '',
       slug: '',
       title: '',
       client: '',
       industry: '',
-      verticalId: defaultVertical,
-      verticalName: verticals[0]?.name || 'Technology',
       year: new Date().getFullYear().toString(),
       heroImage: '/images/hero/mw-hero-bg.webp',
       thumbnailImage: '/images/hero/mw-hero-bg.webp',
@@ -267,12 +256,12 @@ export function WorkPortfolioManagementView() {
       !searchQuery.trim() ||
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.industry.toLowerCase().includes(searchQuery.toLowerCase());
+      (p.industry && p.industry.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    const matchesVertical =
-      selectedVertical === 'ALL' || p.verticalId === selectedVertical;
+    const matchesIndustry =
+      selectedIndustry === 'ALL' || p.industry === selectedIndustry;
 
-    return matchesSearch && matchesVertical;
+    return matchesSearch && matchesIndustry;
   });
 
   if (isLoading) {
@@ -494,31 +483,31 @@ export function WorkPortfolioManagementView() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <button
               type="button"
-              onClick={() => setSelectedVertical('ALL')}
+              onClick={() => setSelectedIndustry('ALL')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
-                selectedVertical === 'ALL'
+                selectedIndustry === 'ALL'
                   ? 'bg-indigo-600 text-white'
                   : isDark
                   ? 'bg-slate-800 text-slate-400 hover:text-white'
                   : 'bg-slate-100 text-slate-600 hover:text-slate-900'
               }`}
             >
-              All Verticals
+              All Industries
             </button>
-            {verticals.map((v) => (
+            {industries.map((ind) => (
               <button
-                key={v.id}
+                key={ind}
                 type="button"
-                onClick={() => setSelectedVertical(v.id)}
+                onClick={() => setSelectedIndustry(ind)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
-                  selectedVertical === v.id
+                  selectedIndustry === ind
                     ? 'bg-indigo-600 text-white'
                     : isDark
                     ? 'bg-slate-800 text-slate-400 hover:text-white'
                     : 'bg-slate-100 text-slate-600 hover:text-slate-900'
                 }`}
               >
-                {v.name}
+                {ind}
               </button>
             ))}
           </div>
@@ -577,7 +566,7 @@ export function WorkPortfolioManagementView() {
 
                     <div className="absolute bottom-2.5 left-2.5">
                       <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-950/80 text-white backdrop-blur-xs">
-                        {project.verticalName}
+                        {project.industry}
                       </span>
                     </div>
                   </div>
@@ -732,44 +721,18 @@ export function WorkPortfolioManagementView() {
                 </div>
               </div>
 
-              {/* Row 2: Vertical, Industry & Year */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Row 2: Industry & Year */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Business Vertical
-                  </label>
-                  <select
-                    value={editingProject.verticalId}
-                    onChange={(e) => {
-                      const vId = e.target.value;
-                      const found = verticals.find((v) => v.id === vId);
-                      setEditingProject({
-                        ...editingProject,
-                        verticalId: vId,
-                        verticalName: found?.name || 'Technology',
-                      });
-                    }}
-                    className={`w-full px-3 py-2 rounded-xl border text-xs ${
-                      isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
-                    }`}
-                  >
-                    {verticals.map((v) => (
-                      <option key={v.id} value={v.id}>
-                        {v.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Industry Domain
+                    Industry Domain *
                   </label>
                   <input
                     type="text"
+                    required
                     value={editingProject.industry}
                     onChange={(e) => setEditingProject({ ...editingProject, industry: e.target.value })}
-                    placeholder="e.g. Supply Chain / SaaS"
+                    placeholder="e.g. Supply Chain / SaaS, Fintech, E-Commerce"
                     className={`w-full px-3 py-2 rounded-xl border text-xs ${
                       isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300'
                     }`}

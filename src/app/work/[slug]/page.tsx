@@ -79,15 +79,19 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   const testimonial = testimonialsData.find((t) => t.id === project.testimonialId);
   const relatedProjects = projectsData
-    .filter((p) => p.verticalId === project.verticalId && p.slug !== project.slug)
+    .filter(
+      (p) =>
+        (p.industry === project.industry || (project.verticalId && p.verticalId === project.verticalId)) &&
+        p.slug !== project.slug
+    )
     .slice(0, 2);
 
   const themeBadgeVariant =
     project.verticalId === 'digital-growth'
       ? 'growth'
-      : project.verticalId === 'technology'
-      ? 'tech'
-      : 'talent';
+      : project.verticalId === 'talent-solutions'
+      ? 'talent'
+      : 'tech';
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">

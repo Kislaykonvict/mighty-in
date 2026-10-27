@@ -23,8 +23,6 @@ export async function GET() {
           title: true,
           client: true,
           industry: true,
-          verticalId: true,
-          verticalName: true,
           thumbnailImage: true,
           featured: true,
           order: true,

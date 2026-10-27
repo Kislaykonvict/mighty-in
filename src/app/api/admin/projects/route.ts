@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('q') || '';
-    const verticalFilter = searchParams.get('vertical') || '';
+    const industryFilter = searchParams.get('industry') || '';
 
     const where: any = {};
     if (query.trim()) {
@@ -18,30 +18,29 @@ export async function GET(req: NextRequest) {
         { industry: { contains: query.trim(), mode: 'insensitive' } },
       ];
     }
-    if (verticalFilter) {
-      where.verticalId = verticalFilter;
+    if (industryFilter && industryFilter !== 'ALL') {
+      where.industry = industryFilter;
     }
 
-    const [projects, verticals] = await Promise.all([
+    const [projects, distinctIndustries] = await Promise.all([
       prisma.project.findMany({
         where,
         orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-        include: {
-          vertical: {
-            select: { id: true, name: true, themeColor: true, accentHex: true },
-          },
-        },
       }),
-      prisma.businessVertical.findMany({
-        select: { id: true, name: true, themeColor: true, accentHex: true },
-        orderBy: { order: 'asc' },
+      prisma.project.findMany({
+        select: { industry: true },
+        distinct: ['industry'],
       }),
     ]);
+
+    const industries = distinctIndustries
+      .map((p) => p.industry?.trim())
+      .filter((ind): ind is string => Boolean(ind));
 
     return NextResponse.json({
       success: true,
       projects,
-      verticals,
+      industries,
     });
   } catch (error: any) {
     console.error('Error fetching admin projects:', error);
@@ -63,13 +62,6 @@ export async function POST(req: NextRequest) {
 
     const client = body.client?.trim() || 'Enterprise Client';
     const industry = body.industry?.trim() || 'General';
-    const verticalId = body.verticalId || 'technology';
-
-    // Verify or fetch vertical
-    const vertical = await prisma.businessVertical.findUnique({
-      where: { id: verticalId },
-    });
-    const verticalName = vertical?.name || body.verticalName || 'Technology';
 
     // Generate or format slug
     const baseSlug = (body.slug || title)
@@ -97,8 +89,6 @@ export async function POST(req: NextRequest) {
         title,
         client,
         industry,
-        verticalId,
-        verticalName,
         year: body.year || new Date().getFullYear().toString(),
         heroImage: body.heroImage || '/images/hero/mw-hero-bg.webp',
         thumbnailImage: body.thumbnailImage || body.heroImage || '/images/hero/mw-hero-bg.webp',
@@ -117,9 +107,6 @@ export async function POST(req: NextRequest) {
         order,
         metaTitle: body.metaTitle || `${title} | Case Study | Mighty Warner`,
         metaDescription: body.metaDescription || body.shortDescription || '',
-      },
-      include: {
-        vertical: true,
       },
     });
 

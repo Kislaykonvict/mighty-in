@@ -92,7 +92,6 @@ model BusinessVertical {
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
-  projects            Project[]
   testimonials        Testimonial[]
 }
 
@@ -105,9 +104,8 @@ model Project {
   title             String
   client            String
   industry          String
-  verticalId        String
-  vertical          BusinessVertical  @relation(fields: [verticalId], references: [id])
-  verticalName      String
+  verticalId        String?
+  verticalName      String?
   year              String            @default("2024")
   heroImage         String
   thumbnailImage    String
@@ -140,7 +138,8 @@ model Project {
 
   testimonials      Testimonial[]
 
-  @@index([verticalId, featured])
+  @@index([industry, featured])
+  @@index([order, featured])
 }
 
 // -------------------------------------------------------------
