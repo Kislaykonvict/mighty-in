@@ -16,6 +16,8 @@ import {
   TestimonialsSectionData,
   TestimonialCard,
 } from '@/types/testimonialsSection';
+import { defaultHomepageWorkData, HomepageWorkData } from '@/types/homepageWork';
+import { projectsData } from '@/data/projects';
 
 export const revalidate = 0;
 
@@ -150,6 +152,82 @@ async function getTestimonialsData(): Promise<TestimonialsSectionData> {
   }
 }
 
+async function getHomepageWorkData(): Promise<HomepageWorkData> {
+  try {
+    const [section, dbProjects] = await Promise.all([
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'home',
+            sectionKey: 'work',
+          },
+        },
+      }),
+      prisma.project.findMany({
+        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      }),
+    ]);
+
+    const fallbackProjects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
+
+    if (!section) {
+      return {
+        ...defaultHomepageWorkData,
+        projects: fallbackProjects.slice(0, 6),
+      };
+    }
+
+    const content = (section.content as any) || {};
+    const selectedIds: string[] = Array.isArray(content.selectedProjectIds)
+      ? content.selectedProjectIds
+      : [];
+    const maxDisplay = typeof content.maxDisplay === 'number' ? content.maxDisplay : 6;
+
+    let orderedProjects: any[] = [];
+    if (selectedIds.length > 0 && dbProjects.length > 0) {
+      const map = new Map<string, any>();
+      dbProjects.forEach((p) => map.set(p.id, p));
+      orderedProjects = selectedIds.map((id) => map.get(id)).filter(Boolean);
+    }
+
+    if (orderedProjects.length === 0) {
+      orderedProjects = fallbackProjects.slice(0, maxDisplay);
+    }
+
+    return {
+      badge:
+        section.badge !== null && section.badge !== undefined
+          ? section.badge
+          : defaultHomepageWorkData.badge,
+      title:
+        section.title !== null && section.title !== undefined
+          ? section.title
+          : defaultHomepageWorkData.title,
+      subtitle:
+        section.subtitle !== null && section.subtitle !== undefined
+          ? section.subtitle
+          : defaultHomepageWorkData.subtitle,
+      ctaText:
+        section.ctaText !== null && section.ctaText !== undefined
+          ? section.ctaText
+          : defaultHomepageWorkData.ctaText,
+      ctaLink:
+        section.ctaLink !== null && section.ctaLink !== undefined
+          ? section.ctaLink
+          : defaultHomepageWorkData.ctaLink,
+      selectedProjectIds: selectedIds,
+      maxDisplay,
+      isActive: section.isActive ?? true,
+      projects: orderedProjects.slice(0, maxDisplay),
+    };
+  } catch (err) {
+    return {
+      ...defaultHomepageWorkData,
+      projects: projectsData.slice(0, 6),
+    };
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
     title: 'One Company. Multiple Ways to Move Your Business Forward',
@@ -160,10 +238,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, coreBusinessData, testimonialsData] = await Promise.all([
+  const [heroData, coreBusinessData, testimonialsData, workData] = await Promise.all([
     getHeroData(),
     getCoreBusinessData(),
     getTestimonialsData(),
+    getHomepageWorkData(),
   ]);
 
   return (
@@ -181,7 +260,7 @@ export default async function HomePage() {
       <CoreBusinessShowcaseSection initialData={coreBusinessData} />
 
       {/* 4. Proof: Verified Portfolio & Case Studies */}
-      <WorkSection />
+      <WorkSection data={workData} />
 
       {/* 5. Social Proof: Executive Endorsements & Reviews */}
       <TestimonialsSection initialData={testimonialsData} />

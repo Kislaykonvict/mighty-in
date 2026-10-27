@@ -5,6 +5,10 @@ import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { PortfolioClientView } from './PortfolioClientView';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { prisma } from '@/lib/db/prisma';
+import { defaultWorkPageSettings, WorkPageSettings } from '@/types/workPage';
+
+export const revalidate = 0;
 
 export const metadata = constructMetadata({
   title: 'Complete Production Portfolio & Case Studies',
@@ -13,7 +17,42 @@ export const metadata = constructMetadata({
   canonical: '/portfolio',
 });
 
-export default function PortfolioPage() {
+async function getPortfolioPageData() {
+  try {
+    const [section, dbProjects] = await Promise.all([
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'work',
+            sectionKey: 'header',
+          },
+        },
+      }),
+      prisma.project.findMany({
+        orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      }),
+    ]);
+
+    const content = (section?.content as any) || {};
+
+    const settings: WorkPageSettings = {
+      badge: section?.badge || defaultWorkPageSettings.badge,
+      title: section?.title || defaultWorkPageSettings.title,
+      highlightedTitle: content.highlightedTitle || defaultWorkPageSettings.highlightedTitle,
+      description: section?.subtitle || content.description || defaultWorkPageSettings.description,
+    };
+
+    const projects = dbProjects.length > 0 ? (dbProjects as any) : projectsData;
+
+    return { settings, projects };
+  } catch (err) {
+    return { settings: defaultWorkPageSettings, projects: projectsData };
+  }
+}
+
+export default async function PortfolioPage() {
+  const { settings, projects } = await getPortfolioPageData();
+
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
       {/* Editorial Header */}
@@ -27,13 +66,13 @@ export default function PortfolioPage() {
         <SectionContainer width="default" paddingY="none" className="relative z-10">
           <div className="max-w-3xl">
             <Badge variant="subtle" dot className="mb-4">
-              VERIFIED PORTFOLIO • 450+ PRODUCTION OUTCOMES
+              {settings.badge}
             </Badge>
             <h1 className="text-display-h1 font-black text-slate-900 dark:text-white tracking-tight mb-5">
-              Work that moves <span className="gradient-text-brand">businesses forward.</span>
+              {settings.title} <span className="gradient-text-brand">{settings.highlightedTitle}</span>
             </h1>
             <p className="text-body-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-              From high-concurrency multi-vendor marketplaces to luxury real estate platforms and sovereign portals. Explore our complete portfolio of live client solutions.
+              {settings.description}
             </p>
           </div>
         </SectionContainer>
@@ -42,7 +81,7 @@ export default function PortfolioPage() {
       {/* Main Interactive Portfolio Section */}
       <section className="py-14 sm:py-20 relative">
         <SectionContainer width="default" paddingY="none">
-          <PortfolioClientView initialProjects={projectsData} />
+          <PortfolioClientView initialProjects={projects} />
         </SectionContainer>
       </section>
 

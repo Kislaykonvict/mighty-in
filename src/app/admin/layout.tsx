@@ -48,9 +48,15 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Build and customize modular homepage layout blocks and interactive components',
       };
     }
+    if (pathname?.startsWith('/admin/homepage-projects')) {
+      return {
+        title: 'Homepage Featured Projects',
+        subtitle: 'Select and sequence verified case studies showcased on the primary homepage grid',
+      };
+    }
     if (pathname?.startsWith('/admin/work')) {
       return {
-        title: 'Case Studies / Work',
+        title: 'Case Studies / Work Portfolio',
         subtitle: 'Manage client portfolio items, case study metrics and showcase assets',
       };
     }

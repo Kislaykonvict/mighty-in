@@ -28,6 +28,7 @@ import {
   FileText,
   MessageSquareQuote,
   Home,
+  FolderKanban,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -73,6 +74,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
             icon: Building2,
           },
           {
+            name: 'Project',
+            href: '/admin/homepage-projects',
+            icon: Briefcase,
+          },
+          {
             name: 'Testimonials',
             href: '/admin/testimonials',
             icon: MessageSquareQuote,
@@ -92,7 +98,7 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
       {
         name: 'Case Studies / Work',
         href: '/admin/work',
-        icon: Briefcase,
+        icon: FolderKanban,
       },
       {
         name: 'Business Verticals',
