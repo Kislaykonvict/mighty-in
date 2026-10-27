@@ -295,22 +295,40 @@ export function UserManagementView() {
     switch (role) {
       case 'SUPERADMIN':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans bg-purple-100 text-purple-900 border border-purple-200/80 dark:bg-purple-950/70 dark:text-purple-200 dark:border-purple-800 shadow-xs">
-            <ShieldAlert className="w-3.5 h-3.5 text-purple-700 dark:text-purple-300" />
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans border shadow-xs ${
+              isDark
+                ? 'bg-purple-950/70 text-purple-200 border-purple-800'
+                : 'bg-purple-100 text-purple-900 border-purple-200/80'
+            }`}
+          >
+            <ShieldAlert className={`w-3.5 h-3.5 ${isDark ? 'text-purple-300' : 'text-purple-700'}`} />
             SUPERADMIN
           </span>
         );
       case 'ADMIN':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans bg-blue-100 text-blue-900 border border-blue-200/80 dark:bg-blue-950/70 dark:text-blue-200 dark:border-blue-800 shadow-xs">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-700 dark:text-blue-300" />
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans border shadow-xs ${
+              isDark
+                ? 'bg-blue-950/70 text-blue-200 border-blue-800'
+                : 'bg-blue-100 text-blue-900 border-blue-200/80'
+            }`}
+          >
+            <ShieldCheck className={`w-3.5 h-3.5 ${isDark ? 'text-blue-300' : 'text-blue-700'}`} />
             ADMIN
           </span>
         );
       case 'EDITOR':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans bg-emerald-100 text-emerald-900 border border-emerald-200/80 dark:bg-emerald-950/70 dark:text-emerald-200 dark:border-emerald-800 shadow-xs">
-            <Shield className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-300" />
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold font-sans border shadow-xs ${
+              isDark
+                ? 'bg-emerald-950/70 text-emerald-200 border-emerald-800'
+                : 'bg-emerald-100 text-emerald-900 border-emerald-200/80'
+            }`}
+          >
+            <Shield className={`w-3.5 h-3.5 ${isDark ? 'text-emerald-300' : 'text-emerald-700'}`} />
             EDITOR
           </span>
         );
@@ -663,7 +681,9 @@ export function UserManagementView() {
                             <img
                               src={user.avatarUrl}
                               alt={user.name}
-                              className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 shadow-sm"
+                              className={`w-10 h-10 rounded-full object-cover border-2 shadow-sm ${
+                                isDark ? 'border-slate-700' : 'border-slate-200'
+                              }`}
                             />
                           ) : (
                             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 via-indigo-700 to-sky-500 flex items-center justify-center text-white font-extrabold text-xs shadow-sm">
@@ -672,17 +692,25 @@ export function UserManagementView() {
                           )}
                           {/* Live Presence Indicator */}
                           <span
-                            className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${
-                              user.isActive ? 'bg-emerald-500' : 'bg-slate-400'
-                            }`}
+                            className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 ${
+                              isDark ? 'border-slate-900' : 'border-white'
+                            } ${user.isActive ? 'bg-emerald-500' : 'bg-slate-400'}`}
                           />
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900 dark:text-white text-sm tracking-tight font-sans">
+                          <div
+                            className={`font-bold text-sm tracking-tight font-sans ${
+                              isDark ? 'text-white' : 'text-slate-900'
+                            }`}
+                          >
                             {user.name}
                           </div>
-                          <div className="font-sans text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-1.5 mt-0.5">
-                            <Mail className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                          <div
+                            className={`font-sans text-xs font-medium flex items-center gap-1.5 mt-0.5 ${
+                              isDark ? 'text-slate-400' : 'text-slate-500'
+                            }`}
+                          >
+                            <Mail className={`w-3.5 h-3.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
                             <span>{user.email}</span>
                           </div>
                         </div>
@@ -697,8 +725,12 @@ export function UserManagementView() {
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold font-sans border ${
                           user.isActive
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/70 dark:text-emerald-200 dark:border-emerald-800'
-                            : 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'
+                            ? isDark
+                              ? 'bg-emerald-950/70 text-emerald-200 border-emerald-800'
+                              : 'bg-emerald-50 text-emerald-800 border-emerald-200/80'
+                            : isDark
+                            ? 'bg-slate-800 text-slate-300 border-slate-700'
+                            : 'bg-slate-100 text-slate-700 border-slate-200'
                         }`}
                       >
                         <span
@@ -711,7 +743,7 @@ export function UserManagementView() {
                     </td>
 
                     {/* Joined Date */}
-                    <td className="py-4 px-6 text-slate-600 dark:text-slate-300 font-sans text-xs font-medium">
+                    <td className={`py-4 px-6 font-sans text-xs font-medium ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                       {new Date(user.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -727,8 +759,12 @@ export function UserManagementView() {
                           onClick={() => handleToggleActive(user)}
                           className={`p-2 rounded-xl border transition-all cursor-pointer ${
                             user.isActive
-                              ? 'border-emerald-300/80 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300'
-                              : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                              ? isDark
+                                ? 'border-emerald-800 bg-emerald-950/50 hover:bg-emerald-900 text-emerald-300'
+                                : 'border-emerald-300/80 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 shadow-xs'
+                              : isDark
+                              ? 'border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300'
+                              : 'border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 shadow-xs'
                           }`}
                           title={user.isActive ? 'Deactivate user' : 'Activate user'}
                         >
@@ -751,7 +787,11 @@ export function UserManagementView() {
                         {/* Delete Button */}
                         <button
                           onClick={() => openDeleteModal(user)}
-                          className="p-2 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-800 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300 transition-all cursor-pointer shadow-xs"
+                          className={`p-2 rounded-xl border transition-all cursor-pointer shadow-xs ${
+                            isDark
+                              ? 'border-rose-800 bg-rose-950/50 hover:bg-rose-900 text-rose-300'
+                              : 'border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-800'
+                          }`}
                           title="Delete user"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -764,18 +804,22 @@ export function UserManagementView() {
 
               {isLoading && (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-600 dark:text-slate-400">
+                  <td colSpan={5} className={`py-12 text-center ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                     <RefreshCw className="w-7 h-7 text-indigo-600 animate-spin mx-auto mb-2" />
-                    <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200">Loading platform users...</div>
+                    <div className={`text-sm font-extrabold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                      Loading platform users...
+                    </div>
                   </td>
                 </tr>
               )}
 
               {filteredUsers.length === 0 && !isLoading && (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-slate-600 dark:text-slate-400">
-                    <Users className="w-10 h-10 text-slate-400 dark:text-slate-600 mx-auto mb-2" />
-                    <div className="text-base font-extrabold text-slate-800 dark:text-slate-200">No users found</div>
+                  <td colSpan={5} className={`py-12 text-center ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                    <Users className={`w-10 h-10 mx-auto mb-2 ${isDark ? 'text-slate-600' : 'text-slate-400'}`} />
+                    <div className={`text-base font-extrabold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                      No users found
+                    </div>
                     <div className="text-xs text-slate-500 mt-1">
                       Try adjusting your search query or role filter.
                     </div>
@@ -795,19 +839,27 @@ export function UserManagementView() {
           }`}
         >
           <div className="font-medium">
-            Showing <span className="font-bold text-slate-900 dark:text-white">{filteredUsers.length}</span> of{' '}
-            <span className="font-bold text-slate-900 dark:text-white">{users.length}</span> platform accounts
+            Showing <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{filteredUsers.length}</span> of{' '}
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{users.length}</span> platform accounts
           </div>
           <div className="flex items-center gap-2">
             <button
               disabled
-              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 text-xs font-semibold cursor-not-allowed opacity-60"
+              className={`px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-not-allowed opacity-60 ${
+                isDark
+                  ? 'border-slate-700 text-slate-500'
+                  : 'border-slate-200 text-slate-400'
+              }`}
             >
               Previous
             </button>
             <button
               disabled
-              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-600 text-xs font-semibold cursor-not-allowed opacity-60"
+              className={`px-3 py-1.5 rounded-lg border text-xs font-semibold cursor-not-allowed opacity-60 ${
+                isDark
+                  ? 'border-slate-700 text-slate-500'
+                  : 'border-slate-200 text-slate-400'
+              }`}
             >
               Next
             </button>
@@ -904,12 +956,18 @@ export function UserManagementView() {
                       onClick={() => setFormRole(r.id as any)}
                       className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
                         formRole === r.id
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 ring-2 ring-indigo-500/20'
-                          : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                          ? isDark
+                            ? 'border-indigo-500 bg-indigo-950/60 text-indigo-200 ring-2 ring-indigo-500/20'
+                            : 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-2 ring-indigo-500/20'
+                          : isDark
+                          ? 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600'
+                          : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
                       }`}
                     >
                       <div className="font-black text-xs">{r.label}</div>
-                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{r.desc}</div>
+                      <div className={`text-[11px] font-semibold mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                        {r.desc}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -1068,12 +1126,18 @@ export function UserManagementView() {
                       onClick={() => setFormRole(r.id as any)}
                       className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
                         formRole === r.id
-                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 ring-2 ring-indigo-500/20'
-                          : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                          ? isDark
+                            ? 'border-indigo-500 bg-indigo-950/60 text-indigo-200 ring-2 ring-indigo-500/20'
+                            : 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-2 ring-indigo-500/20'
+                          : isDark
+                          ? 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600'
+                          : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
                       }`}
                     >
                       <div className="font-black text-xs">{r.label}</div>
-                      <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{r.desc}</div>
+                      <div className={`text-[11px] font-semibold mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                        {r.desc}
+                      </div>
                     </button>
                   ))}
                 </div>

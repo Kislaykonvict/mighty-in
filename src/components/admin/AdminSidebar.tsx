@@ -261,6 +261,29 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
             <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
           </a>
 
+          {/* Sign Out Button */}
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+              } finally {
+                window.location.href = '/admin/login';
+              }
+            }}
+            className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+              isDark
+                ? 'border-slate-800 bg-slate-900/60 hover:bg-rose-950/30 hover:border-rose-900/50 text-slate-400 hover:text-rose-400'
+                : 'border-slate-200 bg-slate-100/70 hover:bg-rose-50 hover:border-rose-200 text-slate-600 hover:text-rose-600'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Log Out</span>
+            </div>
+            <span className="text-[10px] font-mono opacity-60">ESC</span>
+          </button>
+
           {/* Database Connectivity Indicator */}
           <div className="px-1 flex items-center justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">

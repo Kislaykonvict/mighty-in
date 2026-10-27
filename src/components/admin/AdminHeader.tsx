@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Menu,
   Search,
@@ -29,8 +30,52 @@ export function AdminHeader({
   const { theme, toggleTheme } = useAdminTheme();
   const isDark = theme === 'dark';
 
+  const router = useRouter();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{
+    name: string;
+    email: string;
+    role: string;
+  } | null>(null);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setCurrentUser(data.user);
+          }
+        }
+      } catch {
+        // Not authenticated or network error
+      }
+    }
+    loadUser();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      window.location.href = '/admin/login';
+    }
+  };
+
+  const displayName = currentUser?.name || 'Super Admin';
+  const displayEmail = currentUser?.email || 'admin@mightywarner.com';
+  const initials =
+    displayName
+      .split(' ')
+      .map((w) => w[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'SA';
 
   return (
     <header
@@ -90,8 +135,10 @@ export function AdminHeader({
         >
           <button
             type="button"
-            onClick={toggleTheme}
-            className={`p-1.5 rounded-full transition-all ${
+            onClick={() => {
+              if (isDark) toggleTheme();
+            }}
+            className={`p-1.5 rounded-full transition-all cursor-pointer ${
               !isDark
                 ? 'bg-white text-amber-600 shadow-sm'
                 : 'text-slate-400 hover:text-white'
@@ -102,8 +149,10 @@ export function AdminHeader({
           </button>
           <button
             type="button"
-            onClick={toggleTheme}
-            className={`p-1.5 rounded-full transition-all ${
+            onClick={() => {
+              if (!isDark) toggleTheme();
+            }}
+            className={`p-1.5 rounded-full transition-all cursor-pointer ${
               isDark
                 ? 'bg-slate-700 text-indigo-300 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
@@ -164,15 +213,15 @@ export function AdminHeader({
             }`}
           >
             <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 via-indigo-700 to-sky-500 flex items-center justify-center text-white font-black text-xs shadow-sm">
-              SA
+              {initials}
             </div>
 
             <div className="text-left hidden sm:block">
               <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight font-sans">
-                Super Admin
+                {displayName}
               </div>
               <div className="text-[11px] font-sans text-slate-500 dark:text-slate-400 leading-tight">
-                admin@mightywarner.com
+                {displayEmail}
               </div>
             </div>
 
@@ -191,39 +240,34 @@ export function AdminHeader({
               }`}
             >
               <div className="px-3 py-2 border-b border-slate-200 dark:border-slate-800 mb-1">
-                <div className="font-extrabold text-slate-900 dark:text-white">Mighty SuperAdmin</div>
+                <div className="font-extrabold text-slate-900 dark:text-white">{displayName}</div>
                 <div className="text-[10px] font-mono text-indigo-700 dark:text-indigo-400 font-extrabold uppercase">
-                  SUPERADMIN PRIVILEGES
+                  {currentUser?.role || 'SUPERADMIN'} PRIVILEGES
                 </div>
               </div>
 
               <div className="space-y-0.5">
                 <button
                   type="button"
-                  onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-300 transition-colors"
+                  onClick={() => {
+                    setProfileDropdownOpen(false);
+                    router.push('/admin/users');
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
                 >
                   <User className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Admin Profile</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-300 transition-colors"
-                >
-                  <Shield className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Role Permissions</span>
+                  <span>Admin Users</span>
                 </button>
 
                 <div className="pt-1 mt-1 border-t border-slate-200 dark:border-slate-800">
-                  <a
-                    href="/"
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors font-bold"
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-left text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors font-bold cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>Exit Admin</span>
-                  </a>
+                    <span>Log Out</span>
+                  </button>
                 </div>
               </div>
             </div>

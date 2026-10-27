@@ -12,6 +12,11 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   const { theme } = useAdminTheme();
   const isDark = theme === 'dark';
 
+  // Standalone layout for login screen
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
   const getHeaderInfo = () => {
     if (pathname?.startsWith('/admin/hero')) {
       return {
