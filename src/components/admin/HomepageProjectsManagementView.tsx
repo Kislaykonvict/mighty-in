@@ -240,24 +240,8 @@ export function HomepageProjectsManagementView() {
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
                 <Sliders className="w-4 h-4 text-indigo-500" />
-                <span>Section Copy &amp; Visibility</span>
+                <span>Section Copy &amp; Call to Action</span>
               </h2>
-
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.isActive}
-                  onChange={(e) => {
-                    setIsDirty(true);
-                    setFormData({ ...formData, isActive: e.target.checked });
-                  }}
-                  className="sr-only peer"
-                />
-                <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                <span className="ml-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                  {formData.isActive ? 'Active' : 'Hidden'}
-                </span>
-              </label>
             </div>
 
             {/* Eyebrow Badge */}
@@ -365,33 +349,6 @@ export function HomepageProjectsManagementView() {
                 />
               </div>
             </div>
-
-            {/* Display Limit */}
-            <div className="space-y-1.5 pt-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-700 dark:text-slate-300">
-                  Maximum Display Count
-                </span>
-                <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                  {formData.maxDisplay} projects
-                </span>
-              </div>
-              <input
-                type="range"
-                min={3}
-                max={12}
-                step={1}
-                value={formData.maxDisplay}
-                onChange={(e) => {
-                  setIsDirty(true);
-                  setFormData({ ...formData, maxDisplay: Number(e.target.value) });
-                }}
-                className="w-full accent-indigo-600 cursor-pointer"
-              />
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Recommended: 6 items for a clean 3x2 desktop grid layout.
-              </p>
-            </div>
           </div>
         </div>
 
@@ -411,12 +368,12 @@ export function HomepageProjectsManagementView() {
                 </h2>
               </div>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                {selectedProjects.length} Selected (Showing up to {formData.maxDisplay})
+                {selectedProjects.length} {selectedProjects.length === 1 ? 'Project' : 'Projects'}
               </span>
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Use the arrow buttons to arrange the sequence of projects appearing on the homepage.
+              All projects listed below appear on the homepage in this exact sequence. Use the arrow buttons to reorder.
             </p>
 
             {selectedProjects.length === 0 ? (

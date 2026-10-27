@@ -20,8 +20,8 @@ export function WorkSection({ data }: WorkSectionProps) {
 
   const displayProjects =
     current.projects && current.projects.length > 0
-      ? current.projects.slice(0, current.maxDisplay || 6)
-      : projectsData.slice(0, current.maxDisplay || 6);
+      ? current.projects
+      : projectsData.slice(0, 6);
 
   return (
     <section

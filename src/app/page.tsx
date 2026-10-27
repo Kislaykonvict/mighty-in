@@ -191,7 +191,7 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
     }
 
     if (orderedProjects.length === 0) {
-      orderedProjects = fallbackProjects.slice(0, maxDisplay);
+      orderedProjects = fallbackProjects.slice(0, 6);
     }
 
     return {
@@ -216,9 +216,9 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
           ? section.ctaLink
           : defaultHomepageWorkData.ctaLink,
       selectedProjectIds: selectedIds,
-      maxDisplay,
+      maxDisplay: orderedProjects.length,
       isActive: section.isActive ?? true,
-      projects: orderedProjects.slice(0, maxDisplay),
+      projects: orderedProjects,
     };
   } catch (err) {
     return {
