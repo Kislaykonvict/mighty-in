@@ -659,7 +659,7 @@ export function WorkPortfolioManagementView() {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Manage portfolio categories. These populate the project dropdown and display horizontally on the live site. Hover any pill to rename or delete.
+                Manage portfolio categories. These populate the project dropdown and display horizontally on the live site.
               </p>
             </div>
           </div>
@@ -699,13 +699,18 @@ export function WorkPortfolioManagementView() {
         </div>
 
         {/* Categories Showcase (Max 2 rows with 'See All' toggle) */}
-        <div
-          className={`p-5 rounded-2xl border transition-colors ${
-            isDark
-              ? 'bg-[#080C14]/80 border-slate-800'
-              : 'bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-slate-200'
-          }`}
-        >
+        <div className="space-y-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Hover over the categories to manage them.
+          </p>
+
+          <div
+            className={`p-5 rounded-2xl border transition-colors ${
+              isDark
+                ? 'bg-[#080C14]/80 border-slate-800'
+                : 'bg-gradient-to-r from-slate-50 via-slate-100/60 to-slate-50 border-slate-200'
+            }`}
+          >
           <div
             className={`transition-all duration-300 ease-in-out ${
               !isCategoriesExpanded && hasMoreThanTwoRows
@@ -821,6 +826,7 @@ export function WorkPortfolioManagementView() {
           )}
         </div>
       </div>
+    </div>
 
       {/* Projects Table & Management Section */}
       <div
