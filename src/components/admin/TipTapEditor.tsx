@@ -16,6 +16,7 @@ import Highlight from '@tiptap/extension-highlight';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
 import ImageExtension from '@tiptap/extension-image';
+import { uploadMedia } from '@/lib/clientUpload';
 import {
   Bold,
   Italic,
@@ -216,19 +217,13 @@ export function TipTapEditor({ content, onChange, isDark = true }: TipTapEditorP
   const handleImageFileUpload = async (file: File) => {
     setIsUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('folder', 'mighty-warner/content');
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/content',
+        resourceType: 'image',
       });
-      const json = await res.json();
-      if (json.success && json.url) {
-        insertImage(json.url, file.name);
-      } else {
-        alert(json.error || 'Upload failed');
+      if (result.url) {
+        insertImage(result.url, file.name);
       }
     } catch (err: any) {
       alert(err.message || 'Image upload failed');

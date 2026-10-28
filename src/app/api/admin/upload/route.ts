@@ -1,50 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
-import { isCloudinaryConfigured, uploadStreamToCloudinary, deleteFromCloudinary } from '@/lib/cloudinary';
+import { isCloudinaryConfigured, uploadStreamToCloudinary } from '@/lib/cloudinary';
 import { prisma } from '@/lib/db/prisma';
+import { cleanupPreviousAsset } from '@/lib/mediaCleanup';
 
 export const dynamic = 'force-dynamic';
-
-/**
- * Removes an existing asset from Cloudinary or local storage and deletes its DB tracking record
- */
-async function cleanupPreviousAsset(prevUrl: string, resourceType: 'video' | 'image') {
-  if (!prevUrl) return;
-
-  // 1. Cloudinary asset removal
-  if (prevUrl.includes('res.cloudinary.com')) {
-    try {
-      await deleteFromCloudinary(prevUrl, resourceType);
-      await prisma.mediaAsset.deleteMany({
-        where: {
-          OR: [
-            { url: prevUrl },
-            { secureUrl: prevUrl },
-          ],
-        },
-      });
-      console.log(`[Upload API] Deleted previous Cloudinary asset: ${prevUrl}`);
-    } catch (e) {
-      console.warn(`[Upload API] Could not delete previous Cloudinary asset:`, e);
-    }
-  }
-  // 2. Local fallback storage removal
-  else if (prevUrl.startsWith('/uploads/')) {
-    try {
-      const localFilePath = path.join(process.cwd(), 'public', prevUrl);
-      if (fs.existsSync(localFilePath)) {
-        fs.unlinkSync(localFilePath);
-      }
-      await prisma.mediaAsset.deleteMany({
-        where: { url: prevUrl },
-      });
-      console.log(`[Upload API] Deleted previous local asset: ${prevUrl}`);
-    } catch (e) {
-      console.warn(`[Upload API] Could not delete previous local asset:`, e);
-    }
-  }
-}
 
 // GET /api/admin/upload - Check Cloudinary configuration status
 export async function GET() {
@@ -71,13 +32,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
     // Determine resource type
     const mimeType = file.type || '';
     const isVideo = mimeType.startsWith('video/') || Boolean(file.name.match(/\.(mp4|webm|mov|mkv)$/i));
     const resourceType: 'video' | 'image' = isVideo ? 'video' : 'image';
+
+    // File size validations
+    const maxVideoBytes = 100 * 1024 * 1024; // 100MB
+    const maxImageBytes = 10 * 1024 * 1024;  // 10MB
+    if (isVideo && file.size > maxVideoBytes) {
+      return NextResponse.json(
+        { success: false, error: `Video file size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds 100MB limit.` },
+        { status: 400 }
+      );
+    }
+    if (!isVideo && file.size > maxImageBytes) {
+      return NextResponse.json(
+        { success: false, error: `Image file size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds 10MB limit.` },
+        { status: 400 }
+      );
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
     // 1. If Cloudinary is configured, upload directly to Cloudinary
     if (isCloudinaryConfigured()) {

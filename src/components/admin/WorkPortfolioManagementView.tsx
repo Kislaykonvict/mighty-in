@@ -34,6 +34,7 @@ import { useAdminTheme } from './AdminThemeContext';
 import { WorkPageSettings, defaultWorkPageSettings } from '@/types/workPage';
 import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 import { RichTextContent } from '@/components/ui/RichTextContent';
+import { uploadMedia } from '@/lib/clientUpload';
 
 interface ProjectRecord {
   id: string;
@@ -165,35 +166,22 @@ export function WorkPortfolioManagementView() {
 
     setIsUploadingThumbnail(true);
     try {
-      const data = new FormData();
-      data.append('file', file);
-      data.append('folder', 'mighty-warner/work');
-      data.append('resource_type', 'image');
-
-      if (editingProject.thumbnailImage) {
-        data.append('previousUrl', editingProject.thumbnailImage);
-      }
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: data,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/work',
+        resourceType: 'image',
+        previousUrl: editingProject.thumbnailImage || '',
       });
 
-      const json = await res.json();
-      if (!res.ok || !json.success) {
-        throw new Error(json.error || 'Upload failed');
-      }
-
-      const newImageUrl = json.url || json.secureUrl;
       setEditingProject((prev) =>
         prev
           ? {
               ...prev,
-              thumbnailImage: newImageUrl,
+              thumbnailImage: result.url,
             }
           : null
       );
-      setFeedback({ type: 'success', message: 'Thumbnail image uploaded successfully!' });
+      setFeedback({ type: 'success', message: 'Thumbnail image uploaded successfully to Cloudinary CDN!' });
     } catch (err: any) {
       setFeedback({
         type: 'error',

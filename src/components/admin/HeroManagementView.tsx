@@ -29,6 +29,8 @@ import { MinimalRichTextEditor } from './MinimalRichTextEditor';
 
 
 
+import { uploadMedia } from '@/lib/clientUpload';
+
 export function HeroManagementView() {
   const { theme } = useAdminTheme();
   const isDark = theme === 'dark';
@@ -94,65 +96,54 @@ export function HeroManagementView() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-
-  // Upload file to Cloudinary / Local API
+  // Upload file with validation and direct Cloudinary transfer
   const handleFileUpload = async (file: File, type: 'video' | 'image') => {
     const isVideo = type === 'video';
     if (isVideo) {
       setIsUploadingVideo(true);
-      setVideoUploadProgress(25);
+      setVideoUploadProgress(5);
     } else {
       setIsUploadingImage(true);
-      setImageUploadProgress(25);
+      setImageUploadProgress(5);
     }
 
     try {
-      const uploadData = new FormData();
-      uploadData.append('file', file);
-      uploadData.append('folder', 'mighty-warner/hero');
-      uploadData.append('resource_type', type);
-
-      // Pass previous media URL so the server automatically deletes the old asset from Cloudinary
       const previousUrl = isVideo ? formData.videoUrl : formData.fallbackImageUrl;
-      if (previousUrl) {
-        uploadData.append('previousUrl', previousUrl);
-      }
-
-      if (isVideo) setVideoUploadProgress(65);
-      else setImageUploadProgress(65);
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: uploadData,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/hero',
+        resourceType: type,
+        previousUrl,
+        onProgress: (percent) => {
+          if (isVideo) setVideoUploadProgress(percent);
+          else setImageUploadProgress(percent);
+        },
       });
-
-      const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Upload failed');
-      }
 
       if (isVideo) {
         setVideoUploadProgress(100);
-        handleChange('videoUrl', json.url);
+        handleChange('videoUrl', result.url);
         setFeedback({
           type: 'success',
-          message: `New video uploaded to Cloudinary CDN! Previous video was automatically removed from Cloudinary.`,
+          message: 'Hero background video uploaded successfully to Cloudinary CDN!',
         });
       } else {
         setImageUploadProgress(100);
-        handleChange('fallbackImageUrl', json.url);
+        handleChange('fallbackImageUrl', result.url);
         setFeedback({
           type: 'success',
-          message: `New fallback image uploaded to Cloudinary CDN! Previous image was automatically removed from Cloudinary.`,
+          message: 'Fallback poster image uploaded successfully to Cloudinary CDN!',
         });
       }
     } catch (err: any) {
       setFeedback({ type: 'error', message: err.message || 'File upload error' });
     } finally {
       if (isVideo) {
-        setTimeout(() => setIsUploadingVideo(false), 600);
+        setTimeout(() => setIsUploadingVideo(false), 500);
+        if (videoFileInputRef.current) videoFileInputRef.current.value = '';
       } else {
-        setTimeout(() => setIsUploadingImage(false), 600);
+        setTimeout(() => setIsUploadingImage(false), 500);
+        if (imageFileInputRef.current) imageFileInputRef.current.value = '';
       }
     }
   };
@@ -308,7 +299,9 @@ export function HeroManagementView() {
                 {isUploadingVideo ? (
                   <div className="py-2 space-y-2">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto text-indigo-500" />
-                    <div className="text-xs font-bold">Uploading video to {cloudinaryStatus.configured ? 'Cloudinary' : 'storage'}...</div>
+                    <div className="text-xs font-bold text-indigo-400">
+                      Uploading video ({videoUploadProgress}%)...
+                    </div>
                     <div className="w-48 mx-auto bg-slate-700 h-1.5 rounded-full overflow-hidden">
                       <div
                         className="bg-indigo-500 h-full transition-all duration-300"
@@ -370,7 +363,7 @@ export function HeroManagementView() {
                 <input
                   ref={imageFileInputRef}
                   type="file"
-                  accept="image/png,image/jpeg,image/webp"
+                  accept="image/png,image/jpeg,image/webp,image/*"
                   className="hidden"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
@@ -381,7 +374,9 @@ export function HeroManagementView() {
                 {isUploadingImage ? (
                   <div className="py-2 space-y-2">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto text-emerald-500" />
-                    <div className="text-xs font-bold">Uploading image to {cloudinaryStatus.configured ? 'Cloudinary' : 'storage'}...</div>
+                    <div className="text-xs font-bold text-emerald-400">
+                      Uploading image ({imageUploadProgress}%)...
+                    </div>
                     <div className="w-48 mx-auto bg-slate-700 h-1.5 rounded-full overflow-hidden">
                       <div
                         className="bg-emerald-500 h-full transition-all duration-300"

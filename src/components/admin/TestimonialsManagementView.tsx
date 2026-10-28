@@ -37,6 +37,7 @@ import {
   TestimonialCard,
 } from '@/types/testimonialsSection';
 import { MinimalRichTextEditor } from './MinimalRichTextEditor';
+import { uploadMedia } from '@/lib/clientUpload';
 
 export function TestimonialsManagementView() {
   const { theme } = useAdminTheme();
@@ -187,30 +188,18 @@ export function TestimonialsManagementView() {
   const handlePhotoUpload = async (cardId: string, file: File) => {
     setUploadingCardId(cardId);
     try {
-      const data = new FormData();
-      data.append('file', file);
-      data.append('folder', 'mighty-warner/testimonials');
-      data.append('resource_type', 'image');
-
       const currentCard = formData.cards.find((c) => c.id === cardId);
-      if (currentCard?.avatarUrl) {
-        data.append('previousUrl', currentCard.avatarUrl);
-      }
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: data,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/testimonials',
+        resourceType: 'image',
+        previousUrl: currentCard?.avatarUrl || '',
       });
 
-      const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Upload failed');
-      }
-
-      handleCardChange(cardId, 'avatarUrl', json.url);
+      handleCardChange(cardId, 'avatarUrl', result.url);
       setFeedback({
         type: 'success',
-        message: 'Author portrait uploaded successfully!',
+        message: 'Author portrait uploaded successfully to Cloudinary CDN!',
       });
     } catch (err: any) {
       setFeedback({

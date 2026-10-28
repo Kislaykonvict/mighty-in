@@ -24,6 +24,7 @@ import {
 import { useAdminTheme } from './AdminThemeContext';
 import { CoreBusinessData, CoreBusinessCard, defaultCoreBusinessData } from '@/types/coreBusiness';
 import { MinimalRichTextEditor } from './MinimalRichTextEditor';
+import { uploadMedia } from '@/lib/clientUpload';
 
 export function CoreBusinessManagementView() {
   const { theme } = useAdminTheme();
@@ -128,30 +129,18 @@ export function CoreBusinessManagementView() {
     setFeedback(null);
 
     try {
-      const data = new FormData();
-      data.append('file', file);
-      data.append('folder', 'mighty-warner/core-business');
-      data.append('resource_type', 'image');
-
       const currentCard = formData.cards.find((c) => c.id === cardId);
-      if (currentCard?.imageUrl) {
-        data.append('previousUrl', currentCard.imageUrl);
-      }
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: data,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/core-business',
+        resourceType: 'image',
+        previousUrl: currentCard?.imageUrl || '',
       });
 
-      const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Upload failed');
-      }
-
-      handleCardChange(cardId, 'imageUrl', json.url);
+      handleCardChange(cardId, 'imageUrl', result.url);
       setFeedback({
         type: 'success',
-        message: 'Diagram image uploaded successfully to Cloudinary!',
+        message: 'Diagram image uploaded successfully to Cloudinary CDN!',
       });
     } catch (err: any) {
       setFeedback({ type: 'error', message: err.message || 'Error uploading card diagram' });

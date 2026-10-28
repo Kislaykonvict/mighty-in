@@ -123,5 +123,40 @@ export async function deleteFromCloudinary(
   }
 }
 
+/**
+ * Generates signature for direct client-side upload to Cloudinary.
+ * Bypasses serverless function payload limits (e.g. Vercel 4.5MB limit).
+ */
+export function generateCloudinarySignature(params: {
+  folder?: string;
+  resource_type?: 'video' | 'image' | 'auto';
+} = {}) {
+  if (!isCloudinaryConfigured()) {
+    throw new Error('Cloudinary credentials are not configured in environment variables (.env)');
+  }
+
+  const timestamp = Math.round(Date.now() / 1000);
+  const paramsToSign: Record<string, any> = {
+    timestamp,
+  };
+
+  if (params.folder && params.folder.trim()) {
+    paramsToSign.folder = params.folder.trim();
+  }
+
+  const signature = cloudinary.utils.api_sign_request(
+    paramsToSign,
+    process.env.CLOUDINARY_API_SECRET!
+  );
+
+  return {
+    signature,
+    timestamp,
+    apiKey: process.env.CLOUDINARY_API_KEY!,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME!,
+    folder: params.folder ? params.folder.trim() : undefined,
+  };
+}
+
 export { cloudinary };
 

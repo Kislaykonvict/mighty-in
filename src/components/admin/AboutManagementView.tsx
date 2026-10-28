@@ -26,6 +26,7 @@ import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
 import { TrajectoryData, TrajectoryEpoch, defaultTrajectoryData } from '@/types/trajectory';
 import { AboutStoryData, AboutStoryCard, defaultAboutStoryData } from '@/types/aboutStory';
 import { MinimalRichTextEditor } from './MinimalRichTextEditor';
+import { uploadMedia } from '@/lib/clientUpload';
 
 type ActiveTab = 'hero' | 'trajectory' | 'story';
 
@@ -91,35 +92,27 @@ export function AboutManagementView() {
     setUploadingTarget(target);
     setFeedback(null);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('folder', 'about');
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: formData,
+      const previousUrl = target === 'hero' ? heroData.backgroundImage : storyData.cards.find(c => c.id === target)?.image || '';
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/about',
+        resourceType: 'image',
+        previousUrl,
       });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Upload failed');
-      }
-
-      const uploadedUrl = data.url || data.secureUrl;
 
       if (target === 'hero') {
-        setHeroData((prev) => ({ ...prev, backgroundImage: uploadedUrl }));
+        setHeroData((prev) => ({ ...prev, backgroundImage: result.url }));
       } else {
         // target is story card ID
         setStoryData((prev) => ({
           ...prev,
-          cards: prev.cards.map((c) => (c.id === target ? { ...c, image: uploadedUrl } : c)),
+          cards: prev.cards.map((c) => (c.id === target ? { ...c, image: result.url } : c)),
         }));
       }
 
       setFeedback({
         type: 'success',
-        message: 'Image uploaded successfully.',
+        message: 'Image uploaded successfully to Cloudinary CDN.',
       });
     } catch (err: any) {
       console.error('Image upload error:', err);

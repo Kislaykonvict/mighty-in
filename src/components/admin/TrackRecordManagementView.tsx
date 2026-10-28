@@ -34,6 +34,7 @@ import {
 import { useAdminTheme } from './AdminThemeContext';
 import { defaultTrackRecordData, TrackRecordData, TrackRecordCard } from '@/types/trackRecord';
 import { MinimalRichTextEditor } from './MinimalRichTextEditor';
+import { uploadMedia } from '@/lib/clientUpload';
 
 // Icon mapping for presets
 const ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -144,30 +145,18 @@ export function TrackRecordManagementView() {
   const handleLogoUpload = async (cardId: string, file: File) => {
     setUploadingCardId(cardId);
     try {
-      const data = new FormData();
-      data.append('file', file);
-      data.append('folder', 'mighty-warner/track-record');
-      data.append('resource_type', 'image');
-
       const currentCard = formData.cards.find((c) => c.id === cardId);
-      if (currentCard?.iconUrl) {
-        data.append('previousUrl', currentCard.iconUrl);
-      }
-
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: data,
+      const result = await uploadMedia({
+        file,
+        folder: 'mighty-warner/track-record',
+        resourceType: 'image',
+        previousUrl: currentCard?.iconUrl || '',
       });
 
-      const json = await res.json();
-      if (!json.success) {
-        throw new Error(json.error || 'Upload failed');
-      }
-
-      handleCardChange(cardId, 'iconUrl', json.url);
+      handleCardChange(cardId, 'iconUrl', result.url);
       setFeedback({
         type: 'success',
-        message: 'Logo icon uploaded successfully to Cloudinary!',
+        message: 'Logo icon uploaded successfully to Cloudinary CDN!',
       });
     } catch (err: any) {
       setFeedback({ type: 'error', message: err.message || 'Error uploading card logo' });
