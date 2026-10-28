@@ -5,14 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
-  Users,
   Globe,
   Layers,
   Briefcase,
   Building,
   HelpCircle,
   Inbox,
-  Sliders,
   ExternalLink,
   X,
   ChevronRight,
@@ -132,21 +130,6 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
       },
     ],
   },
-  {
-    groupTitle: 'WORKSPACE & ACCESS',
-    items: [
-      {
-        name: 'User Management',
-        href: '/admin/users',
-        icon: Users,
-      },
-      {
-        name: 'Global Site Settings',
-        href: '/admin/settings',
-        icon: Sliders,
-      },
-    ],
-  },
 ];
 
 interface AdminSidebarProps {
@@ -216,7 +199,7 @@ export function AdminSidebar({ mobileOpen, onCloseMobile }: AdminSidebarProps) {
                 : 'border-slate-200 bg-white'
             }`}
           >
-            <Link href="/admin/users" className="flex items-center justify-center group">
+            <Link href="/admin/hero" className="flex items-center justify-center group">
               <div className="transition-transform group-hover:scale-[1.02] duration-200">
                 <Image
                   src="/images/mw-logo.webp"

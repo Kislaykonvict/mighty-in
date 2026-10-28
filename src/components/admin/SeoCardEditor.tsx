@@ -77,10 +77,11 @@ export function SeoCardEditor({
 
       setSaveStatus('success');
       if (onSave) onSave(json.data);
-      setTimeout(() => setSaveStatus('idle'), 3500);
+      setTimeout(() => setSaveStatus('idle'), 4000);
     } catch (err: any) {
       setSaveStatus('error');
       setErrorMessage(err.message || 'Error occurred while saving');
+      setTimeout(() => setSaveStatus('idle'), 4000);
     } finally {
       setIsSaving(false);
     }
@@ -95,11 +96,11 @@ export function SeoCardEditor({
         ? 'bg-[#0B111E] border-white/10 text-slate-200'
         : 'bg-white border-slate-200 text-slate-800 shadow-sm'
     }`}>
-      {/* Top Banner / Breadcrumb */}
-      <div className={`px-6 py-4 border-b flex items-center justify-between transition-colors ${
+      {/* Top Banner / Breadcrumb & Sticky Action Bar */}
+      <div className={`px-6 py-4 border-b flex flex-wrap items-center justify-between gap-3 transition-colors sticky top-0 z-10 backdrop-blur-xl ${
         isDark
-          ? 'bg-[#0F172A] border-white/8'
-          : 'bg-slate-50 border-slate-200'
+          ? 'bg-[#0F172A]/95 border-white/8'
+          : 'bg-slate-50/95 border-slate-200'
       }`}>
         <div className="flex items-center gap-2.5">
           <Globe className="w-4 h-4 text-sky-500 dark:text-sky-400" />
@@ -109,16 +110,49 @@ export function SeoCardEditor({
             PAGE ROUTE: <span className="text-sky-600 dark:text-sky-400 font-mono font-bold">{formData.path}</span>
           </span>
         </div>
-        {formData.pageName && (
-          <span className={`text-xs px-2.5 py-1 rounded-md font-medium border transition-colors ${
-            isDark
-              ? 'bg-white/5 border-white/10 text-slate-400'
-              : 'bg-white border-slate-200 text-slate-700 shadow-xs'
-          }`}>
-            {formData.pageName}
-          </span>
-        )}
+
+        <div className="flex items-center gap-2.5">
+          {formData.pageName && (
+            <span className={`text-xs px-2.5 py-1 rounded-md font-medium border transition-colors ${
+              isDark
+                ? 'bg-white/5 border-white/10 text-slate-400'
+                : 'bg-white border-slate-200 text-slate-700 shadow-xs'
+            }`}>
+              {formData.pageName}
+            </span>
+          )}
+
+          <button
+            type="button"
+            onClick={() => handleSubmit()}
+            disabled={isSaving}
+            className="px-4 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 dark:bg-sky-500 dark:hover:bg-sky-400 text-white text-xs font-mono font-bold tracking-wider uppercase transition-all shadow-md flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+          >
+            <Save className={`w-3.5 h-3.5 ${isSaving ? 'animate-spin' : ''}`} />
+            <span>{isSaving ? 'Saving...' : 'Save & Publish'}</span>
+          </button>
+        </div>
       </div>
+
+      {/* Auto-dismissing Toast Status Banner */}
+      {saveStatus !== 'idle' && (
+        <div className={`px-6 py-3 border-b text-xs font-semibold flex items-center gap-2 animate-fade-in ${
+          saveStatus === 'success'
+            ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+            : 'bg-rose-500/15 border-rose-500/30 text-rose-400'
+        }`}>
+          {saveStatus === 'success' ? (
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          )}
+          <span>
+            {saveStatus === 'success'
+              ? 'SEO settings saved and page revalidated!'
+              : errorMessage || 'Failed to save changes'}
+          </span>
+        </div>
+      )}
 
       <div className="p-6 sm:p-8 space-y-7">
         {/* Section 1: Core SEO */}

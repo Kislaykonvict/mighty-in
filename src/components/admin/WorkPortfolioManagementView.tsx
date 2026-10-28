@@ -150,6 +150,14 @@ export function WorkPortfolioManagementView() {
     };
   }, [categories, isCategoriesExpanded]);
 
+  // Auto-dismiss toast feedback after 4 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
   // Handle Thumbnail File Upload
   const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -489,73 +497,79 @@ export function WorkPortfolioManagementView() {
 
   return (
     <div className="space-y-8 pb-16 font-sans">
-      {/* Top Banner */}
-      <div
-        className={`p-6 sm:p-8 rounded-3xl border transition-colors relative overflow-hidden ${
-          isDark
-            ? 'bg-gradient-to-br from-[#0F172A] to-[#0A0F1D] border-slate-800 text-white'
-            : 'bg-gradient-to-br from-white to-slate-50 border-slate-200 text-slate-900 shadow-sm'
-        }`}
-      >
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Master Work &amp; Portfolio Management</span>
+      {/* Sticky Top Header Container: Action Bar + Toast Message */}
+      <div className="sticky top-[76px] z-20 space-y-3 pb-2 -mt-2 pt-2">
+        {/* Feedback Toast */}
+        {feedback && (
+          <div
+            className={`p-4 rounded-xl flex items-center justify-between gap-3 text-xs font-medium shadow-xl backdrop-blur-md animate-fade-in border ${
+              feedback.type === 'success'
+                ? isDark
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                : isDark
+                ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+                : 'bg-rose-50 border-rose-300 text-rose-800'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {feedback.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              )}
+              <span>{feedback.message}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Top Action Bar */}
+        <div
+          className={`p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg backdrop-blur-xl transition-all ${
+            isDark ? 'bg-[#0F172A]/95 border-slate-800 shadow-black/40' : 'bg-white/95 border-slate-200 shadow-slate-200/50'
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600/10 text-indigo-500 flex items-center justify-center">
+              <Layers className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold">Case Studies &amp; Work Portfolio</h2>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  {projects.length} Projects
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">Manage client case studies, editorial narrative &amp; industry taxonomy</p>
+            </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Work Portfolio &amp; Case Studies Manager
-          </h1>
-
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-            Manage complete client portfolio items, detailed case study content, challenge &amp; solution narratives, metrics, and configure the editorial headers for both /work and /portfolio pages.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex items-center gap-2.5">
             <a
               href="/work"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                isDark
+                  ? 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
+                  : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
+              }`}
             >
-              <span>View Live /work Page</span>
+              <span>Live /work</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            <span className="text-slate-400 dark:text-slate-600">•</span>
-            <a
-              href="/portfolio"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white"
+
+            <button
+              type="button"
+              onClick={handleOpenCreate}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition-all cursor-pointer shrink-0"
             >
-              <span>View Live /portfolio Page</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+              <Plus className="w-4 h-4" />
+              <span>Add New Project</span>
+            </button>
           </div>
         </div>
-
-        <div className="absolute right-6 -bottom-10 opacity-5 dark:opacity-10 pointer-events-none">
-          <Layers className="w-64 h-64 text-indigo-500" />
-        </div>
       </div>
-
-      {/* Feedback Toast */}
-      {feedback && (
-        <div
-          className={`p-4 rounded-2xl flex items-center gap-3 border text-sm font-semibold transition-all ${
-            feedback.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400'
-          }`}
-        >
-          {feedback.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 shrink-0" />
-          )}
-          <span>{feedback.message}</span>
-        </div>
-      )}
 
       {/* Accordion / Panel: Editorial Header Settings */}
       <div

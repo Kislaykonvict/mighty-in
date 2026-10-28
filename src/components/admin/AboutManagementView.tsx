@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import {
   Sparkles,
   Save,
-  RotateCcw,
-  ExternalLink,
   Plus,
   Trash2,
   ArrowUp,
@@ -23,8 +20,6 @@ import {
   BookOpen,
   Type,
   Link as LinkIcon,
-  ToggleLeft,
-  ToggleRight,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
@@ -82,6 +77,14 @@ export function AboutManagementView() {
     }
     loadAllData();
   }, []);
+
+  // Auto-dismiss toast feedback after 4 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
 
   // Generic file uploader
   const handleFileUpload = async (file: File, target: 'hero' | string) => {
@@ -176,20 +179,7 @@ export function AboutManagementView() {
     }
   };
 
-  // Reset active tab to default
-  const handleResetActiveTab = () => {
-    if (!confirm(`Are you sure you want to reset the ${activeTab} section to system defaults?`)) {
-      return;
-    }
-    if (activeTab === 'hero') setHeroData(defaultAboutHeroData);
-    if (activeTab === 'trajectory') setTrajectoryData(defaultTrajectoryData);
-    if (activeTab === 'story') setStoryData(defaultAboutStoryData);
 
-    setFeedback({
-      type: 'success',
-      message: `Reset ${activeTab} to defaults. Click "Save Changes" to publish.`,
-    });
-  };
 
   // -------------------------------------------------------------
   // Trajectory Epoch Handlers
@@ -307,504 +297,510 @@ export function AboutManagementView() {
   }
 
   return (
-    <div className="space-y-8 pb-20">
-      {/* Top Header & Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase tracking-wider bg-sky-500/10 text-sky-500 border border-sky-500/20">
-              Live Content Engine
-            </span>
-            <span className="text-xs text-slate-400 font-mono">page: /about</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            About Us Management
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Dynamically configure the three core sections of Mighty Warner’s About page.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link
-            href="/about"
-            target="_blank"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition-colors"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            <span>View Live Site</span>
-          </Link>
-
-          <button
-            type="button"
-            onClick={handleResetActiveTab}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset Tab</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleSaveActiveTab}
-            disabled={isSaving}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 disabled:opacity-50 transition-all shadow-md shadow-sky-600/20 cursor-pointer"
-          >
-            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            <span>Save Changes</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Feedback Banner */}
-      {feedback && (
-        <div
-          className={`p-4 rounded-xl flex items-center justify-between gap-3 text-sm border animate-in fade-in duration-200 ${feedback.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-              : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+    <div className="space-y-4 pb-16">
+      {/* Sticky Top Header Container: Action Bar + Toast Message */}
+      <div className="sticky top-[76px] z-20 space-y-2 pb-2 pt-2 -mt-2 bg-[#EEF2F6]/95 dark:bg-[#070B14]/95 backdrop-blur-md transition-colors">
+        {/* Feedback Banner */}
+        {feedback && (
+          <div
+            className={`px-3.5 py-2 rounded-lg flex items-center justify-between gap-2.5 text-xs font-semibold border shadow-lg backdrop-blur-md animate-in fade-in duration-200 ${
+              feedback.type === 'success'
+                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                : 'bg-rose-500/15 border-rose-500/30 text-rose-400'
             }`}
-        >
-          <div className="flex items-center gap-2.5">
-            {feedback.type === 'success' ? (
-              <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" />
-            ) : (
-              <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />
-            )}
-            <span className="font-medium">{feedback.message}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setFeedback(null)}
-            className="p-1 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
           >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
-      {/* Tabs Switcher */}
-      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-slate-200/60 dark:bg-slate-900/60 border border-slate-300/80 dark:border-slate-800 w-fit">
-        <button
-          type="button"
-          onClick={() => setActiveTab('hero')}
-          className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${activeTab === 'hero'
-              ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-        >
-          <Layers className="w-4 h-4" />
-          <span>1. Hero Section</span>
-          <span className="w-2 h-2 rounded-full bg-sky-500" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('trajectory')}
-          className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${activeTab === 'trajectory'
-              ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-        >
-          <Milestone className="w-4 h-4" />
-          <span>2. Brand Trajectory ({trajectoryData.epochs.length})</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-500" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('story')}
-          className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${activeTab === 'story'
-              ? 'bg-white dark:bg-slate-800 text-sky-600 dark:text-sky-400 shadow-sm'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>3. Story & Picture Cards ({storyData.cards.length})</span>
-          <span className="w-2 h-2 rounded-full bg-indigo-500" />
-        </button>
-      </div>
-
-      {/* ========================================================= */}
-      {/* TAB 1: HERO SECTION CONFIGURATION */}
-      {/* ========================================================= */}
-      {activeTab === 'hero' && (
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    Hero Typography & Copy
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                    Versett-style full-bleed photo hero with cinematic vignette.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active</span>
-                  <button
-                    type="button"
-                    onClick={() => setHeroData((p) => ({ ...p, isActive: !p.isActive }))}
-                    className="cursor-pointer text-slate-400 hover:text-white"
-                  >
-                    {heroData.isActive !== false ? (
-                      <ToggleRight className="w-6 h-6 text-emerald-400" />
-                    ) : (
-                      <ToggleLeft className="w-6 h-6 text-slate-600" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Headline */}
-              <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                  Main Headline (H1)
-                </label>
-                <MinimalRichTextEditor
-                  value={heroData.headline}
-                  onChange={(val) => setHeroData((p) => ({ ...p, headline: val }))}
-                  placeholder="Enter the main hero headline..."
-                  variant="multiline"
-                  minHeight="64px"
-                />
-              </div>
-
-              {/* Subheadline (Optional) */}
-              <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                  Subheadline / Narrative (Optional)
-                </label>
-                <MinimalRichTextEditor
-                  value={heroData.subheadline || ''}
-                  onChange={(val) => setHeroData((p) => ({ ...p, subheadline: val }))}
-                  placeholder="Optional supporting narrative below headline..."
-                  variant="multiline"
-                  minHeight="56px"
-                />
-              </div>
-
-              {/* CTA Link & Text */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                    CTA Underlined Text
-                  </label>
-                  <input
-                    type="text"
-                    value={heroData.ctaText}
-                    onChange={(e) => setHeroData((p) => ({ ...p, ctaText: e.target.value }))}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    placeholder="e.g. Explore Our Method"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                    CTA Link Destination
-                  </label>
-                  <input
-                    type="text"
-                    value={heroData.ctaLink}
-                    onChange={(e) => setHeroData((p) => ({ ...p, ctaLink: e.target.value }))}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono text-xs"
-                    placeholder="/approach"
-                  />
-                </div>
-              </div>
-
-              {/* Background Image Upload & URL */}
-              <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Background Cinematic Image
-                  </label>
-                  <input
-                    ref={heroImageInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) handleFileUpload(file, 'hero');
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => heroImageInputRef.current?.click()}
-                    disabled={uploadingTarget === 'hero'}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/20 transition-colors cursor-pointer"
-                  >
-                    {uploadingTarget === 'hero' ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Upload className="w-3.5 h-3.5" />
-                    )}
-                    <span>Upload Image</span>
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={heroData.backgroundImage}
-                    onChange={(e) => setHeroData((p) => ({ ...p, backgroundImage: e.target.value }))}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    placeholder="/images/about/hero-versett.jpg"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                    Image Alt Description
-                  </label>
-                  <input
-                    type="text"
-                    value={heroData.imageAlt}
-                    onChange={(e) => setHeroData((p) => ({ ...p, imageAlt: e.target.value }))}
-                    className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    placeholder="Descriptive alt text for accessibility & SEO"
-                  />
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              {feedback.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              )}
+              <span>{feedback.message}</span>
             </div>
           </div>
         )}
+
+        {/* Compact Razor-sharp Command Bar */}
+        <div
+          className={`px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl border shadow-sm backdrop-blur-xl transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 ${
+            isDark
+              ? 'bg-[#0F172A]/95 border-slate-800/90 shadow-black/30'
+              : 'bg-white/95 border-slate-200 shadow-slate-200/40'
+          }`}
+        >
+          {/* Left: Active Section Breadcrumb & Status */}
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 rounded-md bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0 border border-sky-500/20">
+              <Sparkles className="w-3.5 h-3.5" />
+            </div>
+            <div className="flex items-center gap-1.5 min-w-0 text-xs">
+              <span className="text-slate-400 dark:text-slate-500 font-medium">About</span>
+              <span className="text-slate-300 dark:text-slate-600">/</span>
+              <span className="font-bold text-slate-800 dark:text-slate-100 truncate">
+                {activeTab === 'hero' && '1. Hero Section'}
+                {activeTab === 'trajectory' && '2. Brand Trajectory'}
+                {activeTab === 'story' && '3. Story & Craft Cards'}
+              </span>
+              <span className="ml-1 px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase tracking-wider bg-sky-500/10 text-sky-500 border border-sky-500/20 hidden sm:inline-block">
+                Live Engine
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={handleSaveActiveTab}
+              disabled={isSaving}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 disabled:opacity-50 transition-all shadow-xs shadow-sky-600/25 cursor-pointer"
+            >
+              {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+              <span>Save Changes</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2-Column Section Layout: Left Vertical Navigation Sidebar + Right Content Column */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
+        {/* Left Column: Compact Vertical Section Navigation */}
+        <aside className="w-full lg:w-48 shrink-0 sticky top-[136px] z-10">
+          <div
+            className={`p-1.5 rounded-xl border transition-all ${
+              isDark
+                ? 'bg-[#0F172A]/90 border-slate-800/80 shadow-sm backdrop-blur-xl'
+                : 'bg-white border-slate-200 shadow-2xs'
+            }`}
+          >
+            <div className="px-2 py-0.5 text-[9px] font-mono uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">
+              Sections
+            </div>
+
+            <nav className="flex flex-col gap-0.5 mt-0.5">
+              {/* Tab 1: Hero Section */}
+              <button
+                type="button"
+                onClick={() => setActiveTab('hero')}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer text-xs ${
+                  activeTab === 'hero'
+                    ? isDark
+                      ? 'bg-sky-500/15 text-sky-400 font-bold border border-sky-500/30'
+                      : 'bg-sky-50 text-sky-700 font-bold border border-sky-200 shadow-2xs'
+                    : isDark
+                    ? 'border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    : 'border border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                }`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <Layers className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">1. Hero Section</span>
+                </div>
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 shrink-0" />
+              </button>
+
+              {/* Tab 2: Brand Trajectory */}
+              <button
+                type="button"
+                onClick={() => setActiveTab('trajectory')}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer text-xs ${
+                  activeTab === 'trajectory'
+                    ? isDark
+                      ? 'bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30'
+                      : 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 shadow-2xs'
+                    : isDark
+                    ? 'border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    : 'border border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                }`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <Milestone className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">2. Trajectory</span>
+                </div>
+                <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/25 shrink-0">
+                  {trajectoryData.epochs.length}
+                </span>
+              </button>
+
+              {/* Tab 3: Story Cards */}
+              <button
+                type="button"
+                onClick={() => setActiveTab('story')}
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer text-xs ${
+                  activeTab === 'story'
+                    ? isDark
+                      ? 'bg-indigo-500/15 text-indigo-400 font-bold border border-indigo-500/30'
+                      : 'bg-indigo-50 text-indigo-700 font-bold border border-indigo-200 shadow-2xs'
+                    : isDark
+                    ? 'border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    : 'border border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                }`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">3. Story Cards</span>
+                </div>
+                <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-indigo-500/15 text-indigo-500 border border-indigo-500/25 shrink-0">
+                  {storyData.cards.length}
+                </span>
+              </button>
+            </nav>
+          </div>
+        </aside>
+
+        {/* Right Column: Tab Content */}
+        <div className="flex-1 min-w-0">
+          {/* ========================================================= */}
+          {/* TAB 1: HERO SECTION CONFIGURATION */}
+          {/* ========================================================= */}
+          {activeTab === 'hero' && (
+            <div className="space-y-3">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-3">
+                <div className="pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                    Hero Typography &amp; Visuals
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    Versett-style full-bleed photo hero with cinematic vignette.
+                  </p>
+                </div>
+
+                {/* Headline */}
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                    Main Headline (H1)
+                  </label>
+                  <MinimalRichTextEditor
+                    value={heroData.headline}
+                    onChange={(val) => setHeroData((p) => ({ ...p, headline: val }))}
+                    placeholder="Enter the main hero headline..."
+                    variant="multiline"
+                    minHeight="38px"
+                  />
+                </div>
+
+                {/* Subheadline (Optional) */}
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                    Subheadline / Narrative (Optional)
+                  </label>
+                  <MinimalRichTextEditor
+                    value={heroData.subheadline || ''}
+                    onChange={(val) => setHeroData((p) => ({ ...p, subheadline: val }))}
+                    placeholder="Optional supporting narrative below headline..."
+                    variant="multiline"
+                    minHeight="38px"
+                  />
+                </div>
+
+                {/* CTA Link & Text */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                      CTA Underlined Text
+                    </label>
+                    <input
+                      type="text"
+                      value={heroData.ctaText}
+                      onChange={(e) => setHeroData((p) => ({ ...p, ctaText: e.target.value }))}
+                      className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1.5 focus:ring-sky-500"
+                      placeholder="e.g. Explore Our Method"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                      CTA Link Destination
+                    </label>
+                    <input
+                      type="text"
+                      value={heroData.ctaLink}
+                      onChange={(e) => setHeroData((p) => ({ ...p, ctaLink: e.target.value }))}
+                      className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1.5 focus:ring-sky-500 font-mono"
+                      placeholder="/approach"
+                    />
+                  </div>
+                </div>
+
+                {/* Background Image Upload & URL */}
+                <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                      Background Cinematic Image
+                    </label>
+                    <input
+                      ref={heroImageInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleFileUpload(file, 'hero');
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => heroImageInputRef.current?.click()}
+                      disabled={uploadingTarget === 'hero'}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/20 transition-colors cursor-pointer"
+                    >
+                      {uploadingTarget === 'hero' ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Upload className="w-3 h-3" />
+                      )}
+                      <span>Upload Image</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={heroData.backgroundImage}
+                      onChange={(e) => setHeroData((p) => ({ ...p, backgroundImage: e.target.value }))}
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-1.5 focus:ring-sky-500"
+                      placeholder="/images/about/hero-versett.jpg"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-500 dark:text-slate-400">
+                      Image Alt Description
+                    </label>
+                    <input
+                      type="text"
+                      value={heroData.imageAlt}
+                      onChange={(e) => setHeroData((p) => ({ ...p, imageAlt: e.target.value }))}
+                      className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1.5 focus:ring-sky-500"
+                      placeholder="Descriptive alt text for accessibility & SEO"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
       {/* ========================================================= */}
       {/* TAB 2: BRAND TRAJECTORY CONFIGURATION */}
       {/* ========================================================= */}
       {activeTab === 'trajectory' && (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="space-y-3">
           {/* Section Heading Settings */}
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Trajectory Section Header
-                </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active</span>
-                  <button
-                    type="button"
-                    onClick={() => setTrajectoryData((p) => ({ ...p, isActive: !p.isActive }))}
-                    className="cursor-pointer text-slate-400 hover:text-white"
-                  >
-                    {trajectoryData.isActive !== false ? (
-                      <ToggleRight className="w-6 h-6 text-emerald-400" />
-                    ) : (
-                      <ToggleLeft className="w-6 h-6 text-slate-600" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                  Header Title
-                </label>
-                <input
-                  type="text"
-                  value={trajectoryData.title}
-                  onChange={(e) => setTrajectoryData((p) => ({ ...p, title: e.target.value }))}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold"
-                  placeholder="Our Evolution Through Time"
-                />
-              </div>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-2.5">
+            <div className="pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                Trajectory Section Header
+              </h3>
             </div>
 
-            {/* Epochs List */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Milestone className="w-4 h-4 text-emerald-500" />
-                  <span>Milestones / Epochs ({trajectoryData.epochs.length})</span>
-                </h3>
-                <button
-                  type="button"
-                  onClick={handleAddEpoch}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-sm cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add Year Milestone</span>
-                </button>
-              </div>
-
-              {trajectoryData.epochs.map((epoch, idx) => (
-                <div
-                  key={epoch.id || idx}
-                  className="p-5 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4"
-                >
-                  {/* Epoch Top Bar */}
-                  <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/60">
-                    <div className="flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                        {epoch.year}
-                      </span>
-                      <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                        {epoch.phaseTitle}
-                      </span>
-                    </div>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleMoveEpoch(idx, 'up')}
-                          disabled={idx === 0}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move earlier"
-                        >
-                          <ArrowUp className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleMoveEpoch(idx, 'down')}
-                          disabled={idx === trajectoryData.epochs.length - 1}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move later"
-                        >
-                          <ArrowDown className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteEpoch(idx)}
-                          className="p-1 rounded text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors ml-1 cursor-pointer"
-                          title="Delete epoch"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Epoch Fields */}
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                            Year / Tag
-                          </label>
-                          <input
-                            type="text"
-                            value={epoch.year}
-                            onChange={(e) => handleUpdateEpoch(idx, 'year', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono font-bold"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                            Phase Title
-                          </label>
-                          <input
-                            type="text"
-                            value={epoch.phaseTitle}
-                            onChange={(e) => handleUpdateEpoch(idx, 'phaseTitle', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-semibold"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                            Hub / Region
-                          </label>
-                          <input
-                            type="text"
-                            value={epoch.hubLocation}
-                            onChange={(e) => handleUpdateEpoch(idx, 'hubLocation', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                          Milestone Headline
-                        </label>
-                        <MinimalRichTextEditor
-                          value={epoch.headline}
-                          onChange={(val) => handleUpdateEpoch(idx, 'headline', val)}
-                          placeholder="e.g. Scaled Enterprise Next.js Engineering Architecture"
-                          variant="inline"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                          Narrative Description
-                        </label>
-                        <MinimalRichTextEditor
-                          value={epoch.narrative}
-                          onChange={(val) => handleUpdateEpoch(idx, 'narrative', val)}
-                          placeholder="Epoch narrative description..."
-                          variant="multiline"
-                          minHeight="56px"
-                        />
-                      </div>
-
-                      {/* Dual Metrics */}
-                      <div className="grid grid-cols-2 gap-3 pt-2">
-                        <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60 space-y-1.5">
-                          <span className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">Primary Metric</span>
-                          <div className="grid grid-cols-2 gap-2">
-                            <input
-                              type="text"
-                              value={epoch.primaryMetric.value}
-                              onChange={(e) =>
-                                handleUpdateEpoch(idx, 'primaryMetric', {
-                                  ...epoch.primaryMetric,
-                                  value: e.target.value,
-                                })
-                              }
-                              placeholder="Value (e.g. 450+)"
-                              className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-mono font-bold"
-                            />
-                            <input
-                              type="text"
-                              value={epoch.primaryMetric.label}
-                              onChange={(e) =>
-                                handleUpdateEpoch(idx, 'primaryMetric', {
-                                  ...epoch.primaryMetric,
-                                  label: e.target.value,
-                                })
-                              }
-                              placeholder="Label"
-                              className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-[11px]"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60 space-y-1.5">
-                          <span className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">Secondary Metric</span>
-                          <div className="grid grid-cols-2 gap-2">
-                            <input
-                              type="text"
-                              value={epoch.secondaryMetric.value}
-                              onChange={(e) =>
-                                handleUpdateEpoch(idx, 'secondaryMetric', {
-                                  ...epoch.secondaryMetric,
-                                  value: e.target.value,
-                                })
-                              }
-                              placeholder="Value (e.g. 98%)"
-                              className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-mono font-bold text-emerald-400"
-                            />
-                            <input
-                              type="text"
-                              value={epoch.secondaryMetric.label}
-                              onChange={(e) =>
-                                handleUpdateEpoch(idx, 'secondaryMetric', {
-                                  ...epoch.secondaryMetric,
-                                  label: e.target.value,
-                                })
-                              }
-                              placeholder="Label"
-                              className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-[11px]"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              ))}
+            <div>
+              <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                Header Title
+              </label>
+              <input
+                type="text"
+                value={trajectoryData.title}
+                onChange={(e) => setTrajectoryData((p) => ({ ...p, title: e.target.value }))}
+                className="w-full px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-1.5 focus:ring-sky-500 font-semibold"
+                placeholder="Our Evolution Through Time"
+              />
             </div>
+          </div>
+
+          {/* Epochs List */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <Milestone className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Milestones / Epochs ({trajectoryData.epochs.length})</span>
+              </h3>
+              <button
+                type="button"
+                onClick={handleAddEpoch}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-3 h-3" />
+                <span>Add Year Milestone</span>
+              </button>
+            </div>
+
+            {trajectoryData.epochs.map((epoch, idx) => (
+              <div
+                key={epoch.id || idx}
+                className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-2.5"
+              >
+                {/* Epoch Top Bar */}
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/60">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                      {epoch.year}
+                    </span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                      {epoch.phaseTitle}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => handleMoveEpoch(idx, 'up')}
+                      disabled={idx === 0}
+                      className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                      title="Move earlier"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleMoveEpoch(idx, 'down')}
+                      disabled={idx === trajectoryData.epochs.length - 1}
+                      className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                      title="Move later"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteEpoch(idx)}
+                      className="p-1 rounded text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors ml-0.5 cursor-pointer"
+                      title="Delete epoch"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Epoch Fields */}
+                <div className="space-y-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div>
+                      <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                        Year / Tag
+                      </label>
+                      <input
+                        type="text"
+                        value={epoch.year}
+                        onChange={(e) => handleUpdateEpoch(idx, 'year', e.target.value)}
+                        className="w-full px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono font-bold focus:outline-none focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                        Phase Title
+                      </label>
+                      <input
+                        type="text"
+                        value={epoch.phaseTitle}
+                        onChange={(e) => handleUpdateEpoch(idx, 'phaseTitle', e.target.value)}
+                        className="w-full px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                        Hub / Region
+                      </label>
+                      <input
+                        type="text"
+                        value={epoch.hubLocation}
+                        onChange={(e) => handleUpdateEpoch(idx, 'hubLocation', e.target.value)}
+                        className="w-full px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                      Milestone Headline
+                    </label>
+                    <MinimalRichTextEditor
+                      value={epoch.headline}
+                      onChange={(val) => handleUpdateEpoch(idx, 'headline', val)}
+                      placeholder="e.g. Scaled Enterprise Next.js Engineering Architecture"
+                      variant="inline"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                      Narrative Description
+                    </label>
+                    <MinimalRichTextEditor
+                      value={epoch.narrative}
+                      onChange={(val) => handleUpdateEpoch(idx, 'narrative', val)}
+                      placeholder="Epoch narrative description..."
+                      variant="multiline"
+                      minHeight="38px"
+                    />
+                  </div>
+
+                  {/* Dual Metrics */}
+                  <div className="grid grid-cols-2 gap-2.5 pt-1">
+                    <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 space-y-1">
+                      <span className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400">Primary Metric</span>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <input
+                          type="text"
+                          value={epoch.primaryMetric.value}
+                          onChange={(e) =>
+                            handleUpdateEpoch(idx, 'primaryMetric', {
+                              ...epoch.primaryMetric,
+                              value: e.target.value,
+                            })
+                          }
+                          placeholder="Value (e.g. 450+)"
+                          className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-mono font-bold focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        />
+                        <input
+                          type="text"
+                          value={epoch.primaryMetric.label}
+                          onChange={(e) =>
+                            handleUpdateEpoch(idx, 'primaryMetric', {
+                              ...epoch.primaryMetric,
+                              label: e.target.value,
+                            })
+                          }
+                          placeholder="Label"
+                          className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/60 space-y-1">
+                      <span className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400">Secondary Metric</span>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <input
+                          type="text"
+                          value={epoch.secondaryMetric.value}
+                          onChange={(e) =>
+                            handleUpdateEpoch(idx, 'secondaryMetric', {
+                              ...epoch.secondaryMetric,
+                              value: e.target.value,
+                            })
+                          }
+                          placeholder="Value (e.g. 98%)"
+                          className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-mono font-bold text-emerald-400 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        />
+                        <input
+                          type="text"
+                          value={epoch.secondaryMetric.label}
+                          onChange={(e) =>
+                            handleUpdateEpoch(idx, 'secondaryMetric', {
+                              ...epoch.secondaryMetric,
+                              label: e.target.value,
+                            })
+                          }
+                          placeholder="Label"
+                          className="px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-[11px] focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -812,255 +808,243 @@ export function AboutManagementView() {
       {/* TAB 3: STORY & PICTURE CARDS CONFIGURATION */}
       {/* ========================================================= */}
       {activeTab === 'story' && (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="space-y-3">
           {/* Header config */}
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Story Section Header
-                </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active</span>
-                  <button
-                    type="button"
-                    onClick={() => setStoryData((p) => ({ ...p, isActive: !p.isActive }))}
-                    className="cursor-pointer text-slate-400 hover:text-white"
-                  >
-                    {storyData.isActive !== false ? (
-                      <ToggleRight className="w-6 h-6 text-emerald-400" />
-                    ) : (
-                      <ToggleLeft className="w-6 h-6 text-slate-600" />
-                    )}
-                  </button>
-                </div>
-              </div>
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-2.5">
+            <div className="pb-2 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                Story Section Header
+              </h3>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                    Badge Pill Tag (Optional)
-                  </label>
-                  <MinimalRichTextEditor
-                    value={storyData.badge || ''}
-                    onChange={(val) => setStoryData((p) => ({ ...p, badge: val }))}
-                    placeholder="OUR PHILOSOPHY"
-                    variant="inline"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                    Section Title
-                  </label>
-                  <MinimalRichTextEditor
-                    value={storyData.title}
-                    onChange={(val) => setStoryData((p) => ({ ...p, title: val }))}
-                    placeholder="Our Philosophy & Craft"
-                    variant="inline"
-                  />
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                  Badge Pill Tag (Optional)
+                </label>
+                <MinimalRichTextEditor
+                  value={storyData.badge || ''}
+                  onChange={(val) => setStoryData((p) => ({ ...p, badge: val }))}
+                  placeholder="OUR PHILOSOPHY"
+                  variant="inline"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-bold mb-1.5 text-slate-700 dark:text-slate-300">
-                  Subtitle / Mission Statement
+                <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                  Section Title
                 </label>
                 <MinimalRichTextEditor
-                  value={storyData.subtitle}
-                  onChange={(val) => setStoryData((p) => ({ ...p, subtitle: val }))}
-                  placeholder="Mission statement and philosophy narrative..."
-                  variant="multiline"
-                  minHeight="68px"
+                  value={storyData.title}
+                  onChange={(val) => setStoryData((p) => ({ ...p, title: val }))}
+                  placeholder="Our Philosophy & Craft"
+                  variant="inline"
                 />
               </div>
             </div>
 
-            {/* Story Cards List */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-indigo-500" />
-                  <span>Alternating Story Cards ({storyData.cards.length})</span>
-                </h3>
-                <button
-                  type="button"
-                  onClick={handleAddStoryCard}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-sm cursor-pointer"
+            <div>
+              <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-300">
+                Subtitle / Mission Statement
+              </label>
+              <MinimalRichTextEditor
+                value={storyData.subtitle}
+                onChange={(val) => setStoryData((p) => ({ ...p, subtitle: val }))}
+                placeholder="Mission statement and philosophy narrative..."
+                variant="multiline"
+                minHeight="42px"
+              />
+            </div>
+          </div>
+
+          {/* Story Cards List */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                <span>Alternating Story Cards ({storyData.cards.length})</span>
+              </h3>
+              <button
+                type="button"
+                onClick={handleAddStoryCard}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-3 h-3" />
+                <span>Add Story Card</span>
+              </button>
+            </div>
+
+            {storyData.cards.map((card, idx) => {
+              const isImageRight = idx % 2 === 0;
+
+              return (
+                <div
+                  key={card.id || idx}
+                  className="p-3 sm:p-3.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-2.5"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add Story Card</span>
-                </button>
-              </div>
-
-              {storyData.cards.map((card, idx) => {
-                const isImageRight = idx % 2 === 0;
-
-                return (
-                  <div
-                    key={card.id || idx}
-                    className="p-5 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-sm space-y-4"
-                  >
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                          Card {idx + 1}
-                        </span>
-                        <span className="text-xs text-slate-500 font-medium">
-                          Layout: {isImageRight ? 'Text Left, Photo Right' : 'Photo Left, Text Right'}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => handleMoveStoryCard(idx, 'up')}
-                          disabled={idx === 0}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move up"
-                        >
-                          <ArrowUp className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleMoveStoryCard(idx, 'down')}
-                          disabled={idx === storyData.cards.length - 1}
-                          className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
-                          title="Move down"
-                        >
-                          <ArrowDown className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteStoryCard(idx)}
-                          className="p-1 rounded text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors ml-1 cursor-pointer"
-                          title="Delete card"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        Card {idx + 1}
+                      </span>
+                      <span className="text-[11px] text-slate-500 font-medium">
+                        {isImageRight ? 'Text Left, Photo Right' : 'Photo Left, Text Right'}
+                      </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                          Card Badge
-                        </label>
-                        <MinimalRichTextEditor
-                          value={card.badge || ''}
-                          onChange={(val) => handleUpdateStoryCard(idx, 'badge', val)}
-                          placeholder="e.g. 01 / SYSTEMIC DEPTH"
-                          variant="inline"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                          Card Headline
-                        </label>
-                        <MinimalRichTextEditor
-                          value={card.title}
-                          onChange={(val) => handleUpdateStoryCard(idx, 'title', val)}
-                          placeholder="Headline"
-                          variant="inline"
-                        />
-                      </div>
+                    <div className="flex items-center gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => handleMoveStoryCard(idx, 'up')}
+                        disabled={idx === 0}
+                        className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                        title="Move up"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleMoveStoryCard(idx, 'down')}
+                        disabled={idx === storyData.cards.length - 1}
+                        className="p-1 rounded text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                        title="Move down"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteStoryCard(idx)}
+                        className="p-1 rounded text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors ml-0.5 cursor-pointer"
+                        title="Delete card"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
+                  </div>
 
-                    {/* Paragraphs */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div>
-                      <label className="block text-[11px] font-bold mb-1 text-slate-600 dark:text-slate-400">
-                        Paragraphs
+                      <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                        Card Badge
                       </label>
                       <MinimalRichTextEditor
-                        value={card.paragraphs.map((p) => (p.startsWith('<p') ? p : `<p>${p}</p>`)).join('')}
-                        onChange={(val) => {
-                          const pMatches = val.match(/<p[^>]*>([\s\S]*?)<\/p>/gi);
-                          if (pMatches && pMatches.length > 0) {
-                            const cleaned = pMatches
-                              .map((m) => m.replace(/<\/?p[^>]*>/gi, '').trim())
-                              .filter((p) => p.length > 0);
-                            handleUpdateStoryCard(idx, 'paragraphs', cleaned.length > 0 ? cleaned : [val]);
-                          } else {
-                            handleUpdateStoryCard(
-                              idx,
-                              'paragraphs',
-                              val.split('\n\n').filter((p) => p.trim().length > 0)
-                            );
-                          }
-                        }}
-                        placeholder="First paragraph... Enter to start second paragraph..."
-                        variant="multiline"
-                        minHeight="96px"
+                        value={card.badge || ''}
+                        onChange={(val) => handleUpdateStoryCard(idx, 'badge', val)}
+                        placeholder="e.g. 01 / SYSTEMIC DEPTH"
+                        variant="inline"
                       />
                     </div>
 
-                    {/* Image Settings */}
-                    <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/60">
-                      <div className="flex items-center justify-between">
-                        <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400">
-                          Card Photo (Path or Upload)
-                        </label>
-                        <input
-                          ref={(el) => {
-                            storyImageInputRefs.current[card.id] = el;
-                          }}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleFileUpload(file, card.id);
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => storyImageInputRefs.current[card.id]?.click()}
-                          disabled={uploadingTarget === card.id}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 transition-colors cursor-pointer"
-                        >
-                          {uploadingTarget === card.id ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : (
-                            <Upload className="w-3 h-3" />
-                          )}
-                          <span>Upload Photo</span>
-                        </button>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          value={card.image}
-                          onChange={(e) => handleUpdateStoryCard(idx, 'image', e.target.value)}
-                          className="flex-1 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono"
-                          placeholder="/images/about/story-engineer.jpg"
-                        />
-                        {card.image && (
-                          <div className="relative w-9 h-9 rounded-lg overflow-hidden border border-white/20 shrink-0">
-                            <Image src={card.image} alt={card.title} fill className="object-cover" />
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] font-medium mb-1 text-slate-500">
-                          Image Alt Description
-                        </label>
-                        <input
-                          type="text"
-                          value={card.imageAlt || ''}
-                          onChange={(e) => handleUpdateStoryCard(idx, 'imageAlt', e.target.value)}
-                          className="w-full px-3 py-1 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-[11px] text-slate-900 dark:text-white"
-                          placeholder="Photo alt text for screen readers"
-                        />
-                      </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                        Card Headline
+                      </label>
+                      <MinimalRichTextEditor
+                        value={card.title}
+                        onChange={(val) => handleUpdateStoryCard(idx, 'title', val)}
+                        placeholder="Headline"
+                        variant="inline"
+                      />
                     </div>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* Paragraphs */}
+                  <div>
+                    <label className="block text-[11px] font-semibold mb-1 text-slate-600 dark:text-slate-400">
+                      Paragraphs
+                    </label>
+                    <MinimalRichTextEditor
+                      value={card.paragraphs.map((p) => (p.startsWith('<p') ? p : `<p>${p}</p>`)).join('')}
+                      onChange={(val) => {
+                        const pMatches = val.match(/<p[^>]*>([\s\S]*?)<\/p>/gi);
+                        if (pMatches && pMatches.length > 0) {
+                          const cleaned = pMatches
+                            .map((m) => m.replace(/<\/?p[^>]*>/gi, '').trim())
+                            .filter((p) => p.length > 0);
+                          handleUpdateStoryCard(idx, 'paragraphs', cleaned.length > 0 ? cleaned : [val]);
+                        } else {
+                          handleUpdateStoryCard(
+                            idx,
+                            'paragraphs',
+                            val.split('\n\n').filter((p) => p.trim().length > 0)
+                          );
+                        }
+                      }}
+                      placeholder="First paragraph... Enter to start second paragraph..."
+                      variant="multiline"
+                      minHeight="48px"
+                    />
+                  </div>
+
+                  {/* Image Settings */}
+                  <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                        Card Photo (Path or Upload)
+                      </label>
+                      <input
+                        ref={(el) => {
+                          storyImageInputRefs.current[card.id] = el;
+                        }}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleFileUpload(file, card.id);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => storyImageInputRefs.current[card.id]?.click()}
+                        disabled={uploadingTarget === card.id}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 transition-colors cursor-pointer"
+                      >
+                        {uploadingTarget === card.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Upload className="w-3 h-3" />
+                        )}
+                        <span>Upload Photo</span>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={card.image}
+                        onChange={(e) => handleUpdateStoryCard(idx, 'image', e.target.value)}
+                        className="flex-1 px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        placeholder="/images/about/story-engineer.jpg"
+                      />
+                      {card.image && (
+                        <div className="relative w-8 h-8 rounded-md overflow-hidden border border-white/20 shrink-0">
+                          <Image src={card.image} alt={card.title} fill className="object-cover" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-medium mb-0.5 text-slate-500">
+                        Image Alt Description
+                      </label>
+                      <input
+                        type="text"
+                        value={card.imageAlt || ''}
+                        onChange={(e) => handleUpdateStoryCard(idx, 'imageAlt', e.target.value)}
+                        className="w-full px-2.5 py-1 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-[11px] text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                        placeholder="Photo alt text for screen readers"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -21,7 +21,7 @@ import { useAdminTheme } from '@/components/admin/AdminThemeContext';
 function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get('from') || '/admin/users';
+  const from = searchParams.get('from') || '/admin/hero';
   const { theme, toggleTheme } = useAdminTheme();
   const isDark = theme === 'dark';
 
@@ -181,7 +181,7 @@ function AdminLoginContent() {
                 isDark ? 'text-slate-400' : 'text-slate-500'
               }`}
             >
-              Authorized agency staff, editors, and SuperAdmin credentials required.
+              Authorized administrator credentials required.
             </p>
           </div>
         </div>
@@ -344,7 +344,7 @@ function AdminLoginContent() {
           >
             <p className="font-semibold">Mighty Warner Digital Operating System</p>
             <p className="text-[10px] text-slate-400 font-mono">
-              Role-based access gated for SuperAdmin, Admin & Editor
+              Authorized administrator access only
             </p>
           </div>
         </div>

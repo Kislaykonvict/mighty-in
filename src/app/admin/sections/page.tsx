@@ -123,46 +123,28 @@ export default function AdminSectionsPage() {
 
   return (
     <div className="space-y-8 font-sans">
-      {/* Top Banner / Breadcrumb */}
+      {/* Compact Header Card */}
       <div
-        className={`p-6 sm:p-8 rounded-3xl border transition-colors relative overflow-hidden ${
-          isDark
-            ? 'bg-gradient-to-br from-[#0F172A] to-[#0A0F1D] border-slate-800 text-white'
-            : 'bg-gradient-to-br from-white to-slate-50 border-slate-200 text-slate-900 shadow-sm'
+        className={`p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm transition-all ${
+          isDark ? 'bg-[#0F172A]/95 border-slate-800' : 'bg-white/95 border-slate-200'
         }`}
       >
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Homepage Visual Architecture</span>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600/10 text-indigo-500 flex items-center justify-center">
+            <Layers className="w-5 h-5" />
           </div>
-
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Site Sections &amp; Page Layout Builder
-          </h1>
-
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-            Manage the modular sections that assemble the primary Homepage experience. Each block corresponds to a dedicated section editor with real-time updates to your live storefront.
-          </p>
-        </div>
-
-        <div className="absolute right-6 -bottom-10 opacity-5 dark:opacity-10 pointer-events-none">
-          <Layers className="w-64 h-64 text-indigo-500" />
-        </div>
-      </div>
-
-      {/* Sections Stacking Order Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-extrabold text-slate-900 dark:text-white">
-              Homepage Layout Sequence ({HOMEPAGE_SECTIONS.length} Modules)
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Arranged in visual top-to-bottom rendering order on the live website.
-            </p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-slate-900 dark:text-white">Site Sections &amp; Page Layout Builder</h1>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                {HOMEPAGE_SECTIONS.length} Modules
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">Manage modular section ordering and shortcuts across the homepage experience</p>
           </div>
+        </div>
 
+        <div className="flex items-center gap-2.5">
           <a
             href="/"
             target="_blank"
@@ -178,6 +160,7 @@ export default function AdminSectionsPage() {
             <ExternalLink className="w-3 h-3 text-slate-400" />
           </a>
         </div>
+      </div>
 
         <div className="grid grid-cols-1 gap-3.5">
           {HOMEPAGE_SECTIONS.map((sec) => {
@@ -267,7 +250,6 @@ export default function AdminSectionsPage() {
             );
           })}
         </div>
-      </div>
     </div>
   );
 }

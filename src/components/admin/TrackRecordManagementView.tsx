@@ -94,6 +94,14 @@ export function TrackRecordManagementView() {
     loadConfig();
   }, []);
 
+  // Auto-dismiss toast feedback after 4 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
   const handleFieldChange = <K extends keyof TrackRecordData>(key: K, value: TrackRecordData[K]) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -232,97 +240,97 @@ export function TrackRecordManagementView() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-20">
-      {/* Top Header Card */}
-      <div
-        className={`p-6 rounded-2xl border transition-all ${
-          isDark
-            ? 'bg-[#0F172A]/80 border-slate-800 shadow-xl'
-            : 'bg-white border-slate-200 shadow-sm'
-        }`}
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Award className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight">Proven Track Record Section</h1>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Dynamic CMS
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Manage institutional stats, custom card logos, two-line headlines, and trusted industry sectors
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleReset}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                isDark
-                  ? 'border-slate-700 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'
-                  : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
-              }`}
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset</span>
-            </button>
-
-            <Link
-              href="/"
-              target="_blank"
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                isDark
-                  ? 'border-slate-700 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'
-                  : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
-              }`}
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>View Live</span>
-            </Link>
-
-            <button
-              type="button"
-              onClick={() => handleSave()}
-              disabled={isSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 cursor-pointer transition-all disabled:opacity-50"
-            >
-              <Save className={`w-3.5 h-3.5 ${isSaving ? 'animate-spin' : ''}`} />
-              <span>{isSaving ? 'Publishing...' : 'Save & Publish'}</span>
-            </button>
-          </div>
-        </div>
-
+      {/* Sticky Top Header Container: Action Bar + Toast Message */}
+      <div className="sticky top-[76px] z-20 space-y-3 pb-2 -mt-2 pt-2">
         {/* Feedback Alert */}
         {feedback && (
           <div
-            className={`mt-4 p-3 rounded-xl text-xs font-medium flex items-center justify-between border ${
+            className={`p-4 rounded-xl flex items-center justify-between gap-3 text-xs font-medium shadow-xl backdrop-blur-md animate-fade-in border ${
               feedback.type === 'success'
-                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                ? isDark
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                : isDark
+                ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+                : 'bg-rose-50 border-rose-300 text-rose-800'
             }`}
           >
             <div className="flex items-center gap-2">
               {feedback.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
               ) : (
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
               )}
               <span>{feedback.message}</span>
             </div>
-            <button
-              type="button"
-              onClick={() => setFeedback(null)}
-              className="p-1 hover:opacity-75 cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
           </div>
         )}
+
+        {/* Top Header Card */}
+        <div
+          className={`backdrop-blur-xl p-5 sm:p-6 rounded-2xl border shadow-lg transition-all ${
+            isDark
+              ? 'bg-[#0F172A]/95 border-slate-800 shadow-black/40'
+              : 'bg-white/95 border-slate-200 shadow-slate-200/50'
+          }`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <Award className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold tracking-tight">Proven Track Record Section</h1>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    Dynamic CMS
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Manage institutional stats, custom card logos, two-line headlines, and trusted industry sectors
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleReset}
+                className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                  isDark
+                    ? 'border-slate-700 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'
+                    : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset</span>
+              </button>
+
+              <Link
+                href="/"
+                target="_blank"
+                className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                  isDark
+                    ? 'border-slate-700 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'
+                    : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>View Live</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => handleSave()}
+                disabled={isSaving}
+                className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 cursor-pointer transition-all disabled:opacity-50"
+              >
+                <Save className={`w-3.5 h-3.5 ${isSaving ? 'animate-spin' : ''}`} />
+                <span>{isSaving ? 'Publishing...' : 'Save & Publish'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Form Editor */}

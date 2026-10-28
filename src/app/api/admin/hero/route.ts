@@ -32,8 +32,8 @@ export async function GET() {
       ctaLink: section.ctaLink || defaultHeroData.ctaLink,
       secondaryCtaText: content.secondaryCtaText || defaultHeroData.secondaryCtaText,
       secondaryCtaLink: content.secondaryCtaLink || defaultHeroData.secondaryCtaLink,
-      videoUrl: content.videoUrl || defaultHeroData.videoUrl,
-      fallbackImageUrl: content.fallbackImageUrl || defaultHeroData.fallbackImageUrl,
+      videoUrl: content.videoUrl ?? '',
+      fallbackImageUrl: content.fallbackImageUrl ?? '',
       overlayOpacity: typeof content.overlayOpacity === 'number' ? content.overlayOpacity : defaultHeroData.overlayOpacity,
       isActive: section.isActive ?? true,
     };
@@ -60,8 +60,8 @@ export async function PUT(request: NextRequest) {
     const ctaLink = (body.ctaLink || '').trim() || '/work';
     const secondaryCtaText = (body.secondaryCtaText || '').trim();
     const secondaryCtaLink = (body.secondaryCtaLink || '').trim() || '/contact';
-    const videoUrl = (body.videoUrl || '').trim() || defaultHeroData.videoUrl;
-    const fallbackImageUrl = (body.fallbackImageUrl || '').trim() || defaultHeroData.fallbackImageUrl;
+    const videoUrl = (body.videoUrl || '').trim();
+    const fallbackImageUrl = (body.fallbackImageUrl || '').trim();
     const overlayOpacity = typeof body.overlayOpacity === 'number' ? Math.min(100, Math.max(0, body.overlayOpacity)) : 55;
     const isActive = typeof body.isActive === 'boolean' ? body.isActive : true;
 

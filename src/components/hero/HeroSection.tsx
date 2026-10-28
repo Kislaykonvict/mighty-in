@@ -53,14 +53,13 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             ref={videoRef}
             key={data.videoUrl}
             src={data.videoUrl}
-            poster={data.fallbackImageUrl}
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
             onError={() => setVideoError(true)}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover bg-[#080C14]"
           >
             <source src={data.videoUrl} type="video/mp4" />
           </video>

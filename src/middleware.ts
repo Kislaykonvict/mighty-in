@@ -12,13 +12,23 @@ export async function middleware(request: NextRequest) {
       const session = await verifyAdminToken(token);
       if (session) {
         // Already authenticated, redirect to admin dashboard
-        return NextResponse.redirect(new URL('/admin/users', request.url));
+        return NextResponse.redirect(new URL('/admin/hero', request.url));
       }
     }
     return NextResponse.next();
   }
 
-  // 2. Protect all other /admin/* pages
+  // 2. Redirect obsolete user management & profile sections directly to admin dashboard
+  if (
+    pathname === '/admin/profile' ||
+    pathname.startsWith('/admin/profile/') ||
+    pathname === '/admin/users' ||
+    pathname.startsWith('/admin/users/')
+  ) {
+    return NextResponse.redirect(new URL('/admin/hero', request.url));
+  }
+
+  // 3. Protect all other /admin/* pages
   if (pathname.startsWith('/admin')) {
     const token = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
     if (!token) {

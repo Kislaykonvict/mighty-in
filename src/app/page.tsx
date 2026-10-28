@@ -43,8 +43,8 @@ async function getHeroData(): Promise<HeroData> {
       ctaLink: section.ctaLink || defaultHeroData.ctaLink,
       secondaryCtaText: content.secondaryCtaText || defaultHeroData.secondaryCtaText,
       secondaryCtaLink: content.secondaryCtaLink || defaultHeroData.secondaryCtaLink,
-      videoUrl: content.videoUrl || defaultHeroData.videoUrl,
-      fallbackImageUrl: content.fallbackImageUrl || defaultHeroData.fallbackImageUrl,
+      videoUrl: content.videoUrl ?? '',
+      fallbackImageUrl: content.fallbackImageUrl ?? '',
       overlayOpacity: typeof content.overlayOpacity === 'number' ? content.overlayOpacity : defaultHeroData.overlayOpacity,
       isActive: section.isActive ?? true,
     };

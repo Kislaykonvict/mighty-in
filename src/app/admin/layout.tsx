@@ -102,12 +102,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Configure branding, navigation links, global contact info and analytics keys',
       };
     }
-    if (pathname?.startsWith('/admin/users')) {
-      return {
-        title: 'User Management',
-        subtitle: 'Manage administrators, roles and team permissions',
-      };
-    }
     return {
       title: 'Admin Console',
       subtitle: 'Manage website content, growth sections, and settings',

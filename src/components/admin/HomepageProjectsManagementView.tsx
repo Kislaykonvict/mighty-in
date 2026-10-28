@@ -14,7 +14,6 @@ import {
   ChevronUp,
   ChevronDown,
   Layers,
-  ArrowRight,
   Eye,
   Sliders,
   Sparkles,
@@ -72,6 +71,14 @@ export function HomepageProjectsManagementView() {
     loadData();
   }, []);
 
+  // Auto-dismiss toast feedback after 4 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
   // Handle Save
   const handleSave = async () => {
     setIsSaving(true);
@@ -94,7 +101,6 @@ export function HomepageProjectsManagementView() {
       setFeedback({ type: 'error', message: err.message || 'Network error saving changes' });
     } finally {
       setIsSaving(false);
-      setTimeout(() => setFeedback(null), 5000);
     }
   };
 
@@ -161,71 +167,66 @@ export function HomepageProjectsManagementView() {
 
   return (
     <div className="space-y-8 pb-16 font-sans">
-      {/* Top Banner */}
-      <div
-        className={`p-6 sm:p-8 rounded-3xl border transition-colors relative overflow-hidden ${
-          isDark
-            ? 'bg-gradient-to-br from-[#0F172A] to-[#0A0F1D] border-slate-800 text-white'
-            : 'bg-gradient-to-br from-white to-slate-50 border-slate-200 text-slate-900 shadow-sm'
-        }`}
-      >
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20">
-            <Briefcase className="w-3.5 h-3.5" />
-            <span>Homepage Section 4 • Work &amp; Case Studies</span>
+      {/* Sticky Top Header Container: Action Bar + Toast Message */}
+      <div className="sticky top-[76px] z-20 space-y-3 pb-2 -mt-2 pt-2">
+        {/* Feedback Alert */}
+        {feedback && (
+          <div
+            className={`p-4 rounded-xl flex items-center justify-between gap-3 text-xs font-medium shadow-xl backdrop-blur-md animate-fade-in border ${
+              feedback.type === 'success'
+                ? isDark
+                  ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                : isDark
+                ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+                : 'bg-rose-50 border-rose-300 text-rose-800'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {feedback.type === 'success' ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              )}
+              <span>{feedback.message}</span>
+            </div>
           </div>
+        )}
 
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Homepage Featured Projects
-          </h1>
-
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-            Select and sequence the verified case studies showcased on the primary homepage grid. Manage overall section copy, call-to-action buttons, and project display order.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link
-              href="/admin/work"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
-            >
-              <span>Manage Full Project Portfolio (CRUD &amp; Details)</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-            <span className="text-slate-400 dark:text-slate-600">•</span>
-            <a
-              href="/#work"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-white"
-            >
-              <span>Preview Live Homepage Section</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-        </div>
-
-        <div className="absolute right-6 -bottom-10 opacity-5 dark:opacity-10 pointer-events-none">
-          <Briefcase className="w-64 h-64 text-indigo-500" />
-        </div>
-      </div>
-
-      {/* Feedback Alert */}
-      {feedback && (
+        {/* Top Action Bar */}
         <div
-          className={`p-4 rounded-2xl flex items-center gap-3 border text-sm font-semibold transition-all ${
-            feedback.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
-              : 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400'
+          className={`p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg backdrop-blur-xl transition-all ${
+            isDark ? 'bg-[#0F172A]/95 border-slate-800 shadow-black/40' : 'bg-white/95 border-slate-200 shadow-slate-200/50'
           }`}
         >
-          {feedback.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 shrink-0" />
-          )}
-          <span>{feedback.message}</span>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600/10 text-indigo-500 flex items-center justify-center">
+              <Briefcase className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold">Homepage Featured Projects</h2>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  {formData.selectedProjectIds?.length || 0} Featured
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">Configure hero copy, selected case study tiles &amp; primary CTA</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSaving}
+              className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/20 flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+            >
+              {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+              <span>{isSaving ? 'Publishing...' : 'Save & Publish'}</span>
+            </button>
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Main Grid: Settings & Projects Selector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -527,42 +528,6 @@ export function HomepageProjectsManagementView() {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Floating Save Action Bar */}
-      <div
-        className={`sticky bottom-6 z-20 p-4 rounded-2xl border flex items-center justify-between backdrop-blur-md shadow-xl transition-all ${
-          isDark
-            ? 'bg-slate-900/90 border-slate-700 text-white'
-            : 'bg-white/95 border-slate-200 text-slate-900 shadow-slate-200/50'
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-2.5 h-2.5 rounded-full ${
-              isDirty ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'
-            }`}
-          />
-          <span className="text-xs font-semibold">
-            {isDirty ? 'You have unsaved changes' : 'All changes published to live storefront'}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition-all cursor-pointer disabled:opacity-50"
-          >
-            {isSaving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            <span>{isSaving ? 'Publishing...' : 'Save & Publish Changes'}</span>
-          </button>
         </div>
       </div>
     </div>

@@ -26,10 +26,31 @@ export async function POST(request: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // Find admin user in database
-    const user = await prisma.adminUser.findUnique({
+    // Find sole admin user in database
+    let user = await prisma.adminUser.findUnique({
       where: { email: normalizedEmail },
     });
+
+    // If no admin user exists in the database yet, auto-provision default admin
+    if (!user) {
+      const defaultEmail = (process.env.ADMIN_INITIAL_EMAIL || 'admin@mightywarner.com').toLowerCase();
+      if (normalizedEmail === defaultEmail) {
+        const count = await prisma.adminUser.count();
+        if (count === 0) {
+          const defaultPass = process.env.ADMIN_INITIAL_PASSWORD || 'AdminPassword2026!';
+          const passwordHash = await bcrypt.hash(defaultPass, 10);
+          user = await prisma.adminUser.create({
+            data: {
+              email: defaultEmail,
+              name: 'Mighty SuperAdmin',
+              passwordHash,
+              role: 'SUPERADMIN',
+              isActive: true,
+            },
+          });
+        }
+      }
+    }
 
     if (!user) {
       return NextResponse.json(

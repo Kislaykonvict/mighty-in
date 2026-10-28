@@ -21,9 +21,8 @@ export const defaultHeroData: HeroData = {
   ctaLink: '/work',
   secondaryCtaText: 'FIND TALENT',
   secondaryCtaLink: '/contact',
-  videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
-  fallbackImageUrl:
-    'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=2000&q=80',
+  videoUrl: '',
+  fallbackImageUrl: '',
   overlayOpacity: 55,
   isActive: true,
 };

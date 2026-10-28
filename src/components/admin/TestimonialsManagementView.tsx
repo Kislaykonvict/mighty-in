@@ -92,6 +92,14 @@ export function TestimonialsManagementView() {
     loadData();
   }, []);
 
+  // Auto-dismiss toast feedback after 4 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => setFeedback(null), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
   // Header field change
   const handleFieldChange = <K extends keyof TestimonialsSectionData>(
     key: K,
@@ -275,122 +283,118 @@ export function TestimonialsManagementView() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-24 font-sans">
-      {/* Top Header Bar */}
-      <div
-        className={`p-6 rounded-2xl border transition-all ${
-          isDark
-            ? 'bg-[#0F172A]/80 border-slate-800 shadow-xl'
-            : 'bg-white border-slate-200 shadow-sm'
-        }`}
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
-              <MessageSquareQuote className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight">Testimonials & Social Proof</h1>
-                <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
-                    formData.isActive
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                  }`}
-                >
-                  {formData.isActive ? 'Active on Home' : 'Hidden'}
-                </span>
+      {/* Sticky Top Header Container */}
+      <div className="sticky top-[76px] z-20 space-y-3 pb-2 -mt-2 pt-2">
+        {/* Feedback Banner */}
+        <AnimatePresence>
+          {feedback && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className={`p-4 rounded-xl border flex items-center justify-between gap-3 text-xs font-medium shadow-xl backdrop-blur-md ${
+                feedback.type === 'success'
+                  ? isDark
+                    ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300'
+                    : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                  : isDark
+                  ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+                  : 'bg-rose-50 border-rose-300 text-rose-800'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                {feedback.type === 'success' ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                )}
+                <span>{feedback.message}</span>
               </div>
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Configure executive endorsements, full-height fading portraits, quotes, and 3D stack
-              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Top Header Bar */}
+        <div
+          className={`p-5 sm:p-6 rounded-2xl border shadow-lg backdrop-blur-xl transition-all ${
+            isDark
+              ? 'bg-[#0F172A]/95 border-slate-800 shadow-black/40'
+              : 'bg-white/95 border-slate-200 shadow-slate-200/50'
+          }`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                <MessageSquareQuote className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold tracking-tight">Testimonials & Social Proof</h1>
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                      formData.isActive
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                    }`}
+                  >
+                    {formData.isActive ? 'Active on Home' : 'Hidden'}
+                  </span>
+                </div>
+                <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Configure executive endorsements, full-height fading portraits, quotes, and 3D stack
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              href="/"
-              target="_blank"
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
-                isDark
-                  ? 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
-                  : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
-              }`}
-            >
-              <span>Live Site</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Link
+                href="/"
+                target="_blank"
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
+                    : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
+                }`}
+              >
+                <span>Live Site</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
 
-            <button
-              type="button"
-              onClick={handleReset}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                isDark
-                  ? 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
-                  : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
-              }`}
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset</span>
-            </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  isDark
+                    ? 'bg-slate-800/80 hover:bg-slate-700/80 border-slate-700 text-slate-300'
+                    : 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-700'
+                }`}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => handleSave()}
-              disabled={isSaving}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-semibold text-white bg-sky-500 hover:bg-sky-400 shadow-lg shadow-sky-500/20 transition-all cursor-pointer disabled:opacity-50"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Publishing...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="w-3.5 h-3.5" />
-                  <span>Save & Publish</span>
-                </>
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => handleSave()}
+                disabled={isSaving}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-semibold text-white bg-sky-500 hover:bg-sky-400 shadow-lg shadow-sky-500/20 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Publishing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Save & Publish</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Feedback Banner */}
-      <AnimatePresence>
-        {feedback && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className={`p-4 rounded-xl border flex items-center justify-between gap-3 text-xs font-medium ${
-              feedback.type === 'success'
-                ? isDark
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                  : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                : isDark
-                ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-                : 'bg-rose-50 border-rose-300 text-rose-800'
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              {feedback.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              ) : (
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-              )}
-              <span>{feedback.message}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setFeedback(null)}
-              className="p-1 hover:opacity-75 transition-opacity"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Main Form Configuration Layout */}
       <div className="max-w-4xl mx-auto space-y-6">
