@@ -14,6 +14,7 @@ import {
   Save,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   Loader2,
   X,
   Sparkles,
@@ -65,12 +66,14 @@ export function WorkPortfolioManagementView() {
   const [editingCategoryIndex, setEditingCategoryIndex] = useState<number | null>(null);
   const [editingCategoryValue, setEditingCategoryValue] = useState('');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [categoryWarning, setCategoryWarning] = useState<string | null>(null);
 
   // Category Showcase 2-row limit & expansion state
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(false);
   const [hasMoreThanTwoRows, setHasMoreThanTwoRows] = useState(false);
   const [twoRowsHeight, setTwoRowsHeight] = useState<number | null>(null);
   const categoriesContainerRef = useRef<HTMLDivElement>(null);
+  const categoryInputRef = useRef<HTMLInputElement>(null);
 
   // Filters (Search by Title)
   const [searchQuery, setSearchQuery] = useState('');
@@ -413,9 +416,15 @@ export function WorkPortfolioManagementView() {
 
   const handleAddCategory = async () => {
     const trimmed = newCategoryInput.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      categoryInputRef.current?.focus();
+      setFeedback({ type: 'error', message: 'Please enter a category name first.' });
+      setTimeout(() => setFeedback(null), 3000);
+      return;
+    }
     if (categories.some((c) => c.toLowerCase() === trimmed.toLowerCase())) {
       setFeedback({ type: 'error', message: 'Category already exists' });
+      setTimeout(() => setFeedback(null), 3000);
       return;
     }
     const next = [...categories, trimmed];
@@ -445,10 +454,32 @@ export function WorkPortfolioManagementView() {
   };
 
   const handleDeleteCategory = async (catToDelete: string) => {
+    setCategoryWarning(null);
+
     if (categories.length <= 1) {
-      setFeedback({ type: 'error', message: 'You must keep at least one category.' });
+      const msg = 'You must keep at least one category.';
+      setCategoryWarning(msg);
+      setFeedback({ type: 'error', message: msg });
+      setTimeout(() => setFeedback(null), 4000);
       return;
     }
+
+    // Check if any project is currently assigned to this category
+    const connectedProjects = projects.filter(
+      (p) => p.category?.trim().toLowerCase() === catToDelete.trim().toLowerCase()
+    );
+
+    if (connectedProjects.length > 0) {
+      const sampleTitles = connectedProjects.slice(0, 3).map((p) => `"${p.title}"`).join(', ');
+      const moreCount = connectedProjects.length > 3 ? ` and ${connectedProjects.length - 3} more` : '';
+      const warningMsg = `Cannot delete category "${catToDelete}". It is currently connected to ${connectedProjects.length} project(s) (${sampleTitles}${moreCount}). Please reassign or delete these projects first.`;
+
+      setCategoryWarning(warningMsg);
+      setFeedback({ type: 'error', message: warningMsg });
+      setTimeout(() => setFeedback(null), 6000);
+      return;
+    }
+
     const next = categories.filter((c) => c !== catToDelete);
     setCategories(next);
     await handleSaveCategories(next);
@@ -675,11 +706,12 @@ export function WorkPortfolioManagementView() {
             className="flex items-center gap-2"
           >
             <input
+              ref={categoryInputRef}
               type="text"
               placeholder="New category name..."
               value={newCategoryInput}
               onChange={(e) => setNewCategoryInput(e.target.value)}
-              className={`px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-sky-500/20 focus:outline-none w-52 sm:w-64 ${
+              className={`px-3 py-2 rounded-xl border text-xs focus:ring-2 focus:ring-sky-500/20 focus:outline-none w-52 sm:w-64 transition-all ${
                 isDark
                   ? 'bg-slate-900 border-slate-700 text-white placeholder-slate-500'
                   : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
@@ -687,8 +719,8 @@ export function WorkPortfolioManagementView() {
             />
             <button
               type="submit"
-              disabled={!newCategoryInput.trim() || isSavingCategories}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white transition-all cursor-pointer shrink-0"
+              disabled={isSavingCategories}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-700 active:scale-95 disabled:opacity-50 text-white transition-all cursor-pointer shrink-0 shadow-xs hover:shadow-md"
             >
               {isSavingCategories ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -702,6 +734,25 @@ export function WorkPortfolioManagementView() {
 
         {/* Categories Showcase (Max 2 rows with 'See All' toggle) */}
         <div className="space-y-2">
+          {categoryWarning && (
+            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs flex items-start justify-between gap-3 animate-fade-in shadow-xs">
+              <div className="flex items-start gap-2.5">
+                <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-bold text-amber-900 dark:text-amber-100">Category in Use</p>
+                  <p className="text-amber-800 dark:text-amber-300/90 leading-relaxed">{categoryWarning}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCategoryWarning(null)}
+                className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200 p-1 rounded-md text-xs font-bold shrink-0 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
             Hover over the categories to manage them.
           </p>

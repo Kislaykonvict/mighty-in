@@ -25,12 +25,19 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
     );
   }
 
-  const isDark = resolvedTheme === 'dark';
+  const isDark = resolvedTheme === 'dark' || theme === 'dark';
+
+  const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const nextTheme = isDark ? 'light' : 'dark';
+    setTheme(nextTheme);
+  };
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      onClick={handleToggle}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       className={`relative inline-flex items-center justify-center w-9 h-9 rounded-full border transition-all duration-200 

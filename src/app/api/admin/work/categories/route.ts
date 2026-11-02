@@ -76,6 +76,50 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    // Validate that no categories currently connected to existing projects are being removed
+    const existingSection = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'work',
+          sectionKey: 'categories',
+        },
+      },
+    });
+
+    const existingCategories: string[] = Array.isArray((existingSection?.content as any)?.categories)
+      ? (existingSection?.content as any).categories
+      : [];
+
+    const removedCategories = existingCategories.filter(
+      (oldCat) => !categories.some((newCat) => newCat.toLowerCase() === oldCat.toLowerCase())
+    );
+
+    if (removedCategories.length > 0) {
+      for (const removed of removedCategories) {
+        const connectedProjects = await prisma.project.findMany({
+          where: {
+            category: {
+              equals: removed,
+              mode: 'insensitive',
+            },
+          },
+          select: { title: true },
+        });
+
+        if (connectedProjects.length > 0) {
+          const sample = connectedProjects.slice(0, 2).map((p) => `"${p.title}"`).join(', ');
+          const extra = connectedProjects.length > 2 ? ` and ${connectedProjects.length - 2} more` : '';
+          return NextResponse.json(
+            {
+              success: false,
+              error: `Cannot delete category "${removed}". It is currently connected to ${connectedProjects.length} project(s) (${sample}${extra}). Please reassign or delete these projects first.`,
+            },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const title = typeof body.title === 'string' && body.title.trim()
       ? body.title.trim()
       : 'TRUSTED ACROSS:';
