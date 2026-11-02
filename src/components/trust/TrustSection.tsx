@@ -116,7 +116,7 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
   const industries = data.industries && data.industries.length > 0 ? data.industries : defaultTrackRecordData.industries;
 
   return (
-    <section className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#DBDBDB] dark:bg-[#070B12] overflow-hidden border-b border-neutral-300 dark:border-white/[0.06] transition-colors duration-200">
+    <section className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#DBDBDB] dark:bg-[#070B12] overflow-hidden transition-colors duration-200">
       {/* Ambient Lighting & Luminous Waves */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Soft diagonal luminous waves */}
@@ -257,9 +257,8 @@ export function TrustSection({ data: initialData }: TrustSectionProps) {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-wrap items-center justify-start gap-2.5 sm:gap-3 pt-6"
           >
-            {/* Leading Line Accent & Monospace Label */}
-            <div className="flex items-center gap-3 mr-1">
-              <span className="w-12 h-[1px] bg-slate-300 dark:bg-white/20 hidden sm:block" />
+            {/* Monospace Label */}
+            <div className="flex items-center gap-2 mr-1">
               <span className="text-[11px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase font-semibold whitespace-nowrap">
                 TRUSTED ACROSS:
               </span>

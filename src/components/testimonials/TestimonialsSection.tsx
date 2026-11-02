@@ -90,7 +90,7 @@ export function TestimonialsSection({ initialData }: TestimonialsSectionProps) {
       ref={containerRef}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="py-12 sm:py-16 bg-[#DBDBDB] dark:bg-[#060A12] relative border-t border-neutral-300 dark:border-white/8 overflow-hidden select-none transition-colors duration-200"
+      className="py-12 sm:py-16 bg-[#DBDBDB] dark:bg-[#060A12] relative overflow-hidden select-none transition-colors duration-200"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Dynamic Section Header */}

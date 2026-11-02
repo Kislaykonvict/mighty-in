@@ -7,7 +7,7 @@ import { siteConfig } from '@/config/site';
 
 export function Footer() {
   return (
-    <footer className="bg-[#D1D1D1] dark:bg-[#05080E] border-t border-neutral-300 dark:border-white/8 pt-16 sm:pt-24 pb-12 text-slate-700 dark:text-slate-400">
+    <footer className="bg-[#D1D1D1] dark:bg-[#05080E] pt-16 sm:pt-24 pb-12 text-slate-700 dark:text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Brand Statement */}
         <div className="pb-12 mb-12 border-b border-neutral-300 dark:border-white/8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

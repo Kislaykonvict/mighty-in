@@ -32,16 +32,20 @@ export function RichTextContent({
 
   const hasHtml = /<[a-z][\s\S]*>/i.test(processed);
 
+  // If HTML contains block-level tags like <p> and Component is 'p',
+  // switch to 'div' to prevent invalid HTML nesting (<p><p>...</p></p>) which breaks React hydration
+  const TargetComponent = (Component === 'p' && hasHtml && /<p\b/i.test(processed)) ? 'div' : Component;
+
   if (hasHtml) {
     return (
-      <Component
+      <TargetComponent
         className={className}
         dangerouslySetInnerHTML={{ __html: processed }}
       />
     );
   }
 
-  return <Component className={className}>{processed}</Component>;
+  return <TargetComponent className={className}>{processed}</TargetComponent>;
 }
 
 export default RichTextContent;

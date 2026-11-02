@@ -17,6 +17,7 @@ import {
   TestimonialCard,
 } from '@/types/testimonialsSection';
 import { defaultHomepageWorkData, HomepageWorkData } from '@/types/homepageWork';
+import { defaultFinalCtaData, FinalCtaData } from '@/types/finalCta';
 
 export const revalidate = 0;
 
@@ -221,6 +222,38 @@ async function getHomepageWorkData(): Promise<HomepageWorkData> {
   }
 }
 
+async function getFinalCtaData(): Promise<FinalCtaData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'final_cta',
+        },
+      },
+    });
+
+    if (!section) return defaultFinalCtaData;
+
+    const content = (section.content as any) || {};
+
+    return {
+      badge: section.badge !== null && section.badge !== undefined ? section.badge : defaultFinalCtaData.badge,
+      title: section.title !== null && section.title !== undefined ? section.title : defaultFinalCtaData.title,
+      subtitle: section.subtitle !== null && section.subtitle !== undefined ? section.subtitle : defaultFinalCtaData.subtitle,
+      primaryCtaText: section.ctaText !== null && section.ctaText !== undefined ? section.ctaText : defaultFinalCtaData.primaryCtaText,
+      primaryCtaLink: section.ctaLink !== null && section.ctaLink !== undefined ? section.ctaLink : defaultFinalCtaData.primaryCtaLink,
+      secondaryCtaText: typeof content.secondaryCtaText === 'string' ? content.secondaryCtaText : defaultFinalCtaData.secondaryCtaText,
+      secondaryCtaLink: typeof content.secondaryCtaLink === 'string' ? content.secondaryCtaLink : defaultFinalCtaData.secondaryCtaLink,
+      showSecondaryCta: typeof content.showSecondaryCta === 'boolean' ? content.showSecondaryCta : defaultFinalCtaData.showSecondaryCta,
+      guaranteeNote: typeof content.guaranteeNote === 'string' ? content.guaranteeNote : defaultFinalCtaData.guaranteeNote,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultFinalCtaData;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
     title: 'One Company. Multiple Ways to Move Your Business Forward',
@@ -231,11 +264,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, coreBusinessData, testimonialsData, workData] = await Promise.all([
+  const [heroData, coreBusinessData, testimonialsData, workData, finalCtaData] = await Promise.all([
     getHeroData(),
     getCoreBusinessData(),
     getTestimonialsData(),
     getHomepageWorkData(),
+    getFinalCtaData(),
   ]);
 
   return (
@@ -262,7 +296,7 @@ export default async function HomePage() {
       <GlobalOfficesSection />
 
       {/* 7. Conversion: Final What's Next CTA */}
-      <FinalCtaSection />
+      <FinalCtaSection data={finalCtaData} />
     </div>
   );
 }

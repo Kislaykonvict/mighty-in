@@ -219,7 +219,7 @@ export function CoreBusinessShowcaseSection({ initialData }: CoreBusinessShowcas
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-[#DBDBDB] dark:bg-[#080C14] text-slate-900 dark:text-white border-t border-neutral-300 dark:border-white/[0.08] transition-colors duration-200"
+      className="relative w-full bg-[#DBDBDB] dark:bg-[#080C14] text-slate-900 dark:text-white transition-colors duration-200"
       style={{ height: `${Math.max(cards.length, 1) * 105 + 50}vh` }}
     >
       {/* Background Ambience */}

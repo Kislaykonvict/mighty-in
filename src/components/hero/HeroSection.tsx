@@ -111,7 +111,7 @@ export function HeroSection({ data: initialData }: HeroSectionProps) {
             >
               <RichTextContent
                 content={data.subtitle}
-                as="p"
+                as="div"
                 className="text-base sm:text-lg md:text-xl text-slate-200 font-normal leading-relaxed drop-shadow-sm text-left"
               />
             </motion.div>

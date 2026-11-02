@@ -62,7 +62,7 @@ export function GlobalOfficesSection() {
   };
 
   return (
-    <section id="global-offices" className="py-24 bg-[#DBDBDB] dark:bg-[#080C14] relative overflow-hidden border-t border-b border-neutral-300 dark:border-white/8 transition-colors duration-200">
+    <section id="global-offices" className="py-24 bg-[#DBDBDB] dark:bg-[#080C14] relative overflow-hidden transition-colors duration-200">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[700px] h-[700px] bg-rose-500/5 dark:bg-brand-crimson/5 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute top-1/3 right-10 w-[600px] h-[600px] bg-blue-500/5 dark:bg-brand-royal/8 rounded-full blur-[160px] pointer-events-none" />

@@ -120,7 +120,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-white text-slate-900 dark:bg-[#080C14] dark:text-[#F8FAFC] antialiased selection:bg-rose-500/20 selection:text-rose-900 dark:selection:bg-sky-500/30 dark:selection:text-white flex flex-col min-h-screen transition-colors duration-150">
+      <body suppressHydrationWarning className="bg-white text-slate-900 dark:bg-[#080C14] dark:text-[#F8FAFC] antialiased selection:bg-rose-500/20 selection:text-rose-900 dark:selection:bg-sky-500/30 dark:selection:text-white flex flex-col min-h-screen transition-colors duration-150">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <SiteChrome>{children}</SiteChrome>
         </ThemeProvider>

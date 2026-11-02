@@ -27,6 +27,7 @@ import {
   MessageSquareQuote,
   Home,
   FolderKanban,
+  MousePointerClick,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -80,6 +81,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
             name: 'Testimonials',
             href: '/admin/testimonials',
             icon: MessageSquareQuote,
+          },
+          {
+            name: 'Conversion CTA',
+            href: '/admin/final-cta',
+            icon: MousePointerClick,
           },
           {
             name: 'Site Sections (Builder)',
