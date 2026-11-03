@@ -8,14 +8,17 @@ import { Play, Pause, Compass, RotateCcw, MapPin, Sparkles, Navigation } from 'l
 interface InteractiveGlobeProps {
   selectedOffice: OfficeLocation | null;
   onSelectOffice: (office: OfficeLocation) => void;
+  offices?: OfficeLocation[];
   className?: string;
 }
 
 export function InteractiveGlobe({
   selectedOffice,
   onSelectOffice,
+  offices = MIGHTY_OFFICES,
   className = '',
 }: InteractiveGlobeProps) {
+  const activeOffices = offices && offices.length > 0 ? offices : MIGHTY_OFFICES;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
   
@@ -66,40 +69,50 @@ export function InteractiveGlobe({
     window.addEventListener('resize', onResize);
     onResize();
 
-    // Map Mighty Warner offices to Cobe markers with custom colors
-    const markers: Marker[] = MIGHTY_OFFICES.map((office) => {
+    // Map offices to Cobe markers with custom colors
+    const markers: Marker[] = activeOffices.map((office) => {
       const isSelected = selectedOffice?.id === office.id;
+      const location: [number, number] = office.cobeLocation || [
+        office.coordinates?.lat ?? 0,
+        office.coordinates?.lng ?? 0,
+      ];
       return {
-        location: office.cobeLocation,
+        location,
         size: isSelected ? 0.12 : 0.08,
         color: isSelected ? [0.95, 0.2, 0.3] : [0.77, 0.13, 0.2], // Bright Crimson vs Brand Crimson
         id: office.id,
       };
     });
 
-    // Interconnecting delivery network arcs between global offices
-    const arcs: Arc[] = [
-      {
-        from: [28.6280, 77.3649], // Noida, India
-        to: [25.1872, 55.2744],   // Dubai, UAE
-        color: [0.9, 0.2, 0.3],
-      },
-      {
-        from: [25.1872, 55.2744],  // Dubai, UAE
-        to: [42.6526, -73.7562],  // Albany, USA
-        color: [0.2, 0.6, 0.95],
-      },
-      {
-        from: [42.6526, -73.7562], // Albany, USA
-        to: [43.5930, -79.6416],  // Mississauga, Canada
-        color: [0.2, 0.8, 0.6],
-      },
-      {
-        from: [43.5930, -79.6416], // Mississauga, Canada
-        to: [28.6280, 77.3649],   // Noida, India
-        color: [0.8, 0.4, 0.9],
-      },
+    // Dynamic interconnecting delivery network arcs between global offices
+    const arcColors: [number, number, number][] = [
+      [0.9, 0.2, 0.3],
+      [0.2, 0.6, 0.95],
+      [0.2, 0.8, 0.6],
+      [0.8, 0.4, 0.9],
+      [0.95, 0.6, 0.1],
     ];
+
+    const arcs: Arc[] = [];
+    if (activeOffices.length >= 2) {
+      for (let i = 0; i < activeOffices.length; i++) {
+        const fromOffice = activeOffices[i];
+        const toOffice = activeOffices[(i + 1) % activeOffices.length];
+        const fromLoc: [number, number] = fromOffice.cobeLocation || [
+          fromOffice.coordinates?.lat ?? 0,
+          fromOffice.coordinates?.lng ?? 0,
+        ];
+        const toLoc: [number, number] = toOffice.cobeLocation || [
+          toOffice.coordinates?.lat ?? 0,
+          toOffice.coordinates?.lng ?? 0,
+        ];
+        arcs.push({
+          from: fromLoc,
+          to: toLoc,
+          color: arcColors[i % arcColors.length],
+        });
+      }
+    }
 
     let globe: ReturnType<typeof createGlobe> | null = null;
     let animationFrameId: number | null = null;
@@ -184,7 +197,7 @@ export function InteractiveGlobe({
       }
       window.removeEventListener('resize', onResize);
     };
-  }, [selectedOffice, isAutoSpinning]);
+  }, [selectedOffice, isAutoSpinning, activeOffices]);
 
   // Pointer event handlers for interactive 3D drag
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -291,7 +304,7 @@ export function InteractiveGlobe({
 
       {/* Quick Office Jump Hotspots */}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 rounded-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/12 shadow-lg">
-        {MIGHTY_OFFICES.map((office) => {
+        {activeOffices.map((office) => {
           const isSelected = selectedOffice?.id === office.id;
           return (
             <button

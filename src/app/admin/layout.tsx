@@ -42,6 +42,18 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage the Versett hero, brand evolution trajectory, and philosophy story cards',
       };
     }
+    if (pathname?.startsWith('/admin/final-cta')) {
+      return {
+        title: 'Conversion CTA Configuration',
+        subtitle: 'Manage homepage final conversion call-to-action, narrative persuasion copy, and assessment links',
+      };
+    }
+    if (pathname?.startsWith('/admin/global-offices')) {
+      return {
+        title: 'Global Office Presence',
+        subtitle: 'Manage regional executive hubs, office addresses, contact channels, coordinates, and statistics',
+      };
+    }
     if (pathname?.startsWith('/admin/sections')) {
       return {
         title: 'Site Sections (Builder)',

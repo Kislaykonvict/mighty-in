@@ -6,6 +6,8 @@ import { ContactWizard } from '@/components/contact/ContactWizard';
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
 import { Mail, Phone, MapPin, Clock, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '@/config/site';
+import { prisma } from '@/lib/db/prisma';
+import { defaultGlobalOfficesData, GlobalOfficesData } from '@/types/globalOffices';
 
 export const metadata = constructMetadata({
   title: 'Start a Conversation | Contact Mighty Warner',
@@ -14,7 +16,55 @@ export const metadata = constructMetadata({
   canonical: '/contact',
 });
 
-export default function ContactPage() {
+async function getGlobalOfficesData(): Promise<GlobalOfficesData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'global_offices',
+        },
+      },
+    });
+
+    if (!section) return defaultGlobalOfficesData;
+
+    const content = (section.content as any) || {};
+
+    return {
+      badge: section.badge !== null && section.badge !== undefined ? section.badge : defaultGlobalOfficesData.badge,
+      title: section.title !== null && section.title !== undefined ? section.title : defaultGlobalOfficesData.title,
+      highlightedTitle:
+        typeof content.highlightedTitle === 'string'
+          ? content.highlightedTitle
+          : defaultGlobalOfficesData.highlightedTitle,
+      description:
+        section.subtitle !== null && section.subtitle !== undefined
+          ? section.subtitle
+          : typeof content.description === 'string'
+          ? content.description
+          : defaultGlobalOfficesData.description,
+      cycleBannerText:
+        typeof content.cycleBannerText === 'string'
+          ? content.cycleBannerText
+          : defaultGlobalOfficesData.cycleBannerText,
+      stats:
+        Array.isArray(content.stats) && content.stats.length > 0
+          ? content.stats
+          : defaultGlobalOfficesData.stats,
+      offices:
+        Array.isArray(content.offices) && content.offices.length > 0
+          ? content.offices
+          : defaultGlobalOfficesData.offices,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultGlobalOfficesData;
+  }
+}
+
+export default async function ContactPage() {
+  const globalOfficesData = await getGlobalOfficesData();
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
       {/* Header */}
@@ -96,7 +146,7 @@ export default function ContactPage() {
       </SectionContainer>
 
       {/* Global Office Network 3D Globe Section */}
-      <GlobalOfficesSection />
+      <GlobalOfficesSection initialData={globalOfficesData} />
     </div>
   );
 }

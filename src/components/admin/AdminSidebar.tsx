@@ -88,6 +88,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
             icon: MousePointerClick,
           },
           {
+            name: 'Global Offices',
+            href: '/admin/global-offices',
+            icon: Globe,
+          },
+          {
             name: 'Site Sections (Builder)',
             href: '/admin/sections',
             icon: Layers,

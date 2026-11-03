@@ -18,6 +18,7 @@ import {
 } from '@/types/testimonialsSection';
 import { defaultHomepageWorkData, HomepageWorkData } from '@/types/homepageWork';
 import { defaultFinalCtaData, FinalCtaData } from '@/types/finalCta';
+import { defaultGlobalOfficesData, GlobalOfficesData } from '@/types/globalOffices';
 
 export const revalidate = 0;
 
@@ -254,6 +255,53 @@ async function getFinalCtaData(): Promise<FinalCtaData> {
   }
 }
 
+async function getGlobalOfficesData(): Promise<GlobalOfficesData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'global_offices',
+        },
+      },
+    });
+
+    if (!section) return defaultGlobalOfficesData;
+
+    const content = (section.content as any) || {};
+
+    return {
+      badge: section.badge !== null && section.badge !== undefined ? section.badge : defaultGlobalOfficesData.badge,
+      title: section.title !== null && section.title !== undefined ? section.title : defaultGlobalOfficesData.title,
+      highlightedTitle:
+        typeof content.highlightedTitle === 'string'
+          ? content.highlightedTitle
+          : defaultGlobalOfficesData.highlightedTitle,
+      description:
+        section.subtitle !== null && section.subtitle !== undefined
+          ? section.subtitle
+          : typeof content.description === 'string'
+          ? content.description
+          : defaultGlobalOfficesData.description,
+      cycleBannerText:
+        typeof content.cycleBannerText === 'string'
+          ? content.cycleBannerText
+          : defaultGlobalOfficesData.cycleBannerText,
+      stats:
+        Array.isArray(content.stats) && content.stats.length > 0
+          ? content.stats
+          : defaultGlobalOfficesData.stats,
+      offices:
+        Array.isArray(content.offices) && content.offices.length > 0
+          ? content.offices
+          : defaultGlobalOfficesData.offices,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultGlobalOfficesData;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
     title: 'One Company. Multiple Ways to Move Your Business Forward',
@@ -264,13 +312,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, coreBusinessData, testimonialsData, workData, finalCtaData] = await Promise.all([
-    getHeroData(),
-    getCoreBusinessData(),
-    getTestimonialsData(),
-    getHomepageWorkData(),
-    getFinalCtaData(),
-  ]);
+  const [heroData, coreBusinessData, testimonialsData, workData, finalCtaData, globalOfficesData] =
+    await Promise.all([
+      getHeroData(),
+      getCoreBusinessData(),
+      getTestimonialsData(),
+      getHomepageWorkData(),
+      getFinalCtaData(),
+      getGlobalOfficesData(),
+    ]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -293,7 +343,7 @@ export default async function HomePage() {
       <TestimonialsSection initialData={testimonialsData} />
 
       {/* 6. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
-      <GlobalOfficesSection />
+      <GlobalOfficesSection initialData={globalOfficesData} />
 
       {/* 7. Conversion: Final What's Next CTA */}
       <FinalCtaSection data={finalCtaData} />
