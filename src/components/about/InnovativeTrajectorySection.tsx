@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MapPin } from 'lucide-react';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { TrajectoryData, defaultTrajectoryData } from '@/types/trajectory';
@@ -17,13 +17,13 @@ export function InnovativeTrajectorySection({ initialData }: InnovativeTrajector
   const [activeIndex, setActiveIndex] = useState(0);
   const activeEpoch = epochs[activeIndex] || epochs[0];
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setActiveIndex((prev) => (prev === 0 ? epochs.length - 1 : prev - 1));
-  };
+  }, [epochs.length]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % epochs.length);
-  };
+  }, [epochs.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -33,7 +33,7 @@ export function InnovativeTrajectorySection({ initialData }: InnovativeTrajector
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [epochs.length]);
+  }, [handlePrev, handleNext]);
 
   return (
     <section id="trajectory" className="py-14 sm:py-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden text-slate-900 dark:text-white">

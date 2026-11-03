@@ -12,10 +12,7 @@ interface WorkSectionProps {
 
 export function WorkSection({ data }: WorkSectionProps) {
   const current = data || defaultHomepageWorkData;
-
-  if (current.isActive === false) return null;
-
-  const rawProjects = current.projects || [];
+  const rawProjects = useMemo(() => current.projects || [], [current.projects]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   // Derive categories from the available projects
@@ -41,6 +38,8 @@ export function WorkSection({ data }: WorkSectionProps) {
       );
     }).slice(0, 6);
   }, [rawProjects, activeCategory]);
+
+  if (current.isActive === false) return null;
 
   return (
     <section
