@@ -258,28 +258,48 @@ export function LeadsManagementView() {
 
       {/* Filter and Search Bar */}
       <div className="p-4 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-white/10 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Status Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
-          {[
-            { id: 'ALL', label: 'All Inquiries' },
-            { id: 'NEW', label: `New (${counts.new})` },
-            { id: 'REVIEWED', label: 'Reviewed' },
-            { id: 'CONTACTED', label: 'Contacted' },
-            { id: 'ARCHIVED', label: 'Archived' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setStatusFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                statusFilter === tab.id
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
-              }`}
+        {/* Status Pills & Category Selector */}
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {[
+              { id: 'ALL', label: 'All Inquiries' },
+              { id: 'NEW', label: `New (${counts.new})` },
+              { id: 'REVIEWED', label: 'Reviewed' },
+              { id: 'CONTACTED', label: 'Contacted' },
+              { id: 'ARCHIVED', label: 'Archived' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setStatusFilter(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  statusFilter === tab.id
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Category / Topic Dropdown */}
+          <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-white/10">
+            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">
+              Category:
+            </span>
+            <select
+              value={topicFilter}
+              onChange={(e) => setTopicFilter(e.target.value)}
+              className="px-2.5 py-1 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white cursor-pointer"
             >
-              {tab.label}
-            </button>
-          ))}
+              <option value="ALL">All Categories</option>
+              <option value="digital-growth">Digital & Growth</option>
+              <option value="technology">Technology</option>
+              <option value="talent-solutions">Talent Solutions</option>
+              <option value="ecosystem">Connected Ecosystem</option>
+            </select>
+          </div>
         </div>
 
         {/* Search Input */}
@@ -321,7 +341,7 @@ export function LeadsManagementView() {
                 <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3.5 px-4 font-semibold">Date &amp; Ref</th>
                   <th className="py-3.5 px-4 font-semibold">Lead Details</th>
-                  <th className="py-3.5 px-4 font-semibold">Practice Area</th>
+                  <th className="py-3.5 px-4 font-semibold">Category / Practice</th>
                   <th className="py-3.5 px-4 font-semibold">Requirements Preview</th>
                   <th className="py-3.5 px-4 font-semibold">Status</th>
                   <th className="py-3.5 px-4 font-semibold text-right">Actions</th>
@@ -463,9 +483,16 @@ export function LeadsManagementView() {
             {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-slate-200 dark:border-white/10 pb-4">
               <div>
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                     #{selectedLead.data?.referenceId || `MW-${selectedLead.id.slice(-6).toUpperCase()}`}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${
+                      getTopicBadge(selectedLead.topic).color
+                    }`}
+                  >
+                    <span>Category: {getTopicBadge(selectedLead.topic).label}</span>
                   </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400">
                     {new Date(selectedLead.createdAt).toLocaleString()}
