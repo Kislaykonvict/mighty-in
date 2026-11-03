@@ -54,6 +54,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage regional executive hubs, office addresses, contact channels, coordinates, and statistics',
       };
     }
+    if (pathname?.startsWith('/admin/contact')) {
+      return {
+        title: 'Contact Page Configuration',
+        subtitle: 'Manage hero headlines, practice options, form fields, direct channels, and SLA guarantees',
+      };
+    }
     if (pathname?.startsWith('/admin/sections')) {
       return {
         title: 'Site Sections (Builder)',

@@ -28,6 +28,7 @@ import {
   Home,
   FolderKanban,
   MousePointerClick,
+  Mail,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -123,6 +124,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         name: 'FAQs & Schema',
         href: '/admin/faqs',
         icon: HelpCircle,
+      },
+      {
+        name: 'Contact',
+        href: '/admin/contact',
+        icon: Mail,
       },
     ],
   },

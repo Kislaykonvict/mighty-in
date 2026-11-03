@@ -2,70 +2,71 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
   Cpu,
   Users,
   Layers,
   CheckCircle2,
-  ArrowRight,
   Send,
   Building,
   Mail,
   Phone,
   User,
   Globe,
-  DollarSign,
-  Clock,
+  Code,
+  Rocket,
+  ShieldCheck,
   Briefcase,
+  Zap,
+  Terminal,
+  Compass,
+  Target,
 } from 'lucide-react';
 import { InquiryTopic, ContactRequest } from '@/types/contact';
 import { contactApi } from '@/lib/api/contact';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';
+import {
+  ContactSectionData,
+  defaultContactSectionData,
+} from '@/types/contactSection';
 
-const topicOptions = [
-  {
-    id: 'digital-growth' as InquiryTopic,
-    label: 'Digital & Growth',
-    tagline: 'Brand, Web, SEO & Acquisition',
-    icon: Sparkles,
-    color: '#FF5E3A',
-    themeClass: 'hover:border-orange-500/50',
-  },
-  {
-    id: 'technology' as InquiryTopic,
-    label: 'Technology',
-    tagline: 'Custom Web Apps, Platforms & APIs',
-    icon: Cpu,
-    color: '#3B82F6',
-    themeClass: 'hover:border-blue-500/50',
-  },
-  {
-    id: 'talent-solutions' as InquiryTopic,
-    label: 'Talent Solutions',
-    tagline: 'Contingent Staffing, Direct Hire & SOW',
-    icon: Users,
-    color: '#10B981',
-    themeClass: 'hover:border-emerald-500/50',
-  },
-  {
-    id: 'ecosystem' as InquiryTopic,
-    label: 'Connected Ecosystem',
-    tagline: 'Strategy + Technology + Talent Combined',
-    icon: Layers,
-    color: '#38BDF8',
-    themeClass: 'hover:border-sky-500/50',
-  },
-];
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  sparkles: Sparkles,
+  cpu: Cpu,
+  users: Users,
+  layers: Layers,
+  code: Code,
+  rocket: Rocket,
+  globe: Globe,
+  shieldcheck: ShieldCheck,
+  briefcase: Briefcase,
+  zap: Zap,
+  terminal: Terminal,
+  compass: Compass,
+  target: Target,
+};
 
-export function ContactWizard() {
+function resolveIcon(name: string) {
+  const key = (name || '').toLowerCase();
+  return ICON_MAP[key] || Sparkles;
+}
+
+interface ContactWizardProps {
+  contactData?: ContactSectionData;
+}
+
+export function ContactWizard({ contactData = defaultContactSectionData }: ContactWizardProps) {
+  const data = contactData || defaultContactSectionData;
+  const formConfig = data.form || defaultContactSectionData.form;
+  const topics = data.topics && data.topics.length > 0 ? data.topics : defaultContactSectionData.topics;
+
   const searchParams = useSearchParams();
-  const initialTopic = (searchParams.get('topic') as InquiryTopic) || 'digital-growth';
+  const initialTopic = (searchParams.get('topic') as InquiryTopic) || (topics[0]?.id as any) || 'digital-growth';
   const initialType = searchParams.get('type') || 'employer';
 
-  const [topic, setTopic] = useState<InquiryTopic>(initialTopic);
+  const [topic, setTopic] = useState<string>(initialTopic);
   const [talentAudience, setTalentAudience] = useState<'employer' | 'candidate'>(
     initialType === 'candidate' ? 'candidate' : 'employer'
   );
@@ -92,7 +93,7 @@ export function ContactWizard() {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    analytics.trackContactStart(topic);
+    analytics.trackContactStart(topic as any);
   }, [topic]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,7 +108,7 @@ export function ContactWizard() {
     setIsSubmitting(true);
 
     const payload: ContactRequest = {
-      topic,
+      topic: topic as any,
       fullName,
       email,
       phone,
@@ -143,7 +144,7 @@ export function ContactWizard() {
       if (response.success) {
         setIsSuccess(true);
         setReferenceId(response.referenceId || 'MW-CONFIRMED');
-        analytics.trackContactSubmit(topic, companyName);
+        analytics.trackContactSubmit(topic as any, companyName);
       } else {
         setErrorMessage(response.message || 'Submission failed. Please try again.');
       }
@@ -155,6 +156,19 @@ export function ContactWizard() {
   };
 
   if (isSuccess) {
+    const successBadgeText = (formConfig.successBadge || 'INQUIRY RECEIVED • REFERENCE #{referenceId}').replace(
+      '{referenceId}',
+      referenceId
+    );
+    const successHeadingText = (formConfig.successHeading || 'Thank you, {fullName}.').replace(
+      '{fullName}',
+      fullName
+    );
+    const successMsgText = (
+      formConfig.successMessage ||
+      'Our strategic leadership team has received your details for {companyName}. We are reviewing your requirements and will reach out within 24 business hours.'
+    ).replace('{companyName}', companyName);
+
     return (
       <div className="p-8 sm:p-14 rounded-3xl bg-white dark:bg-[#0F1626] border border-emerald-200 dark:border-emerald-500/30 text-center space-y-6 shadow-sm animate-fade-in">
         <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
@@ -163,32 +177,23 @@ export function ContactWizard() {
 
         <div>
           <div className="text-xs font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold mb-2">
-            INQUIRY RECEIVED • REFERENCE #{referenceId}
+            {successBadgeText}
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
-            Thank you, {fullName}.
+            {successHeadingText}
           </h2>
           <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-            Our strategic leadership team has received your details for{' '}
-            <strong className="text-slate-900 dark:text-white">{companyName}</strong>. We are reviewing your requirements and will reach out within 24 business hours.
+            {successMsgText}
           </p>
         </div>
 
         <div className="pt-4 flex items-center justify-center gap-4">
-          <Button
-            href="/"
-            variant="outline"
-            size="md"
-          >
-            Return to Homepage
+          <Button href="/" variant="outline" size="md">
+            {formConfig.returnHomeText || 'Return to Homepage'}
           </Button>
 
-          <Button
-            href="/portfolio"
-            variant="primary"
-            size="md"
-          >
-            Explore Case Studies
+          <Button href="/portfolio" variant="primary" size="md">
+            {formConfig.caseStudiesText || 'Explore Case Studies'}
           </Button>
         </div>
       </div>
@@ -201,12 +206,12 @@ export function ContactWizard() {
         {/* Step 1: Vertical Selection */}
         <div>
           <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 font-semibold">
-            01. What can we help you move forward?
+            {formConfig.step1Heading || '01. What can we help you move forward?'}
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {topicOptions.map((opt) => {
+            {topics.map((opt) => {
               const isSelected = topic === opt.id;
-              const Icon = opt.icon;
+              const Icon = resolveIcon(opt.icon);
 
               return (
                 <button
@@ -216,7 +221,7 @@ export function ContactWizard() {
                   className={`p-4 rounded-2xl text-left border transition-all duration-200 flex flex-col justify-between cursor-pointer ${
                     isSelected
                       ? 'bg-slate-50 dark:bg-white/10 border-slate-400 dark:border-white/40 text-slate-900 dark:text-white shadow-xs ring-1 ring-slate-300 dark:ring-white/20'
-                      : `bg-white dark:bg-white/[0.02] border-slate-200 dark:border-white/8 ${opt.themeClass} text-slate-700 dark:text-slate-300`
+                      : 'bg-white dark:bg-white/[0.02] border-slate-200 dark:border-white/8 hover:border-slate-300 dark:hover:border-white/20 text-slate-700 dark:text-slate-300'
                   }`}
                   style={{
                     borderColor: isSelected ? opt.color : undefined,
@@ -247,7 +252,7 @@ export function ContactWizard() {
         {topic === 'talent-solutions' && (
           <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
             <span className="text-xs font-mono text-emerald-700 dark:text-emerald-300 uppercase tracking-wider font-semibold">
-              I am reaching out as:
+              {formConfig.talentAudiencePrompt || 'I am reaching out as:'}
             </span>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
@@ -259,7 +264,7 @@ export function ContactWizard() {
                     : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-transparent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                An Employer (Hiring)
+                {formConfig.talentEmployerLabel || 'An Employer (Hiring)'}
               </button>
               <button
                 type="button"
@@ -270,7 +275,7 @@ export function ContactWizard() {
                     : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-transparent text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                A Candidate (Seeking Roles)
+                {formConfig.talentCandidateLabel || 'A Candidate (Seeking Roles)'}
               </button>
             </div>
           </div>
@@ -279,20 +284,20 @@ export function ContactWizard() {
         {/* Step 2: Core Contact Info */}
         <div className="space-y-4">
           <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
-            02. Your Contact Information
+            {formConfig.step2Heading || '02. Your Contact Information'}
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
-                Full Name <span className="text-rose-500">*</span>
+                {formConfig.nameLabel || 'Full Name'} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Sarah Jenkins"
+                  placeholder={formConfig.namePlaceholder || 'e.g. Sarah Jenkins'}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
@@ -302,14 +307,14 @@ export function ContactWizard() {
 
             <div>
               <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
-                Work Email <span className="text-rose-500">*</span>
+                {formConfig.emailLabel || 'Work Email'} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   required
-                  placeholder="s.jenkins@company.com"
+                  placeholder={formConfig.emailPlaceholder || 's.jenkins@company.com'}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
@@ -319,14 +324,14 @@ export function ContactWizard() {
 
             <div>
               <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
-                Company / Organization <span className="text-rose-500">*</span>
+                {formConfig.companyLabel || 'Company / Organization'} <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Acme Corp"
+                  placeholder={formConfig.companyPlaceholder || 'e.g. Acme Corp'}
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
@@ -336,13 +341,13 @@ export function ContactWizard() {
 
             <div>
               <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
-                Phone Number (Optional)
+                {formConfig.phoneLabel || 'Phone Number (Optional)'}
               </label>
               <div className="relative">
                 <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder={formConfig.phonePlaceholder || '+1 (555) 000-0000'}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 focus:ring-1 focus:ring-rose-500 dark:ring-sky-400 transition-all"
@@ -355,7 +360,7 @@ export function ContactWizard() {
         {/* Step 3: Dynamic Tailored Fields based on Selected Vertical */}
         <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-white/8">
           <label className="block text-xs font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
-            03. Project &amp; Requirements Details
+            {formConfig.step3Heading || '03. Project & Requirements Details'}
           </label>
 
           {topic === 'digital-growth' && (
@@ -464,11 +469,14 @@ export function ContactWizard() {
           {/* General Message */}
           <div>
             <label className="block text-xs text-slate-700 dark:text-slate-300 mb-1.5 font-medium">
-              Brief Overview of Goals &amp; Requirements
+              {formConfig.messageLabel || 'Brief Overview of Goals & Requirements'}
             </label>
             <textarea
               rows={4}
-              placeholder="Tell us about the problem you are solving, your expected outcomes, or any specific constraints..."
+              placeholder={
+                formConfig.messagePlaceholder ||
+                'Tell us about the problem you are solving, your expected outcomes, or any specific constraints...'
+              }
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:border-rose-500 dark:focus:border-sky-400 transition-all resize-none"
@@ -486,7 +494,7 @@ export function ContactWizard() {
         {/* Submit Button */}
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 dark:border-white/8">
           <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-            🔒 All inquiries protected under standard mutual NDA
+            {formConfig.ndaText || '🔒 All inquiries protected under standard mutual NDA'}
           </span>
 
           <Button
@@ -496,7 +504,7 @@ export function ContactWizard() {
             isLoading={isSubmitting}
             rightIcon={<Send className="w-4 h-4" />}
           >
-            Submit Strategic Inquiry
+            {formConfig.submitButtonText || 'Submit Strategic Inquiry'}
           </Button>
         </div>
       </form>
