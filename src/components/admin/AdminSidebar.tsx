@@ -29,6 +29,7 @@ import {
   FolderKanban,
   MousePointerClick,
   Mail,
+  ClipboardCheck,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -129,6 +130,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         name: 'Contact',
         href: '/admin/contact',
         icon: Mail,
+      },
+      {
+        name: 'Assessment',
+        href: '/admin/assessment',
+        icon: ClipboardCheck,
       },
     ],
   },

@@ -3,21 +3,33 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
-import { assessmentQuestions } from '@/data/assessment';
+import {
+  AssessmentSectionData,
+  defaultAssessmentSectionData,
+} from '@/types/assessmentSection';
+import { assessmentQuestions, calculateAssessmentResult } from '@/data/assessment';
 import { AssessmentAnswer, AssessmentResult } from '@/types/assessment';
 import { assessmentApi } from '@/lib/api/assessment';
 import { AssessmentResultCard } from './AssessmentResultCard';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';
 
-export function AssessmentWizard() {
+interface AssessmentWizardProps {
+  sectionData?: AssessmentSectionData;
+}
+
+export function AssessmentWizard({ sectionData }: AssessmentWizardProps) {
+  const config = sectionData || defaultAssessmentSectionData;
+  const questions =
+    config.questions && config.questions.length > 0 ? config.questions : assessmentQuestions;
+
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<AssessmentAnswer[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<AssessmentResult | null>(null);
 
-  const totalSteps = assessmentQuestions.length;
-  const currentQuestion = assessmentQuestions[currentStep];
+  const totalSteps = questions.length;
+  const currentQuestion = questions[currentStep] || questions[0];
 
   const currentAnswer = answers.find((a) => a.questionId === currentQuestion?.id);
 
@@ -41,7 +53,11 @@ export function AssessmentWizard() {
       // Calculate score and complete
       setIsSubmitting(true);
       try {
-        const res = await assessmentApi.submitAnswers({ answers });
+        const res = calculateAssessmentResult(answers, questions, {
+          ratingTiers: config.ratingTiers,
+          opportunities: config.opportunities,
+          cta: config.cta,
+        });
         setResult(res);
         analytics.trackAssessmentComplete(res.score, res.ratingTitle);
       } catch (err) {
@@ -66,7 +82,7 @@ export function AssessmentWizard() {
   };
 
   if (result) {
-    return <AssessmentResultCard result={result} onReset={handleReset} />;
+    return <AssessmentResultCard result={result} onReset={handleReset} config={config} />;
   }
 
   return (

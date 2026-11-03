@@ -60,6 +60,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage hero headlines, practice options, form fields, direct channels, and SLA guarantees',
       };
     }
+    if (pathname?.startsWith('/admin/assessment') || pathname?.startsWith('/admin/assesment')) {
+      return {
+        title: 'Assessment & Growth Diagnostic',
+        subtitle: 'Manage diagnostic hero headlines, metadata pills, questions, options, scoring tiers, and conversion CTAs',
+      };
+    }
     if (pathname?.startsWith('/admin/sections')) {
       return {
         title: 'Site Sections (Builder)',

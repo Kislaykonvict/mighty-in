@@ -208,7 +208,15 @@ export const assessmentQuestions: AssessmentQuestion[] = [
   },
 ];
 
-export function calculateAssessmentResult(answers: AssessmentAnswer[]): AssessmentResult {
+export function calculateAssessmentResult(
+  answers: AssessmentAnswer[],
+  questionsList: AssessmentQuestion[] = assessmentQuestions,
+  config?: {
+    ratingTiers?: { minScore: number; title: string; summary: string }[];
+    opportunities?: any[];
+    cta?: { primaryButtonText?: string; primaryButtonLink?: string };
+  }
+): AssessmentResult {
   // Score computation
   let rawScore = 0;
   const categoryCounts: Record<string, number> = {
@@ -218,8 +226,10 @@ export function calculateAssessmentResult(answers: AssessmentAnswer[]): Assessme
     strategy: 0,
   };
 
+  const activeQuestions = questionsList && questionsList.length > 0 ? questionsList : assessmentQuestions;
+
   answers.forEach((ans) => {
-    const question = assessmentQuestions.find((q) => q.id === ans.questionId);
+    const question = activeQuestions.find((q) => q.id === ans.questionId);
     if (question) {
       const option = question.options.find((o) => o.id === ans.selectedOptionId);
       if (option) {
@@ -236,18 +246,27 @@ export function calculateAssessmentResult(answers: AssessmentAnswer[]): Assessme
   let summary =
     'Your business has established solid operational roots, but untapped leverage across brand positioning, modern software engineering, or team velocity is slowing your momentum.';
 
-  if (finalScore >= 85) {
-    ratingTitle = 'HIGH MOMENTUM (SCALE READY)';
-    summary =
-      'Your organization possesses strong fundamentals and is primed for rapid category leadership through advanced ecosystem alignment and multi-channel scaling.';
-  } else if (finalScore >= 70) {
-    ratingTitle = 'STRONG FOUNDATION';
-    summary =
-      'You have solid market traction, but significant revenue is being left on the table due to friction in conversion funnels, technical debt, or hiring capacity.';
+  if (config?.ratingTiers && config.ratingTiers.length > 0) {
+    const sortedTiers = [...config.ratingTiers].sort((a, b) => b.minScore - a.minScore);
+    const matchedTier = sortedTiers.find((t) => finalScore >= t.minScore) || sortedTiers[sortedTiers.length - 1];
+    if (matchedTier) {
+      ratingTitle = matchedTier.title;
+      summary = matchedTier.summary;
+    }
   } else {
-    ratingTitle = 'TRANSFORMATION READY';
-    summary =
-      'Substantial immediate upside exists by modernizing your digital presence, automating fragmented workflows, and injecting senior execution talent.';
+    if (finalScore >= 85) {
+      ratingTitle = 'HIGH MOMENTUM (SCALE READY)';
+      summary =
+        'Your organization possesses strong fundamentals and is primed for rapid category leadership through advanced ecosystem alignment and multi-channel scaling.';
+    } else if (finalScore >= 70) {
+      ratingTitle = 'STRONG FOUNDATION';
+      summary =
+        'You have solid market traction, but significant revenue is being left on the table due to friction in conversion funnels, technical debt, or hiring capacity.';
+    } else {
+      ratingTitle = 'TRANSFORMATION READY';
+      summary =
+        'Substantial immediate upside exists by modernizing your digital presence, automating fragmented workflows, and injecting senior execution talent.';
+    }
   }
 
   // Determine dominant category
@@ -268,36 +287,47 @@ export function calculateAssessmentResult(answers: AssessmentAnswer[]): Assessme
       teamScalability: Math.min(100, Math.round(finalScore * 0.92)),
       conversionPower: Math.min(100, Math.round(finalScore * 0.85)),
     },
-    biggestOpportunities: [
-      {
-        id: 'opp-1',
-        number: '01',
-        title: 'Conversion Rate & Funnel Optimization',
-        description: 'Re-engineering lead capture mechanisms and narrative flow to eliminate friction for high-intent enterprise buyers.',
-        recommendedVertical: 'Digital & Growth',
-        actionStep: 'Conduct a comprehensive UI/UX friction audit and implement high-converting landing architectures.',
-      },
-      {
-        id: 'opp-2',
-        number: '02',
-        title: 'Digital Visibility & Organic Authority',
-        description: 'Capturing category-defining search intent through programmatic SEO topic clusters and structured schema.',
-        recommendedVertical: 'Digital & Growth',
-        actionStep: 'Deploy an authority content cluster to outrank competitors on high-value commercial queries.',
-      },
-      {
-        id: 'opp-3',
-        number: '03',
-        title: 'Technology Scalability & Workflow Automation',
-        description: 'Upgrading core web applications and automating repetitive API pipelines to handle 10x transaction throughput.',
-        recommendedVertical: 'Technology',
-        actionStep: 'Modernize legacy codebases into decoupled microservices with sub-second response times.',
-      },
-    ],
+    biggestOpportunities:
+      config?.opportunities && config.opportunities.length > 0
+        ? config.opportunities
+        : [
+            {
+              id: 'opp-1',
+              number: '01',
+              title: 'Conversion Rate & Funnel Optimization',
+              description:
+                'Re-engineering lead capture mechanisms and narrative flow to eliminate friction for high-intent enterprise buyers.',
+              recommendedVertical: 'Digital & Growth',
+              actionStep:
+                'Conduct a comprehensive UI/UX friction audit and implement high-converting landing architectures.',
+            },
+            {
+              id: 'opp-2',
+              number: '02',
+              title: 'Digital Visibility & Organic Authority',
+              description:
+                'Capturing category-defining search intent through programmatic SEO topic clusters and structured schema.',
+              recommendedVertical: 'Digital & Growth',
+              actionStep:
+                'Deploy an authority content cluster to outrank competitors on high-value commercial queries.',
+            },
+            {
+              id: 'opp-3',
+              number: '03',
+              title: 'Technology Scalability & Workflow Automation',
+              description:
+                'Upgrading core web applications and automating repetitive API pipelines to handle 10x transaction throughput.',
+              recommendedVertical: 'Technology',
+              actionStep:
+                'Modernize legacy codebases into decoupled microservices with sub-second response times.',
+            },
+          ],
     suggestedVerticalId,
     recommendedCta: {
-      label: 'Talk to Mighty Warner →',
-      href: `/contact?source=assessment&vertical=${suggestedVerticalId}&score=${finalScore}`,
+      label: config?.cta?.primaryButtonText || 'Talk to Mighty Warner →',
+      href:
+        config?.cta?.primaryButtonLink ||
+        `/contact?source=assessment&vertical=${suggestedVerticalId}&score=${finalScore}`,
     },
   };
 }

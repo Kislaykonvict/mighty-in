@@ -4,15 +4,17 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, RotateCcw, CheckCircle2, TrendingUp, Sparkles, Cpu, Users } from 'lucide-react';
 import { AssessmentResult } from '@/types/assessment';
+import { AssessmentSectionData } from '@/types/assessmentSection';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';
 
 interface AssessmentResultCardProps {
   result: AssessmentResult;
   onReset?: () => void;
+  config?: AssessmentSectionData;
 }
 
-export function AssessmentResultCard({ result, onReset }: AssessmentResultCardProps) {
+export function AssessmentResultCard({ result, onReset, config }: AssessmentResultCardProps) {
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
     if (score >= 65) return 'text-sky-400 border-sky-500/30 bg-sky-500/10';
@@ -57,7 +59,9 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 space-y-2">
             <div className="flex justify-between text-xs font-medium">
-              <span className="text-slate-600 dark:text-slate-300">Digital Visibility</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                {config?.scoreBreakdownLabels?.digitalVisibilityLabel || 'Digital Visibility'}
+              </span>
               <span className="text-slate-900 dark:text-white font-mono font-bold">{result.scoreBreakdown.digitalVisibility}%</span>
             </div>
             <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
@@ -70,7 +74,9 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
 
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 space-y-2">
             <div className="flex justify-between text-xs font-medium">
-              <span className="text-slate-600 dark:text-slate-300">Tech Architecture</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                {config?.scoreBreakdownLabels?.technologyReadinessLabel || 'Tech Architecture'}
+              </span>
               <span className="text-slate-900 dark:text-white font-mono font-bold">{result.scoreBreakdown.technologyReadiness}%</span>
             </div>
             <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
@@ -83,7 +89,9 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
 
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 space-y-2">
             <div className="flex justify-between text-xs font-medium">
-              <span className="text-slate-600 dark:text-slate-300">Team Scalability</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                {config?.scoreBreakdownLabels?.teamScalabilityLabel || 'Team Scalability'}
+              </span>
               <span className="text-slate-900 dark:text-white font-mono font-bold">{result.scoreBreakdown.teamScalability}%</span>
             </div>
             <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
@@ -96,7 +104,9 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
 
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 space-y-2">
             <div className="flex justify-between text-xs font-medium">
-              <span className="text-slate-600 dark:text-slate-300">Conversion Power</span>
+              <span className="text-slate-600 dark:text-slate-300">
+                {config?.scoreBreakdownLabels?.conversionPowerLabel || 'Conversion Power'}
+              </span>
               <span className="text-slate-900 dark:text-white font-mono font-bold">{result.scoreBreakdown.conversionPower}%</span>
             </div>
             <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
@@ -150,10 +160,10 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
       <div className="p-6 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/12 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
           <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-            Want to explore these opportunities with our architects?
+            {config?.cta?.title || 'Want to explore these opportunities with our architects?'}
           </h4>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-            Book a complimentary 30-minute discovery call to review your custom roadmap.
+            {config?.cta?.subtitle || 'Book a complimentary 30-minute discovery call to review your custom roadmap.'}
           </p>
         </div>
 
@@ -165,7 +175,7 @@ export function AssessmentResultCard({ result, onReset }: AssessmentResultCardPr
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
               onClick={onReset}
             >
-              Retake
+              {config?.cta?.retakeButtonText || 'Retake'}
             </Button>
           )}
 

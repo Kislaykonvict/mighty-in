@@ -3,10 +3,24 @@ import {
   AssessmentSubmission,
   AssessmentResult,
 } from '@/types/assessment';
+import {
+  AssessmentSectionData,
+  defaultAssessmentSectionData,
+} from '@/types/assessmentSection';
 import { assessmentQuestions, calculateAssessmentResult } from '@/data/assessment';
 import { apiClient, isMockEnabled } from './client';
 
 export const assessmentApi = {
+  async getSectionData(): Promise<AssessmentSectionData> {
+    try {
+      const res = await fetch('/api/assessment/section');
+      const json = await res.json();
+      if (json.success && json.data) return json.data;
+      return defaultAssessmentSectionData;
+    } catch {
+      return defaultAssessmentSectionData;
+    }
+  },
   async getQuestions(): Promise<AssessmentQuestion[]> {
     if (isMockEnabled) {
       return Promise.resolve(assessmentQuestions);
