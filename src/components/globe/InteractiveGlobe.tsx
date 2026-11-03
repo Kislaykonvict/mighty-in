@@ -201,6 +201,9 @@ export function InteractiveGlobe({
 
   // Pointer event handlers for interactive 3D drag
   const handlePointerDown = (e: React.PointerEvent) => {
+    try {
+      (e.target as HTMLElement)?.setPointerCapture?.(e.pointerId);
+    } catch {}
     pointerInteracting.current = {
       x: e.clientX,
       y: e.clientY,
@@ -210,7 +213,10 @@ export function InteractiveGlobe({
     setIsAutoSpinning(false);
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
+    try {
+      (e.target as HTMLElement)?.releasePointerCapture?.(e.pointerId);
+    } catch {}
     pointerInteracting.current = null;
   };
 
@@ -219,14 +225,24 @@ export function InteractiveGlobe({
       const deltaX = e.clientX - pointerInteracting.current.x;
       const deltaY = e.clientY - pointerInteracting.current.y;
       
+      // Horizontal rotation: dragging left moves globe left, dragging right moves globe right
       phiRef.current += deltaX * 0.005;
-      // Clamp theta between -0.8 and 0.8 to avoid flipping
-      thetaRef.current = Math.max(-0.8, Math.min(0.8, thetaRef.current - deltaY * 0.005));
+      // Vertical tilt: dragging up moves globe up, dragging down moves globe down
+      thetaRef.current = Math.max(-0.8, Math.min(0.8, thetaRef.current + deltaY * 0.005));
       
       pointerInteracting.current = {
         x: e.clientX,
         y: e.clientY,
       };
+    }
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    // If user scrolls horizontally with trackpad swipe over the globe
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      phiRef.current += e.deltaX * 0.003;
+      targetPhiRef.current = null;
+      setIsAutoSpinning(false);
     }
   };
 
@@ -250,8 +266,9 @@ export function InteractiveGlobe({
         ref={canvasRef}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
-        onPointerOut={handlePointerUp}
+        onPointerCancel={handlePointerUp}
         onPointerMove={handlePointerMove}
+        onWheel={handleWheel}
         className="w-full h-full cursor-grab active:cursor-grabbing transition-opacity duration-700 opacity-0 relative z-10 touch-none"
       />
 
