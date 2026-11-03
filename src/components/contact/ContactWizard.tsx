@@ -22,6 +22,8 @@ import {
   Terminal,
   Compass,
   Target,
+  X,
+  RotateCcw,
 } from 'lucide-react';
 import { InquiryTopic, ContactRequest } from '@/types/contact';
 import { contactApi } from '@/lib/api/contact';
@@ -91,6 +93,45 @@ export function ContactWizard({ contactData = defaultContactSectionData }: Conta
   const [isSuccess, setIsSuccess] = useState(false);
   const [referenceId, setReferenceId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const autoResetDuration =
+    typeof formConfig.autoResetSeconds === 'number' && !isNaN(formConfig.autoResetSeconds)
+      ? formConfig.autoResetSeconds
+      : 6;
+
+  const [countdown, setCountdown] = useState<number>(autoResetDuration);
+
+  const resetForm = () => {
+    setIsSuccess(false);
+    setReferenceId('');
+    setFullName('');
+    setEmail('');
+    setPhone('');
+    setCompanyName('');
+    setMessage('');
+    setWebsiteUrl('');
+    setMarketingGoals('');
+    setTalentRoles('');
+    setErrorMessage('');
+  };
+
+  useEffect(() => {
+    if (!isSuccess || autoResetDuration <= 0) return;
+
+    setCountdown(autoResetDuration);
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          resetForm();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isSuccess, autoResetDuration]);
 
   useEffect(() => {
     analytics.trackContactStart(topic as any);
@@ -170,7 +211,18 @@ export function ContactWizard({ contactData = defaultContactSectionData }: Conta
     ).replace('{companyName}', companyName);
 
     return (
-      <div className="p-8 sm:p-14 rounded-3xl bg-white dark:bg-[#0F1626] border border-emerald-200 dark:border-emerald-500/30 text-center space-y-6 shadow-sm animate-fade-in">
+      <div className="p-8 sm:p-14 rounded-3xl bg-white dark:bg-[#0F1626] border border-emerald-200 dark:border-emerald-500/30 text-center space-y-6 shadow-sm animate-fade-in relative overflow-hidden">
+        {/* Manual Dismiss Button */}
+        <button
+          type="button"
+          onClick={resetForm}
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          title="Dismiss and return to form"
+          aria-label="Dismiss confirmation"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
@@ -187,7 +239,16 @@ export function ContactWizard({ contactData = defaultContactSectionData }: Conta
           </p>
         </div>
 
-        <div className="pt-4 flex items-center justify-center gap-4">
+        {autoResetDuration > 0 && (
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>
+              Auto-closing in <strong className="font-bold font-mono">{countdown}s</strong>
+            </span>
+          </div>
+        )}
+
+        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
           <Button href="/" variant="outline" size="md">
             {formConfig.returnHomeText || 'Return to Homepage'}
           </Button>
@@ -195,7 +256,29 @@ export function ContactWizard({ contactData = defaultContactSectionData }: Conta
           <Button href="/portfolio" variant="primary" size="md">
             {formConfig.caseStudiesText || 'Explore Case Studies'}
           </Button>
+
+          <button
+            type="button"
+            onClick={resetForm}
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Submit Another Inquiry</span>
+          </button>
         </div>
+
+        {/* Animated Progress Bar at bottom */}
+        {autoResetDuration > 0 && (
+          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-emerald-100 dark:bg-emerald-950/40 overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all ease-linear"
+              style={{
+                width: `${Math.max(0, Math.min(100, (countdown / autoResetDuration) * 100))}%`,
+                transitionDuration: '1000ms',
+              }}
+            />
+          </div>
+        )}
       </div>
     );
   }

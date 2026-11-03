@@ -160,6 +160,10 @@ export async function PUT(req: NextRequest) {
       caseStudiesText: String(
         rawForm.caseStudiesText || defaultContactSectionData.form.caseStudiesText
       ).trim(),
+      autoResetSeconds:
+        typeof rawForm.autoResetSeconds === 'number' && !isNaN(rawForm.autoResetSeconds)
+          ? Math.max(0, Math.min(60, Math.round(rawForm.autoResetSeconds)))
+          : defaultContactSectionData.form.autoResetSeconds ?? 6,
     };
 
     // Sanitize direct channels

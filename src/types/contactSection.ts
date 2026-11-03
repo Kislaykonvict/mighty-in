@@ -48,6 +48,7 @@ export interface ContactFormData {
   successMessage: string;
   returnHomeText: string;
   caseStudiesText: string;
+  autoResetSeconds?: number;
 }
 
 export interface ContactSectionData {
@@ -124,6 +125,7 @@ export const defaultContactSectionData: ContactSectionData = {
       'Our strategic leadership team has received your details for {companyName}. We are reviewing your requirements and will reach out within 24 business hours.',
     returnHomeText: 'Return to Homepage',
     caseStudiesText: 'Explore Case Studies',
+    autoResetSeconds: 6,
   },
   directChannels: {
     title: 'DIRECT CHANNELS',

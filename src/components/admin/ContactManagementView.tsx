@@ -920,6 +920,33 @@ export function ContactManagementView() {
                   className="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white"
                 />
               </div>
+
+              <div className="md:col-span-2 p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20">
+                <label className="block text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-1">
+                  Confirmation Auto-Dismiss Duration (Seconds)
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    min="0"
+                    max="60"
+                    value={data.form.autoResetSeconds ?? 6}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        form: {
+                          ...data.form,
+                          autoResetSeconds: Math.max(0, parseInt(e.target.value, 10) || 0),
+                        },
+                      })
+                    }
+                    className="w-32 px-3 py-2 text-sm font-semibold rounded-xl bg-white dark:bg-[#0B111E] border border-emerald-300 dark:border-emerald-500/30 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                  <span className="text-xs text-slate-600 dark:text-slate-400">
+                    seconds (recommended: 5–8s. Set to <strong>0</strong> to keep it permanently visible until user navigates away).
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
