@@ -65,7 +65,7 @@ export function AssessmentManagementView() {
   const { theme } = useAdminTheme();
   const isDark = theme === 'dark';
 
-  const [activeTab, setActiveTab] = useState<'hero' | 'questions' | 'scoring' | 'opportunities' | 'preview'>('hero');
+  const [activeTab, setActiveTab] = useState<'hero' | 'questions' | 'scoring' | 'opportunities'>('hero');
   const [data, setData] = useState<AssessmentSectionData>(defaultAssessmentSectionData);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -444,18 +444,6 @@ export function AssessmentManagementView() {
           }`}
         >
           04. Opportunities &amp; CTA
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('preview')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'preview'
-              ? 'bg-white dark:bg-rose-600 text-slate-900 dark:text-white shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-          }`}
-        >
-          05. Live Preview
         </button>
       </div>
 
@@ -1325,94 +1313,6 @@ export function AssessmentManagementView() {
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Tab 5: Live Preview */}
-      {activeTab === 'preview' && (
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-white/10 space-y-6 shadow-sm">
-          <div className="border-b border-slate-200 dark:border-white/10 pb-4">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
-              Interactive Diagnostic Preview
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Real-time demonstration of how the hero banner and diagnostic questions appear to prospective clients.
-            </p>
-          </div>
-
-          {/* Hero Simulation */}
-          <div className="p-8 rounded-3xl bg-[#DBDBDB] dark:bg-[#080C14] border border-neutral-300 dark:border-white/8 text-center space-y-4">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-white/80 dark:bg-white/10 text-slate-800 dark:text-white border border-slate-300 dark:border-white/20">
-              • {data.badge} •
-            </span>
-
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              {data.title}{' '}
-              <span className="text-rose-600 dark:text-rose-400">
-                {data.highlightedTitle}
-              </span>
-            </h2>
-
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
-              {data.description}
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-slate-600 dark:text-slate-400 pt-2">
-              {data.featurePills.map((pill, i) => {
-                const Icon = resolvePillIcon(pill.icon);
-                return (
-                  <span key={i} className="flex items-center gap-1.5">
-                    <Icon className="w-3.5 h-3.5 text-rose-500" />
-                    {pill.text}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* First Question Simulation */}
-          {data.questions.length > 0 && (
-            <div className="p-6 rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/10 shadow-lg space-y-5 max-w-2xl mx-auto">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
-                <span className="text-rose-600 dark:text-sky-400 font-bold">
-                  • QUESTION 1 OF {data.questions.length}
-                </span>
-                <span>{Math.round((1 / data.questions.length) * 100)}% COMPLETE</span>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                  {data.questions[0].question}
-                </h3>
-                {data.questions[0].subtext && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {data.questions[0].subtext}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2.5">
-                {data.questions[0].options.map((opt, i) => (
-                  <div
-                    key={i}
-                    className="p-3.5 rounded-xl border border-slate-200 dark:border-white/8 bg-slate-50 dark:bg-white/[0.02] flex items-center justify-between gap-3 text-left"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-900 dark:text-white">
-                        {opt.label}
-                      </div>
-                      {opt.description && (
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                          {opt.description}
-                        </div>
-                      )}
-                    </div>
-                    <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-white/20 shrink-0" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
 
