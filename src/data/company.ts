@@ -6,12 +6,6 @@ export interface MethodStep {
   deliverables: string[];
 }
 
-export interface CompanyMilestone {
-  year: string;
-  title: string;
-  description: string;
-  badge?: string;
-}
 
 export interface TeamMember {
   name: string;
@@ -65,35 +59,6 @@ export const methodSteps: MethodStep[] = [
   },
 ];
 
-export const companyMilestones: CompanyMilestone[] = [
-  {
-    year: '2013',
-    title: 'Founded with a Vision for Unified Growth',
-    description: 'Mighty Warner was established to bridge the gap between creative branding and rigorous digital execution.',
-    badge: 'Inception',
-  },
-  {
-    year: '2016',
-    title: 'Expansion into Full-Stack Software Engineering',
-    description: 'Scaled internal engineering teams to build custom web applications, cloud architectures, and enterprise platforms.',
-  },
-  {
-    year: '2019',
-    title: 'Launch of Dedicated Talent Solutions Practice',
-    description: 'Introduced contingent staffing, direct hire, and dedicated SOW engineering pods to solve enterprise hiring bottlenecks.',
-  },
-  {
-    year: '2022',
-    title: 'Global Office & Multi-Market Expansion',
-    description: 'Expanded operations across North America, EMEA, and APAC, supporting clients across 25+ global markets.',
-  },
-  {
-    year: 'Today',
-    title: 'The Connected Business Ecosystem',
-    description: 'A united powerhouse providing Strategy + Technology + Talent to over 450+ companies worldwide.',
-    badge: 'Present',
-  },
-];
 
 export const leadershipTeam: TeamMember[] = [
   {

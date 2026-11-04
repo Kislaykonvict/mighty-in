@@ -48,4 +48,3 @@ export function RichTextContent({
   return <TargetComponent className={className}>{processed}</TargetComponent>;
 }
 
-export default RichTextContent;

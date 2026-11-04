@@ -423,4 +423,3 @@ export function MinimalRichTextEditor({
   );
 }
 
-export default MinimalRichTextEditor;

@@ -41,6 +41,33 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
 
   const activeTheme: AdminTheme = mounted ? adminTheme : 'light';
 
+  useEffect(() => {
+    if (!mounted) return;
+    if (adminTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
+    }
+
+    return () => {
+      // Restore public storefront theme preference if leaving admin panel
+      try {
+        const siteTheme = localStorage.getItem('theme');
+        if (siteTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        } else if (siteTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+        }
+      } catch {
+        // Ignore localStorage error in restricted environments
+      }
+    };
+  }, [adminTheme, mounted]);
+
   return (
     <AdminThemeContext.Provider value={{ theme: activeTheme, toggleTheme, setAdminTheme }}>
       <div className={activeTheme === 'dark' ? 'dark' : ''} data-theme={activeTheme}>

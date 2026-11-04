@@ -13,7 +13,7 @@ interface ProjectCardProps {
   index?: number;
 }
 
-export function getProjectDeliverable(project: Project): string {
+function getProjectDeliverable(project: Project): string {
   const customDeliverables: Record<string, string> = {
     'SmartShop': 'Online store build & optimization',
     'White Sand': 'Luxury beachfront property platform',
