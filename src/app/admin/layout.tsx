@@ -30,12 +30,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage verified metrics, dynamic cards, custom logos and trusted industry sectors',
       };
     }
-    if (pathname?.startsWith('/admin/core-business')) {
-      return {
-        title: 'Core Business Verticals',
-        subtitle: 'Manage homepage services showcase, scroll stacking cards, and diagram assets',
-      };
-    }
     if (pathname?.startsWith('/admin/about')) {
       return {
         title: 'About Page Management',
@@ -106,12 +100,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
       return {
         title: 'Legal & Policy Pages',
         subtitle: 'Configure dynamic full-bleed hero covers, bottom-left typography & rich content editor',
-      };
-    }
-    if (pathname?.startsWith('/admin/seo')) {
-      return {
-        title: 'SEO & Metadata Hub',
-        subtitle: 'Audit meta tags, OpenGraph previews, canonical links and indexation settings',
       };
     }
     if (pathname?.startsWith('/admin/leads')) {

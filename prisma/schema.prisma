@@ -342,28 +342,6 @@ enum Role {
   EDITOR
 }
 
-// -------------------------------------------------------------
-// Search Engine Optimization (SEO) & Custom Head Scripts
-// -------------------------------------------------------------
-model PageSeo {
-  id              String   @id @default(cuid())
-  path            String   @unique // e.g. "/", "/about", "/approach", "/businesses/digital-growth", "/work/strata-financial-brand-transformation", "/insights/*"
-  pageName        String   // Human-readable title in Admin e.g. "Home Page", "About Us", "Strata Financial"
-  metaTitle       String?
-  metaDescription String?  @db.Text
-  metaKeywords    String?  // Comma-separated keywords
-  canonicalUrl    String?
-  ogTitle         String?
-  ogDescription   String?  @db.Text
-  ogImage         String?
-  noIndex         Boolean  @default(false)
-  noFollow        Boolean  @default(false)
-  headCode        String?  @db.Text // Custom <meta> tags, verification, tracking scripts, <script type="application/ld+json">
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@index([path])
-}
 
 // -------------------------------------------------------------
 // Frequently Asked Questions (FAQ) & Schema Rich Snippets

@@ -3,14 +3,12 @@ import { constructDynamicMetadata } from '@/lib/utils/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { HeroSection } from '@/components/hero/HeroSection';
 import { TrustSection } from '@/components/trust/TrustSection';
-import { CoreBusinessShowcaseSection } from '@/components/businesses/CoreBusinessShowcaseSection';
 import { WorkSection } from '@/components/work/WorkSection';
 import { TestimonialsSection } from '@/components/testimonials/TestimonialsSection';
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultHeroData, HeroData } from '@/types/hero';
-import { defaultCoreBusinessData, CoreBusinessData } from '@/types/coreBusiness';
 import {
   defaultTestimonialsSectionData,
   TestimonialsSectionData,
@@ -52,37 +50,6 @@ async function getHeroData(): Promise<HeroData> {
     };
   } catch (err) {
     return defaultHeroData;
-  }
-}
-
-async function getCoreBusinessData(): Promise<CoreBusinessData> {
-  try {
-    const section = await prisma.siteSection.findUnique({
-      where: {
-        pageSlug_sectionKey: {
-          pageSlug: 'home',
-          sectionKey: 'core_business',
-        },
-      },
-    });
-
-    if (!section || !section.isActive) return defaultCoreBusinessData;
-
-    const content = (section.content as any) || {};
-
-    const rawCards: any[] = Array.isArray(content.cards) && content.cards.length > 0
-      ? content.cards
-      : defaultCoreBusinessData.cards;
-
-    return {
-      title: section.title || defaultCoreBusinessData.title,
-      badge: section.badge || defaultCoreBusinessData.badge,
-      subtitle: section.subtitle || defaultCoreBusinessData.subtitle,
-      cards: rawCards,
-      isActive: section.isActive ?? true,
-    };
-  } catch (err) {
-    return defaultCoreBusinessData;
   }
 }
 
@@ -312,10 +279,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, coreBusinessData, testimonialsData, workData, finalCtaData, globalOfficesData] =
+  const [heroData, testimonialsData, workData, finalCtaData, globalOfficesData] =
     await Promise.all([
       getHeroData(),
-      getCoreBusinessData(),
       getTestimonialsData(),
       getHomepageWorkData(),
       getFinalCtaData(),
@@ -333,19 +299,16 @@ export default async function HomePage() {
       {/* 2. Verified Trust & Client Credibility */}
       <TrustSection />
 
-      {/* 3. Core Business Showcase: Scroll Stacking Cards */}
-      <CoreBusinessShowcaseSection initialData={coreBusinessData} />
-
-      {/* 4. Proof: Verified Portfolio & Case Studies */}
+      {/* 3. Proof: Verified Portfolio & Case Studies */}
       <WorkSection data={workData} />
 
-      {/* 5. Social Proof: Executive Endorsements & Reviews */}
+      {/* 4. Social Proof: Executive Endorsements & Reviews */}
       <TestimonialsSection initialData={testimonialsData} />
 
-      {/* 6. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
+      {/* 5. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
       <GlobalOfficesSection initialData={globalOfficesData} />
 
-      {/* 7. Conversion: Final What's Next CTA */}
+      {/* 6. Conversion: Final What's Next CTA */}
       <FinalCtaSection data={finalCtaData} />
     </div>
   );

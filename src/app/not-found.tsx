@@ -1,17 +1,18 @@
 import React from 'react';
-import Link from 'next/link';
-import { ArrowLeft, Home, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Home, ArrowLeft } from 'lucide-react';
+import { constructMetadata } from '@/lib/utils/seo';
+
+export const metadata = constructMetadata({
+  title: 'Page Not Found',
+  description: 'The requested page could not be located on the Mighty Warner platform.',
+});
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-24 text-center">
-      <div className="max-w-md mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center mx-auto mb-6 text-rose-600 dark:text-sky-400">
-          <Compass className="w-8 h-8 animate-spin" style={{ animationDuration: '12s' }} />
-        </div>
-
-        <div className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#080C14] px-4 py-32">
+      <div className="max-w-md w-full text-center">
+        <div className="inline-block p-3 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-mono text-sm font-bold mb-6">
           Error 404
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -25,8 +26,8 @@ export default function NotFound() {
           <Button href="/" variant="primary" leftIcon={<Home className="w-4 h-4" />}>
             Return to Homepage
           </Button>
-          <Button href="/businesses" variant="outline" rightIcon={<ArrowLeft className="w-4 h-4 rotate-180" />}>
-            Explore Capabilities
+          <Button href="/work" variant="outline" rightIcon={<ArrowLeft className="w-4 h-4 rotate-180" />}>
+            Explore Case Studies
           </Button>
         </div>
       </div>

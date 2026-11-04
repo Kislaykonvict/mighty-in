@@ -44,7 +44,7 @@ export function WorkSection({ data }: WorkSectionProps) {
   return (
     <section
       id="work"
-      className="py-20 sm:py-28 bg-[#FAFAFC] dark:bg-[#060A12] relative transition-colors duration-200"
+      className="py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#060A12] relative transition-colors duration-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         

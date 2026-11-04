@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown, ArrowRight, Sparkles, Cpu, Users, Layers } from 'lucide-react';
+import { X, ChevronDown, ArrowRight, Sparkles, Cpu, Users, Layers, Building } from 'lucide-react';
 import { navItems } from '@/data/navigation';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';
@@ -14,10 +14,65 @@ interface MobileNavProps {
   onClose: () => void;
 }
 
+interface MobileBusinessItem {
+  name: string;
+  href: string;
+  tagline?: string;
+  description?: string;
+}
+
+const defaultMobileBusinesses: MobileBusinessItem[] = [
+  {
+    name: 'Digital & Growth',
+    href: '/businesses/digital-growth',
+    tagline: 'Build a brand • Strategy & Web',
+  },
+  {
+    name: 'Technology',
+    href: '/businesses/technology',
+    tagline: 'Build a product • Custom Apps & APIs',
+  },
+  {
+    name: 'Talent Solutions',
+    href: '/businesses/talent-solutions',
+    tagline: 'Build a team • Staffing & SOW Pods',
+  },
+];
+
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const [businessesExpanded, setBusinessesExpanded] = useState(true);
+  const [businessItems, setBusinessItems] = useState<MobileBusinessItem[]>(defaultMobileBusinesses);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/businesses')
+      .then((res) => res.json())
+      .then((json) => {
+        if (isMounted && json?.success && Array.isArray(json.data) && json.data.length > 0) {
+          setBusinessItems(json.data);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
+
+  const getBusinessIcon = (href: string) => {
+    if (href.includes('digital-growth')) {
+      return <Sparkles className="w-5 h-5 text-orange-500 dark:text-orange-400 mt-0.5 shrink-0" />;
+    }
+    if (href.includes('technology')) {
+      return <Cpu className="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0" />;
+    }
+    if (href.includes('talent-solutions')) {
+      return <Users className="w-5 h-5 text-emerald-500 dark:text-emerald-400 mt-0.5 shrink-0" />;
+    }
+    return <Building className="w-5 h-5 text-sky-500 dark:text-sky-400 mt-0.5 shrink-0" />;
+  };
 
   return (
     <AnimatePresence>
@@ -28,41 +83,33 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         className="fixed inset-0 z-50 bg-white dark:bg-[#080C14] flex flex-col justify-between overflow-y-auto"
       >
         {/* Mobile Nav Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 dark:border-white/10">
-          <Link
-            href="/"
-            onClick={onClose}
-            className="flex items-center"
-          >
-            <div className="transition-transform active:scale-95 duration-200 flex items-center">
-              <Image
-                src="/images/mw-logo.webp"
-                alt="Mighty Warner"
-                width={170}
-                height={48}
-                priority
-                className="h-10 w-auto object-contain"
-              />
-            </div>
+        <div className="p-6 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+          <Link href="/" onClick={onClose}>
+            <Image
+              src="/images/mw-logo.webp"
+              alt="Mighty Warner"
+              width={160}
+              height={45}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
-
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors"
-            aria-label="Close navigation menu"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+            aria-label="Close menu"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Navigation Links */}
-        <div className="px-6 py-6 space-y-6 flex-1">
+        {/* Mobile Nav Content */}
+        <div className="p-6 flex-1">
           <div className="space-y-4">
             {/* Businesses Accordion */}
             <div className="border-b border-slate-200 dark:border-white/10 pb-4">
               <button
                 onClick={() => setBusinessesExpanded(!businessesExpanded)}
-                className="w-full flex items-center justify-between text-xl font-bold text-slate-900 dark:text-white tracking-tight py-2 text-left"
+                className="w-full flex items-center justify-between text-xl font-bold text-slate-900 dark:text-white tracking-tight py-2 text-left cursor-pointer"
               >
                 <span>Businesses</span>
                 <ChevronDown
@@ -74,41 +121,24 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
               {businessesExpanded && (
                 <div className="mt-3 space-y-3 pl-2">
-                  <Link
-                    href="/businesses/digital-growth"
-                    onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 active:bg-orange-100"
-                  >
-                    <Sparkles className="w-5 h-5 text-orange-500 dark:text-orange-400 mt-0.5 shrink-0" />
-                    <div>
-                      <div className="text-sm font-bold text-slate-900 dark:text-white">Digital & Growth</div>
-                      <div className="text-xs text-orange-600 dark:text-orange-300/80">Build a brand • Strategy & Web</div>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/businesses/technology"
-                    onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 active:bg-blue-100"
-                  >
-                    <Cpu className="w-5 h-5 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0" />
-                    <div>
-                      <div className="text-sm font-bold text-slate-900 dark:text-white">Technology</div>
-                      <div className="text-xs text-blue-600 dark:text-blue-300/80">Build a product • Custom Apps & APIs</div>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/businesses/talent-solutions"
-                    onClick={onClose}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 active:bg-emerald-100"
-                  >
-                    <Users className="w-5 h-5 text-emerald-500 dark:text-emerald-400 mt-0.5 shrink-0" />
-                    <div>
-                      <div className="text-sm font-bold text-slate-900 dark:text-white">Talent Solutions</div>
-                      <div className="text-xs text-emerald-600 dark:text-emerald-300/80">Build a team • Staffing & SOW Pods</div>
-                    </div>
-                  </Link>
+                  {businessItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={onClose}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 active:bg-slate-100"
+                    >
+                      {getBusinessIcon(item.href)}
+                      <div>
+                        <div className="text-sm font-bold text-slate-900 dark:text-white">{item.name}</div>
+                        {(item.tagline || item.description) && (
+                          <div className="text-xs text-slate-600 dark:text-slate-400">
+                            {item.tagline || item.description}
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>

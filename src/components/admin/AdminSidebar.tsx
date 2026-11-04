@@ -70,11 +70,6 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
             icon: Award,
           },
           {
-            name: 'Core Business',
-            href: '/admin/core-business',
-            icon: Building2,
-          },
-          {
             name: 'Project',
             href: '/admin/homepage-projects',
             icon: Briefcase,
@@ -141,11 +136,6 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
   {
     groupTitle: 'DISCOVERY & LEADS',
     items: [
-      {
-        name: 'SEO & Metadata Hub',
-        href: '/admin/seo',
-        icon: Globe,
-      },
       {
         name: 'Lead Submissions',
         href: '/admin/leads',

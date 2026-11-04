@@ -61,7 +61,7 @@ export default async function PortfolioPage() {
   const { settings, projects } = await getPortfolioPageData();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAFAFC] dark:bg-[#060A12] transition-colors duration-200">
+    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12] transition-colors duration-200">
       <main className="pt-32 sm:pt-40 pb-20 sm:pb-28">
         <SectionContainer width="default" paddingY="none">
           <PortfolioClientView

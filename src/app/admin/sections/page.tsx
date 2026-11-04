@@ -58,18 +58,6 @@ const HOMEPAGE_SECTIONS: SectionCard[] = [
     type: 'Verified Institutional Metrics',
   },
   {
-    id: 'sec-core-business',
-    order: 3,
-    name: 'Core Business Verticals',
-    key: 'core_business',
-    description: '3 primary pillars (Digital & Growth, Technology, Talent Solutions) with interactive scroll-stacking card animation.',
-    icon: Building2,
-    editHref: '/admin/core-business',
-    previewHref: '/#core-business',
-    isActive: true,
-    type: 'Scroll Stacking Showcase',
-  },
-  {
     id: 'sec-portfolio',
     order: 4,
     name: 'Client Case Studies & Work',

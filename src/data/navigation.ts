@@ -17,7 +17,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   {
     name: 'Businesses',
-    href: '/businesses',
+    href: '/businesses/digital-growth',
     isDropdown: true,
     dropdownItems: [
       {
@@ -73,7 +73,6 @@ export const footerLinks = {
     { name: 'Digital & Growth', href: '/businesses/digital-growth' },
     { name: 'Technology & Software', href: '/businesses/technology' },
     { name: 'Talent Solutions', href: '/businesses/talent-solutions' },
-    { name: 'All Capabilities', href: '/businesses' },
   ],
   company: [
     { name: 'About Mighty Warner', href: '/about' },

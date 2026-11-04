@@ -1,5 +1,4 @@
 import React from 'react';
-import { getDynamicPageSeo } from '@/lib/utils/seo';
 
 interface CustomHeadCodeProps {
   path?: string;
@@ -11,12 +10,7 @@ interface CustomHeadCodeProps {
  * directly into the server-rendered HTML for search engine crawlers and browsers.
  */
 export async function CustomHeadCode({ path, rawHeadCode }: CustomHeadCodeProps) {
-  let headHtml = rawHeadCode;
-
-  if (!headHtml && path) {
-    const seo = await getDynamicPageSeo(path);
-    headHtml = seo?.headCode;
-  }
+  const headHtml = rawHeadCode;
 
   if (!headHtml) {
     return null;
