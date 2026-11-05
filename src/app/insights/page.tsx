@@ -2,7 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Clock } from 'lucide-react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { insightsData } from '@/data/insights';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -10,16 +12,19 @@ import { Badge } from '@/components/ui/Badge';
 import { formatDate } from '@/lib/utils/formatters';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 
-export const metadata = constructMetadata({
-  title: 'Insights & Thought Leadership',
-  description:
-    'Strategic insights, engineering architectures, and growth playbooks by Mighty Warner leadership and practitioners.',
-  canonical: '/insights',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/insights');
+  return formatPageMetadata(seo, {
+    title: 'Insights & Thought Leadership',
+    description: 'Strategic insights, engineering architectures, and growth playbooks by Mighty Warner leadership and practitioners.',
+    canonical: '/insights',
+  });
+}
 
 export default function InsightsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
+      <CustomHeadCode path="/insights" />
       {/* Header */}
       <section className="pt-28 sm:pt-32 pb-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
         <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />

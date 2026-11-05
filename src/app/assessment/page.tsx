@@ -1,5 +1,7 @@
 import React from 'react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { AssessmentWizard } from '@/components/assessment/AssessmentWizard';
@@ -25,12 +27,15 @@ import {
 
 export const revalidate = 0;
 
-export const metadata = constructMetadata({
-  title: 'Digital Growth & Systems Diagnostic | 3-Minute Assessment',
-  description:
-    'Take the Mighty Warner 3-minute business momentum diagnostic across branding, software architecture, and talent scaling.',
-  canonical: '/assessment',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/assessment');
+  return formatPageMetadata(seo, {
+    title: 'Digital Growth & Systems Diagnostic | 3-Minute Assessment',
+    description:
+      'Take the Mighty Warner 3-minute business momentum diagnostic across branding, software architecture, and talent scaling.',
+    canonical: '/assessment',
+  });
+}
 
 const PILL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   clock: Clock,
@@ -123,6 +128,7 @@ export default async function AssessmentPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
+      <CustomHeadCode path="/assessment" />
       {/* Header */}
       <section className="pt-28 sm:pt-32 pb-12 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-rose-500/5 dark:bg-sky-500/10 blur-[130px] pointer-events-none" />

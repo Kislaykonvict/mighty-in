@@ -30,6 +30,7 @@ import {
   MousePointerClick,
   Mail,
   ClipboardCheck,
+  Search,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -136,6 +137,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
   {
     groupTitle: 'DISCOVERY & LEADS',
     items: [
+      {
+        name: 'SEO & Page Manager',
+        href: '/admin/seo',
+        icon: Search,
+      },
       {
         name: 'Lead Submissions',
         href: '/admin/leads',

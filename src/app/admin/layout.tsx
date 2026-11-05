@@ -102,6 +102,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Configure dynamic full-bleed hero covers, bottom-left typography & rich content editor',
       };
     }
+    if (pathname?.startsWith('/admin/seo')) {
+      return {
+        title: 'SEO Meta Tags & Page Manager',
+        subtitle: 'Configure dynamic metadata, social OG cards, canonical links, and custom head scripts across all routes',
+      };
+    }
     if (pathname?.startsWith('/admin/leads')) {
       return {
         title: 'Lead Submissions',

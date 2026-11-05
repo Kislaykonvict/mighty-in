@@ -1,5 +1,7 @@
 import React, { Suspense } from 'react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { ContactWizard } from '@/components/contact/ContactWizard';
@@ -11,12 +13,15 @@ import { defaultContactSectionData, ContactSectionData } from '@/types/contactSe
 
 export const revalidate = 0;
 
-export const metadata = constructMetadata({
-  title: 'Start a Conversation | Contact Mighty Warner',
-  description:
-    'Connect with Mighty Warner across Digital & Growth, Technology, or Talent Solutions. Book a consultation or request project proposals.',
-  canonical: '/contact',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/contact');
+  return formatPageMetadata(seo, {
+    title: 'Start a Conversation | Contact Mighty Warner',
+    description:
+      'Connect with Mighty Warner across Digital & Growth, Technology, or Talent Solutions. Book a consultation or request project proposals.',
+    canonical: '/contact',
+  });
+}
 
 async function getGlobalOfficesData(): Promise<GlobalOfficesData> {
   try {
@@ -138,6 +143,7 @@ export default async function ContactPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
+      <CustomHeadCode path="/contact" />
       {/* Header */}
       <section className="pt-28 sm:pt-32 pb-12 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[500px] rounded-full bg-gradient-to-r from-orange-500/5 via-blue-500/5 to-emerald-500/5 dark:from-orange-500/10 dark:via-blue-500/10 dark:to-emerald-500/10 blur-[130px] pointer-events-none" />

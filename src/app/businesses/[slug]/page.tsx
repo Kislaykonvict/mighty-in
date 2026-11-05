@@ -2,6 +2,8 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { constructMetadata } from '@/lib/utils/seo';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { BusinessDetailView } from '@/components/businesses/BusinessDetailView';
 import { prisma } from '@/lib/db/prisma';
 import { businessVerticalDefaults } from '@/types/businessVertical';
@@ -16,8 +18,19 @@ export async function generateMetadata({
   params,
 }: BusinessVerticalPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const path = `/businesses/${slug}`;
 
-  // 1. Check known defaults
+  // 1. Check custom PostgreSQL SEO record from SEO Manager
+  try {
+    const seo = await getPageSEO(path);
+    if (seo && seo.metaTitle) {
+      return formatPageMetadata(seo, {
+        canonical: path,
+      });
+    }
+  } catch {}
+
+  // 2. Check known defaults
   if (businessVerticalDefaults[slug]) {
     const d = businessVerticalDefaults[slug];
     return constructMetadata({
@@ -27,7 +40,7 @@ export async function generateMetadata({
     });
   }
 
-  // 2. Check database BusinessVertical
+  // 3. Check database BusinessVertical
   try {
     const dbVertical = await prisma.businessVertical.findUnique({
       where: { slug },
@@ -40,7 +53,7 @@ export async function generateMetadata({
       });
     }
 
-    // 3. Check database SiteSection
+    // 4. Check database SiteSection
     const heroSection = await prisma.siteSection.findUnique({
       where: {
         pageSlug_sectionKey: {
@@ -94,6 +107,10 @@ export default async function DynamicBusinessVerticalPage({
     notFound();
   }
 
-  return <BusinessDetailView slug={slug} />;
+  return (
+    <>
+      <CustomHeadCode path={`/businesses/${slug}`} />
+      <BusinessDetailView slug={slug} />
+    </>
+  );
 }
-

@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { methodSteps } from '@/data/company';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -12,16 +14,19 @@ import { WhySection } from '@/components/why/WhySection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 
-export const metadata = constructMetadata({
-  title: 'Our Approach | The Mighty Warner Method',
-  description:
-    'Discover the battle-tested 5-stage Mighty Warner Method: Discover, Define, Build, Activate, and Optimize. Engineered for measurable business momentum.',
-  canonical: '/approach',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/approach');
+  return formatPageMetadata(seo, {
+    title: 'Our Approach | The Mighty Warner Method',
+    description: 'Discover the battle-tested 5-stage Mighty Warner Method: Discover, Define, Build, Activate, and Optimize. Engineered for measurable business momentum.',
+    canonical: '/approach',
+  });
+}
 
 export default function ApproachPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
+      <CustomHeadCode path="/approach" />
       {/* Hero */}
       <section className="pt-28 sm:pt-32 pb-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
         <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />

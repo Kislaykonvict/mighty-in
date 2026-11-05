@@ -47,7 +47,14 @@ export function Navbar() {
     }, 250);
   };
 
-  const isTransparentTopPage = pathname === '/' || pathname === '/about';
+  const isTransparentTopPage =
+    pathname === '/' ||
+    pathname === '/about' ||
+    pathname.startsWith('/businesses') ||
+    pathname === '/privacy-policy' ||
+    pathname === '/refund-policy' ||
+    pathname === '/terms-and-conditions' ||
+    pathname === '/disclaimer';
   const isOpaque = scrolled || !isTransparentTopPage;
 
   return (

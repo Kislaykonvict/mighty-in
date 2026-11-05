@@ -894,6 +894,158 @@ async function main() {
   }
   console.log(`✅ Seeded ${sectionsToSeed.length} Dynamic Site Sections`);
 
+  // 12. Seed PageSeo Records for All Routes
+  const defaultSeoPages = [
+    {
+      pageRoute: '/',
+      pageName: 'Homepage',
+      metaTitle: 'Mighty Warner | Strategy • Technology • Talent Solutions',
+      metaDescription:
+        'Mighty Warner unites Digital & Growth, Technology, and Talent Solutions under one connected ecosystem. Discover how we build brands, software platforms, and elite engineering teams.',
+      metaKeywords: [
+        'Mighty Warner',
+        'Digital Growth',
+        'Custom Software Development',
+        'Talent Solutions',
+        'Engineering Pods',
+        'Enterprise Tech',
+      ],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/',
+      customHeadScripts: '<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "Organization",\n  "name": "Mighty Warner",\n  "url": "https://mightywarner.com",\n  "logo": "https://mightywarner.com/images/mw-logo.webp",\n  "foundingDate": "2013",\n  "description": "One company. Multiple ways to move your business forward."\n}\n</script>',
+    },
+    {
+      pageRoute: '/about',
+      pageName: 'About Us',
+      metaTitle: 'About Us | Building Businesses Since 2013 | Mighty Warner',
+      metaDescription:
+        "Learn about Mighty Warner's journey from inception in 2013 to a global multi-disciplinary commercial partner across North America, EMEA, and APAC.",
+      metaKeywords: ['About Mighty Warner', 'Leadership', 'Company History', 'Global Offices', 'Executive Team'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/about',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/work',
+      pageName: 'Selected Work & Portfolio',
+      metaTitle: 'Selected Work & Case Studies | Mighty Warner Portfolio',
+      metaDescription:
+        'Verified client case studies across fintech, enterprise SaaS, logistics, and digital commerce. Proven ROI, performance lifts, and architectural triumphs.',
+      metaKeywords: ['Case Studies', 'Client Portfolio', 'Digital Transformation', 'Software Case Studies'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/work',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/approach',
+      pageName: 'Our Approach & Methodology',
+      metaTitle: 'Our Methodology & Approach | The Mighty Warner Method',
+      metaDescription:
+        'Explore our battle-tested 5-stage framework (Discover, Define, Build, Activate, Optimize) designed to de-risk investments and compound commercial velocity.',
+      metaKeywords: ['Mighty Warner Method', 'Growth Framework', 'Product Strategy', 'Software Architecture'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/approach',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/businesses/digital-growth',
+      pageName: 'Digital & Growth Vertical',
+      metaTitle: 'Digital & Growth | High-Performance Brand & SEO Engine | Mighty Warner',
+      metaDescription:
+        'Make your business impossible to ignore with category-defining brand identity, Next.js web applications, authority SEO, and paid performance.',
+      metaKeywords: ['Brand Strategy', 'Web Design & Dev', 'SEO Topic Clusters', 'CRO'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/businesses/digital-growth',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/businesses/technology',
+      pageName: 'Technology & Software Vertical',
+      metaTitle: 'Technology & Software Platforms | Scalable Web Architecture | Mighty Warner',
+      metaDescription:
+        'Engineer scalable web applications, event-driven microservices, API integrations, and cloud platforms with sub-second performance.',
+      metaKeywords: ['Custom Software', 'Web Apps', 'Microservices', 'Cloud Architecture'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/businesses/technology',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/businesses/talent-solutions',
+      pageName: 'Talent Solutions Vertical',
+      metaTitle: 'Talent Solutions & Engineering Pods | Direct Hire & Staffing | Mighty Warner',
+      metaDescription:
+        'Deploy dedicated senior engineering pods, contingent technical specialists, and executive hires to accelerate your roadmap with zero lag.',
+      metaKeywords: ['SOW Dedicated Pods', 'Contingent Staffing', 'Technical Recruitment'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/businesses/talent-solutions',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/growth-lab',
+      pageName: 'Interactive Growth Lab',
+      metaTitle: 'Interactive Growth Lab & Simulation Engines | Mighty Warner',
+      metaDescription:
+        'Interactive toolset including the 90-Day Strategy Blueprint synthesizer, ROI revenue impact simulator, and persona diagnostic.',
+      metaKeywords: ['ROI Calculator', '90-Day Strategy Builder', 'Growth Simulation'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/growth-lab',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/insights',
+      pageName: 'Insights & Perspectives',
+      metaTitle: 'Insights & Strategic Perspectives | Mighty Warner',
+      metaDescription:
+        'Actionable thought leadership on decoupled web architecture, organic search authority, and modern enterprise scaling.',
+      metaKeywords: ['B2B Strategy', 'Engineering Insights', 'Organic Search Authority'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/insights',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/contact',
+      pageName: 'Contact & Global Desks',
+      metaTitle: 'Contact & Global Desks | Start a Conversation | Mighty Warner',
+      metaDescription:
+        'Connect with our executive partners in Dubai, New York, London, Singapore, and Sydney. 24-hour response guarantee.',
+      metaKeywords: ['Contact Mighty Warner', 'Global Offices', 'RFP Submission'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/contact',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/assessment',
+      pageName: 'Growth Diagnostic Assessment',
+      metaTitle: 'Growth Diagnostic Assessment | Calculate Your Momentum Score | Mighty Warner',
+      metaDescription:
+        'Take our rapid diagnostic assessment to benchmark your brand positioning, software stack, and talent readiness.',
+      metaKeywords: ['Growth Diagnostic', 'Momentum Score', 'Business Audit'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/assessment',
+      customHeadScripts: '',
+    },
+    {
+      pageRoute: '/faqs',
+      pageName: 'Frequently Asked Questions',
+      metaTitle: 'Frequently Asked Questions | Mighty Warner Knowledge Base',
+      metaDescription:
+        'Find answers to common questions about our digital growth strategies, custom software engineering, and dedicated talent pods.',
+      metaKeywords: ['Mighty Warner FAQs', 'Agency Questions', 'Pricing Models'],
+      metaImage: '/images/og/mighty-warner-og.jpg',
+      canonicalUrl: 'https://mightywarner.com/faqs',
+      customHeadScripts: '',
+    },
+  ];
+
+  for (const p of defaultSeoPages) {
+    await prisma.pageSeo.upsert({
+      where: { pageRoute: p.pageRoute },
+      update: p,
+      create: p,
+    });
+  }
+  console.log(`✅ Seeded ${defaultSeoPages.length} PageSeo records in PostgreSQL`);
+
 
   console.log('🎉 Database seed completed successfully! All platform content is live in Neon PostgreSQL.');
 }

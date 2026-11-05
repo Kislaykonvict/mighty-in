@@ -33,7 +33,7 @@ export function PolicyPageView({ page }: PolicyPageViewProps) {
       {/* ============================================================ */}
       {/* 1. HERO SECTION: Full-Screen Picture + Optional Bottom-Left Text */}
       {/* ============================================================ */}
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-end overflow-hidden bg-slate-950 pb-12 sm:pb-20 pt-28 border-b border-slate-200 dark:border-white/10">
+      <section className="relative w-full min-h-[75vh] sm:min-h-screen flex items-end overflow-hidden bg-slate-950 pb-14 sm:pb-20 pt-36 border-b border-slate-200 dark:border-white/10">
         {/* Full-bleed background image covering whole screen */}
         <div className="absolute inset-0 pointer-events-none">
           <Image
@@ -51,7 +51,7 @@ export function PolicyPageView({ page }: PolicyPageViewProps) {
         </div>
 
         {/* Bottom-Left Overlay Content */}
-        <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full px-6 sm:px-12 md:px-16 lg:px-20 xl:px-24 flex justify-start">
           <div className="max-w-3xl space-y-4 sm:space-y-6">
             {/* Optional Badge */}
             {page.heroBadge && (

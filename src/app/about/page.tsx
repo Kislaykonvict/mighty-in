@@ -1,5 +1,7 @@
 import React from 'react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { prisma } from '@/lib/db/prisma';
 import { AboutHeroVersett } from '@/components/about/AboutHeroVersett';
 import { InnovativeTrajectorySection } from '@/components/about/InnovativeTrajectorySection';
@@ -12,12 +14,14 @@ import { AboutStoryData, defaultAboutStoryData } from '@/types/aboutStory';
 
 export const revalidate = 60; // Incremental Static Regeneration
 
-export const metadata = constructMetadata({
-  title: 'About Mighty Warner | Building Businesses Since 2013',
-  description:
-    'Learn about Mighty Warner’s journey since 2013: our multidisciplinary team, founding vision, and connected business ecosystem across strategy, technology, and talent.',
-  canonical: '/about',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/about');
+  return formatPageMetadata(seo, {
+    title: 'About Mighty Warner | Building Businesses Since 2013',
+    description: 'Learn about Mighty Warner journey since 2013: our multidisciplinary team, founding vision, and connected business ecosystem across strategy, technology, and talent.',
+    canonical: '/about',
+  });
+}
 
 async function getHeroData(): Promise<AboutHeroData> {
   try {
@@ -125,6 +129,7 @@ export default async function AboutPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#080C14]">
+      <CustomHeadCode path="/about" />
       {/* 1. Versett-Style Text Over Picture Hero (Dynamic) */}
       <AboutHeroVersett initialData={heroData} />
 

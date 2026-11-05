@@ -344,6 +344,27 @@ enum Role {
 
 
 // -------------------------------------------------------------
+// -------------------------------------------------------------
+// SEO Meta Tags & Page Manager
+// -------------------------------------------------------------
+model PageSeo {
+  id                String   @id @default(cuid())
+  pageRoute         String   @unique @map("page_route")
+  pageName          String   @map("page_name")
+  metaTitle         String   @default("") @map("meta_title")
+  metaDescription   String   @default("") @map("meta_description") @db.Text
+  metaKeywords      String[] @default([]) @map("meta_keywords")
+  metaImage         String   @default("/og.jpg") @map("meta_image")
+  canonicalUrl      String   @default("") @map("canonical_url")
+  customHeadScripts String   @default("") @map("custom_head_scripts") @db.Text
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([pageRoute])
+  @@map("page_seo")
+}
+
+// -------------------------------------------------------------
 // Frequently Asked Questions (FAQ) & Schema Rich Snippets
 // -------------------------------------------------------------
 model FaqItem {

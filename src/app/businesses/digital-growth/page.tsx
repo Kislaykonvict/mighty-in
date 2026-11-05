@@ -1,16 +1,26 @@
 import React from 'react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { BusinessDetailView } from '@/components/businesses/BusinessDetailView';
 
 export const revalidate = 60;
 
-export const metadata = constructMetadata({
-  title: 'Digital & Growth | Make Your Business Impossible to Ignore',
-  description:
-    'Brand strategy, high-speed Next.js web experiences, technical SEO, and conversion optimization designed to attract high-intent buyers and turn attention into revenue.',
-  canonical: '/businesses/digital-growth',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/businesses/digital-growth');
+  return formatPageMetadata(seo, {
+    title: 'Digital & Growth | High-Performance Brand & SEO Engine',
+    description:
+      'Brand strategy, high-speed Next.js web experiences, technical SEO, and conversion optimization designed to attract high-intent buyers and turn attention into revenue.',
+    canonical: '/businesses/digital-growth',
+  });
+}
 
 export default function DigitalGrowthPage() {
-  return <BusinessDetailView slug="digital-growth" />;
+  return (
+    <>
+      <CustomHeadCode path="/businesses/digital-growth" />
+      <BusinessDetailView slug="digital-growth" />
+    </>
+  );
 }

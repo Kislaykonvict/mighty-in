@@ -1,5 +1,7 @@
 import React from 'react';
-import { constructMetadata } from '@/lib/utils/seo';
+import { Metadata } from 'next';
+import { getPageSEO, formatPageMetadata } from '@/lib/seo';
+import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { PortfolioClientView } from '@/app/portfolio/PortfolioClientView';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
@@ -8,12 +10,15 @@ import { defaultWorkPageSettings, WorkPageSettings } from '@/types/workPage';
 
 export const revalidate = 0;
 
-export const metadata = constructMetadata({
-  title: 'Selected Client Projects & Portfolio | Mighty Warner',
-  description:
-    'Explore verified case studies and production outcomes across e-commerce, custom web applications, real estate platforms, and digital solutions delivered by Mighty Warner.',
-  canonical: '/work',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSEO('/work');
+  return formatPageMetadata(seo, {
+    title: 'Selected Client Projects & Portfolio | Mighty Warner',
+    description:
+      'Explore verified case studies and production outcomes across e-commerce, custom web applications, real estate platforms, and digital solutions delivered by Mighty Warner.',
+    canonical: '/work',
+  });
+}
 
 async function getWorkPageData() {
   try {
@@ -62,6 +67,7 @@ export default async function WorkPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12] transition-colors duration-200">
+      <CustomHeadCode path="/work" />
       {/* Main Portfolio Showcase with Reference UI */}
       <main className="pt-32 sm:pt-40 pb-20 sm:pb-28">
         <SectionContainer width="default" paddingY="none">

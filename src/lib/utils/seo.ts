@@ -1,5 +1,8 @@
 import { Metadata } from 'next';
 import { siteConfig } from '@/config/site';
+import { getPageSEO, formatPageMetadata, PageSeo } from '@/lib/seo';
+
+export type { PageSeo };
 
 export interface MetadataProps {
   title?: string;
@@ -81,15 +84,16 @@ export function constructMetadata({
 }
 
 /**
- * Kept for backward compatibility. Returns null as PageSeo has been removed.
+ * Fetch dynamic SEO record for any path from Neon PostgreSQL database
  */
-export async function getDynamicPageSeo(_path: string) {
-  return null;
+export async function getDynamicPageSeo(path: string) {
+  return await getPageSEO(path);
 }
 
 /**
- * Construct Next.js Metadata dynamically using fallback props
+ * Construct Next.js Metadata dynamically from PostgreSQL PageSeo record
  */
-export async function constructDynamicMetadata(_path: string, fallback?: MetadataProps): Promise<Metadata> {
-  return constructMetadata(fallback);
+export async function constructDynamicMetadata(path: string, fallback?: MetadataProps): Promise<Metadata> {
+  const seo = await getPageSEO(path);
+  return formatPageMetadata(seo, fallback);
 }
