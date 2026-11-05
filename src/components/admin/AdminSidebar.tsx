@@ -132,6 +132,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         href: '/admin/assessment',
         icon: ClipboardCheck,
       },
+      {
+        name: 'Insights (Blog)',
+        href: '/admin/insights',
+        icon: FileText,
+      },
     ],
   },
   {
@@ -146,6 +151,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         name: 'Lead Submissions',
         href: '/admin/leads',
         icon: Inbox,
+      },
+      {
+        name: 'Newsletter Subscribers',
+        href: '/admin/newsletter',
+        icon: Mail,
       },
     ],
   },

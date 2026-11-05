@@ -108,6 +108,18 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Configure dynamic metadata, social OG cards, canonical links, and custom head scripts across all routes',
       };
     }
+    if (pathname?.startsWith('/admin/insights')) {
+      return {
+        title: 'Insights & Blog Management',
+        subtitle: 'Create, edit, and organize dynamic articles, custom categories, author details, and SEO metadata',
+      };
+    }
+    if (pathname?.startsWith('/admin/newsletter')) {
+      return {
+        title: 'Newsletter Subscribers',
+        subtitle: 'Review, manage, filter, and export verified newsletter subscriber leads from footer and blog',
+      };
+    }
     if (pathname?.startsWith('/admin/leads')) {
       return {
         title: 'Lead Submissions',

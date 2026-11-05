@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ArrowRight, Layers, Mail, MapPin } from 'lucide-react';
 import { footerLinks } from '@/data/navigation';
 import { siteConfig } from '@/config/site';
+import { FooterNewsletterForm } from '@/components/newsletter/FooterNewsletterForm';
 
 export function Footer() {
   return (
@@ -54,6 +55,19 @@ export function Footer() {
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Newsletter Subscription Row */}
+        <div className="mb-12 p-6 sm:p-8 rounded-2xl bg-white/60 dark:bg-white/[0.02] border border-slate-300 dark:border-white/8 backdrop-blur-sm flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+          <div className="max-w-md">
+            <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-1">
+              Stay ahead of digital &amp; tech trends
+            </h4>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+              Subscribe to the Mighty Warner newsletter for practical engineering and growth playbooks. No fluff.
+            </p>
+          </div>
+          <FooterNewsletterForm />
         </div>
 
         {/* 4 Footer Columns */}

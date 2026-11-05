@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, FolderKanban } from 'lucide-react';
 import { ProjectCard } from './ProjectCard';
 import { HomepageWorkData, defaultHomepageWorkData } from '@/types/homepageWork';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 
 interface WorkSectionProps {
   data?: HomepageWorkData;
@@ -21,22 +22,18 @@ export function WorkSection({ data }: WorkSectionProps) {
       new Set(rawProjects.map((p) => p.category?.trim()).filter(Boolean))
     );
     const list = [{ id: 'all', label: 'All' }];
-    unique.slice(0, 5).forEach((cat) => {
-      const label = cat.toLowerCase() === 'web design' ? 'Websites' : cat;
-      list.push({ id: cat.toLowerCase(), label });
+    unique.forEach((cat) => {
+      list.push({ id: cat.toLowerCase(), label: cat });
     });
     return list;
   }, [rawProjects]);
 
   const filteredProjects = useMemo(() => {
-    if (activeCategory === 'all') return rawProjects.slice(0, 6);
+    if (activeCategory === 'all') return rawProjects;
     return rawProjects.filter((p) => {
-      const cat = (p.category || '').toLowerCase();
-      return (
-        cat === activeCategory ||
-        (activeCategory === 'websites' && (cat.includes('web') || cat.includes('site')))
-      );
-    }).slice(0, 6);
+      const cat = (p.category || '').toLowerCase().trim();
+      return cat === activeCategory;
+    });
   }, [rawProjects, activeCategory]);
 
   if (current.isActive === false) return null;
@@ -50,16 +47,20 @@ export function WorkSection({ data }: WorkSectionProps) {
         
         {/* Editorial Header Row matching Reference Screenshot */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-16">
-          <div>
-            <span className="block text-xs font-bold font-mono tracking-[0.2em] text-[#8B1E2D] dark:text-rose-400 uppercase mb-2">
-              {current.badge || 'PORTFOLIO'}
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Selected{' '}
-              <span className="font-serif italic font-normal text-[#8B1E2D] dark:text-rose-400">
-                client projects
+          <div className="max-w-2xl">
+            {current.badge && (
+              <span className="block text-xs font-bold font-mono tracking-[0.2em] text-[#8B1E2D] dark:text-rose-400 uppercase mb-2">
+                <RichTextContent content={current.badge} inline />
               </span>
+            )}
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
+              <RichTextContent content={current.title || "We've built things worth talking about."} inline />
             </h2>
+            {current.subtitle && (
+              <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                <RichTextContent content={current.subtitle} inline />
+              </p>
+            )}
           </div>
 
           {/* Filter Pills */}
@@ -102,10 +103,10 @@ export function WorkSection({ data }: WorkSectionProps) {
             {/* Centered Solid Black Pill Button matching Reference Screenshot */}
             <div className="text-center">
               <Link
-                href={current.ctaLink || '/work'}
+                href={current.ctaLink || '/portfolio'}
                 className="inline-flex items-center justify-center px-9 py-4 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold text-xs tracking-widest uppercase hover:bg-neutral-800 dark:hover:bg-slate-200 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 cursor-pointer select-none"
               >
-                {current.ctaText || 'VIEW ALL PROJECTS'}
+                {current.ctaText || 'Explore Complete Portfolio & Case Studies'}
               </Link>
             </div>
           </>

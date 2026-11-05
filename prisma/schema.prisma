@@ -205,6 +205,7 @@ model Insight {
   id           String   @id @default(cuid())
   slug         String   @unique
   title        String
+  titleAccent  String?
   subtitle     String
   category     String   // "Growth", "Technology", "Business", "Talent"
   verticalId   String?
@@ -411,3 +412,17 @@ model PolicyPage {
   @@index([slug, isActive])
 }
 
+
+// -------------------------------------------------------------
+// Newsletter Subscriptions
+// -------------------------------------------------------------
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String?  @default("footer")
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}

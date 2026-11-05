@@ -1,124 +1,101 @@
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Clock } from 'lucide-react';
 import { Metadata } from 'next';
+import { prisma } from '@/lib/db/prisma';
+import { insightsData } from '@/data/insights';
 import { getPageSEO, formatPageMetadata } from '@/lib/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
-import { insightsData } from '@/data/insights';
-import { SectionContainer } from '@/components/layout/SectionContainer';
-import { SectionHeader } from '@/components/ui/SectionHeader';
-import { Badge } from '@/components/ui/Badge';
-import { formatDate } from '@/lib/utils/formatters';
-import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import MightyBlog, { BlogPostItem } from '@/components/blog/MightyBlog';
+
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSEO('/insights');
   return formatPageMetadata(seo, {
-    title: 'Insights & Thought Leadership',
-    description: 'Strategic insights, engineering architectures, and growth playbooks by Mighty Warner leadership and practitioners.',
+    title: 'The Mighty Blog | Insights & Thought Leadership',
+    description: 'A practical look at how SEO, performance ads, engineering, and brand strategy work together to drive compounding growth.',
     canonical: '/insights',
   });
 }
 
-export default function InsightsPage() {
+export default async function InsightsPage() {
+  let posts: BlogPostItem[] = [];
+
+  try {
+    const dbPosts = await prisma.insight.findMany({
+      orderBy: [
+        { featured: 'desc' },
+        { publishedAt: 'desc' },
+      ],
+    });
+
+    if (dbPosts && dbPosts.length > 0) {
+      posts = dbPosts.map((p) => ({
+        id: p.id,
+        slug: p.slug,
+        category: p.category,
+        title: p.title,
+        titleAccent: p.titleAccent,
+        excerpt: p.excerpt,
+        publishedAt: p.publishedAt,
+        readTime: p.readTime,
+        coverImage: p.coverImage,
+        featured: p.featured,
+        tags: Array.isArray(p.tags) ? (p.tags as string[]) : [],
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching insights from DB:', err);
+  }
+
+  // Fallback to static insightsData if DB was empty
+  if (posts.length === 0) {
+    posts = insightsData.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      category: p.category,
+      title: p.title,
+      titleAccent: null,
+      excerpt: p.excerpt,
+      publishedAt: p.publishedAt,
+      readTime: p.readTime,
+      coverImage: p.coverImage,
+      featured: p.featured,
+      tags: p.tags,
+    }));
+  }
+
+  // Extract categories (prioritize official taxonomy from siteSection)
+  let categories: string[] = [];
+  try {
+    const catSection = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'insights',
+          sectionKey: 'categories',
+        },
+      },
+    });
+    if (catSection && Array.isArray((catSection.content as any)?.categories)) {
+      categories = (catSection.content as any).categories;
+    }
+  } catch (err) {
+    console.error('Error fetching insight categories:', err);
+  }
+
+  if (categories.length === 0) {
+    categories = Array.from(new Set(posts.map((p) => p.category).filter(Boolean)));
+  }
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
+    <div className="w-full pt-[76px] sm:pt-[84px] bg-[#DBDBDB] dark:bg-[#080C14] transition-colors duration-200">
       <CustomHeadCode path="/insights" />
-      {/* Header */}
-      <section className="pt-28 sm:pt-32 pb-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
-        <div className="absolute inset-0 subtle-grid-bg opacity-15 pointer-events-none" />
-        <SectionContainer width="default" paddingY="none">
-          <Badge variant="subtle" dot className="mb-4">
-            PERSPECTIVES &amp; PLAYBOOKS
-          </Badge>
-          <h1 className="text-display-h1 font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 max-w-4xl">
-            Thinking beyond the <span className="gradient-text-brand">next campaign.</span>
-          </h1>
-          <p className="text-body-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mb-4">
-            Deep dives into enterprise architecture, brand positioning moats, conversion mechanics, and talent pod scaling.
-          </p>
-        </SectionContainer>
-      </section>
-
-      {/* Articles Grid */}
-      <SectionContainer width="default" paddingY="lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {insightsData.map((item) => (
-            <div
-              key={item.id}
-              className="group rounded-3xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 hover:border-slate-300 dark:hover:border-white/20 transition-all overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md"
-            >
-              <div>
-                <div className="relative h-64 w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
-                  <Image
-                    src={item.coverImage}
-                    alt={item.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4">
-                    <Badge variant="subtle" dot>
-                      {item.category}
-                    </Badge>
-                  </div>
-                </div>
-
-                <div className="p-6 sm:p-8">
-                  <div className="flex items-center gap-3 text-xs font-mono text-slate-500 dark:text-slate-400 mb-3">
-                    <span>{formatDate(item.publishedAt)}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      {item.readTime}
-                    </span>
-                  </div>
-
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-rose-600 dark:group-hover:text-sky-300 transition-colors">
-                    <Link href={`/insights/${item.slug}`}>
-                      {item.title}
-                    </Link>
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    {item.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-6 sm:px-8 pb-6 pt-2">
-                <div className="pt-4 border-t border-slate-200 dark:border-white/8 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">
-                    By <strong className="text-slate-800 dark:text-slate-200">{item.author.name}</strong>
-                  </span>
-
-                  <Link
-                    href={`/insights/${item.slug}`}
-                    className="text-xs font-bold text-rose-600 dark:text-sky-400 hover:text-rose-700 dark:hover:text-sky-300 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                  >
-                    <span>Read Article</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </SectionContainer>
-
-      <FinalCtaSection />
+      <MightyBlog
+        initialPosts={posts}
+        allCategories={categories}
+        title="The Mighty"
+        titleAccent="Blog"
+      />
     </div>
   );
 }

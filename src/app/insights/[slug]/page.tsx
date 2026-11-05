@@ -1,18 +1,11 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Metadata } from 'next';
-import { ArrowLeft, ArrowRight, Clock, Calendar, CheckCircle2, User, Share2 } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
 import { insightsData } from '@/data/insights';
 import { constructDynamicMetadata } from '@/lib/utils/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
-import { SectionContainer } from '@/components/layout/SectionContainer';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { formatDate } from '@/lib/utils/formatters';
-import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import MightyBlogDetail, { DetailedInsightArticle } from '@/components/blog/MightyBlogDetail';
 
 interface InsightArticlePageProps {
   params: {
@@ -20,208 +13,105 @@ interface InsightArticlePageProps {
   };
 }
 
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
+  try {
+    const dbArticles = await prisma.insight.findMany({
+      select: { slug: true },
+    });
+    if (dbArticles.length > 0) {
+      return dbArticles.map((a) => ({ slug: a.slug }));
+    }
+  } catch {
+    // Fallback if db is offline at build time
+  }
   return insightsData.map((article) => ({
     slug: article.slug,
   }));
 }
 
 export async function generateMetadata({ params }: InsightArticlePageProps): Promise<Metadata> {
-  const article = insightsData.find((a) => a.slug === params.slug);
-  if (!article) return { title: 'Article Not Found' };
-
-  let dbInsight = null;
+  let dbArticle: any = null;
   try {
-    dbInsight = await prisma.insight.findUnique({
+    dbArticle = await prisma.insight.findUnique({
       where: { slug: params.slug },
-      select: {
-        metaTitle: true,
-        metaDescription: true,
-        metaKeywords: true,
-        canonicalUrl: true,
-      },
     });
   } catch (e) {
-    // Fallback if db offline or during static build
+    // Fallback
   }
 
-  const fallbackKeywords = dbInsight?.metaKeywords
-    ? dbInsight.metaKeywords.split(',').map((k) => k.trim())
+  const fallback = insightsData.find((a) => a.slug === params.slug);
+  const article = dbArticle || fallback;
+
+  if (!article) {
+    return { title: 'Article Not Found | Mighty Warner' };
+  }
+
+  const titleWithAccent = article.titleAccent
+    ? `${article.title} ${article.titleAccent}`
+    : article.title;
+
+  const fallbackKeywords = article.metaKeywords
+    ? article.metaKeywords.split(',').map((k: string) => k.trim())
+    : Array.isArray(article.tags)
+    ? article.tags
     : undefined;
 
   return constructDynamicMetadata(`/insights/${article.slug}`, {
-    title: dbInsight?.metaTitle || `${article.title} | Mighty Warner Insights`,
-    description: dbInsight?.metaDescription || article.excerpt,
-    canonical: dbInsight?.canonicalUrl || `/insights/${article.slug}`,
+    title: article.metaTitle || `${titleWithAccent} | The Mighty Blog`,
+    description: article.metaDescription || article.excerpt,
+    canonical: article.canonicalUrl || `/insights/${article.slug}`,
     keywords: fallbackKeywords,
     ogImage: article.coverImage,
   });
 }
 
 export default async function InsightArticlePage({ params }: InsightArticlePageProps) {
-  const article = insightsData.find((a) => a.slug === params.slug);
+  let dbArticle: any = null;
+  try {
+    dbArticle = await prisma.insight.findUnique({
+      where: { slug: params.slug },
+    });
+  } catch (e) {
+    // Fallback
+  }
 
-  if (!article) {
+  const fallback = insightsData.find((a) => a.slug === params.slug);
+  const rawArticle = dbArticle || fallback;
+
+  if (!rawArticle) {
     notFound();
   }
 
-  let dbHeadCode: string | null = null;
-  try {
-    const dbInsight = await prisma.insight.findUnique({
-      where: { slug: params.slug },
-      select: { headCode: true },
-    });
-    dbHeadCode = dbInsight?.headCode || null;
-  } catch (e) {
-    // Fallback gracefully
-  }
-
-  const related = insightsData
-    .filter((a) => a.slug !== article.slug)
-    .slice(0, 2);
+  // Normalize article structure
+  const article: DetailedInsightArticle = {
+    id: rawArticle.id,
+    slug: rawArticle.slug,
+    title: rawArticle.title,
+    titleAccent: rawArticle.titleAccent || null,
+    subtitle: rawArticle.subtitle || null,
+    category: rawArticle.category,
+    readTime: rawArticle.readTime,
+    publishedAt: rawArticle.publishedAt,
+    authorName: rawArticle.authorName || rawArticle.author?.name || 'Team Mighty Warner',
+    authorRole: rawArticle.authorRole || rawArticle.author?.role || null,
+    authorAvatar: rawArticle.authorAvatar || rawArticle.author?.avatarUrl || null,
+    coverImage: rawArticle.coverImage,
+    excerpt: rawArticle.excerpt,
+    content: rawArticle.content,
+    keyTakeaways: rawArticle.keyTakeaways,
+    tags: rawArticle.tags,
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12]">
+    <div className="w-full pt-[76px] sm:pt-[84px] bg-[#DBDBDB] dark:bg-[#080C14] transition-colors duration-200">
       {/* Custom Head Scripts, Meta Tags & Schema (Head Code) */}
-      <CustomHeadCode path={`/insights/${article.slug}`} rawHeadCode={dbHeadCode} />
+      <CustomHeadCode path={`/insights/${article.slug}`} rawHeadCode={rawArticle.headCode || null} />
 
-      {/* Article Header */}
-      <section className="pt-28 sm:pt-32 pb-16 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden">
-        <SectionContainer width="narrow" paddingY="none">
-          <div className="mb-6">
-            <Link
-              href="/insights"
-              className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to all insights</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-3 mb-4">
-            <Badge variant="subtle" dot>
-              {article.category}
-            </Badge>
-            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-              {formatDate(article.publishedAt)} • {article.readTime}
-            </span>
-          </div>
-
-          <h1 className="text-display-h1 font-extrabold text-slate-900 dark:text-white tracking-tight mb-6">
-            {article.title}
-          </h1>
-
-          <p className="text-body-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-8">
-            {article.subtitle}
-          </p>
-
-          {/* Author Card */}
-          <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 shadow-xs">
-            {article.author.avatarUrl && (
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-white/20 shrink-0">
-                <Image
-                  src={article.author.avatarUrl}
-                  alt={article.author.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-            <div>
-              <div className="text-sm font-bold text-slate-900 dark:text-white">{article.author.name}</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">{article.author.role}</div>
-            </div>
-          </div>
-        </SectionContainer>
-      </section>
-
-      {/* Hero Cover Image */}
-      <section className="py-8 bg-[#DBDBDB] dark:bg-[#060910]">
-        <SectionContainer width="narrow" paddingY="none">
-          <div className="relative h-[320px] sm:h-[450px] w-full rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-lg">
-            <Image
-              src={article.coverImage}
-              alt={article.title}
-              fill
-              priority
-              className="object-cover"
-            />
-          </div>
-        </SectionContainer>
-      </section>
-
-      {/* Key Takeaways Box */}
-      <SectionContainer width="narrow" paddingY="sm">
-        <div className="p-6 sm:p-8 rounded-2xl bg-rose-50/50 dark:bg-[#0F1626] border border-rose-200 dark:border-sky-500/25 shadow-xs space-y-4">
-          <div className="text-xs font-mono uppercase tracking-widest text-rose-600 dark:text-sky-400 font-bold">
-            KEY EXECUTIVE TAKEAWAYS
-          </div>
-          <div className="space-y-2.5">
-            {article.keyTakeaways.map((takeaway) => (
-              <div key={takeaway} className="flex items-start gap-3 text-sm text-slate-800 dark:text-slate-200">
-                <CheckCircle2 className="w-5 h-5 text-rose-600 dark:text-sky-400 shrink-0 mt-0.5" />
-                <span>{takeaway}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </SectionContainer>
-
-      {/* Article Content Paragraphs */}
-      <SectionContainer width="narrow" paddingY="sm">
-        <div className="prose prose-slate dark:prose-invert max-w-none space-y-6 text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
-          {article.content.map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
-        </div>
-
-        {/* Tags */}
-        <div className="pt-10 mt-10 border-t border-slate-200 dark:border-white/10 flex flex-wrap gap-2">
-          {article.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-300"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      </SectionContainer>
-
-      {/* Related Reading */}
-      {related.length > 0 && (
-        <section className="py-16 bg-[#DBDBDB] dark:bg-[#060A12] border-t border-neutral-300 dark:border-white/8 mt-12">
-          <SectionContainer width="default" paddingY="none">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Related Perspectives</h3>
-              <Link href="/insights" className="text-xs font-bold text-rose-600 dark:text-sky-400 hover:text-rose-700 dark:hover:text-sky-300 flex items-center gap-1">
-                <span>View All Articles</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {related.map((item) => (
-                <div key={item.id} className="p-6 rounded-2xl bg-white dark:bg-[#0F1626] border border-slate-200 dark:border-white/8 shadow-xs">
-                  <span className="text-xs font-mono text-slate-500 dark:text-slate-400 block mb-2">{item.category} • {item.readTime}</span>
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                    <Link href={`/insights/${item.slug}`} className="hover:text-rose-600 dark:hover:text-sky-300 transition-colors">
-                      {item.title}
-                    </Link>
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mb-4">{item.excerpt}</p>
-                  <Link href={`/insights/${item.slug}`} className="text-xs font-bold text-rose-600 dark:text-sky-400 flex items-center gap-1">
-                    <span>Read article</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </SectionContainer>
-        </section>
-      )}
-
-      <FinalCtaSection />
+      {/* Shared Blog Detail View */}
+      <MightyBlogDetail article={article} />
     </div>
   );
 }
