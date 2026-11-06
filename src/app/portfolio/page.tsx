@@ -22,12 +22,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 async function getPortfolioPageData() {
   try {
-    const [section, dbProjects] = await Promise.all([
+    const [headerSection, categorySection, dbProjects] = await Promise.all([
       prisma.siteSection.findUnique({
         where: {
           pageSlug_sectionKey: {
             pageSlug: 'work',
             sectionKey: 'header',
+          },
+        },
+      }),
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'work',
+            sectionKey: 'categories',
           },
         },
       }),
@@ -37,33 +45,34 @@ async function getPortfolioPageData() {
       }),
     ]);
 
-    const content = (section?.content as any) || {};
+    const headerContent = (headerSection?.content as any) || {};
 
     const settings: WorkPageSettings = {
-      badge: section?.badge || 'PORTFOLIO',
-      title: section?.title || 'Selected',
-      highlightedTitle: content.highlightedTitle || 'client projects',
-      description: section?.subtitle || content.description || defaultWorkPageSettings.description,
+      badge: headerSection?.badge || defaultWorkPageSettings.badge,
+      title: headerSection?.title || defaultWorkPageSettings.title,
+      highlightedTitle: headerContent.highlightedTitle || defaultWorkPageSettings.highlightedTitle,
+      description: headerSection?.subtitle || headerContent.description || defaultWorkPageSettings.description,
     };
+
+    const categoryContent = (categorySection?.content as any) || {};
+    const officialCategories: string[] = Array.isArray(categoryContent.categories)
+      ? categoryContent.categories
+      : [];
 
     const projects = dbProjects as any;
 
-    return { settings, projects };
+    return { settings, officialCategories, projects };
   } catch (err) {
     return {
-      settings: {
-        badge: 'PORTFOLIO',
-        title: 'Selected',
-        highlightedTitle: 'client projects',
-        description: defaultWorkPageSettings.description,
-      },
+      settings: defaultWorkPageSettings,
+      officialCategories: [],
       projects: [],
     };
   }
 }
 
 export default async function PortfolioPage() {
-  const { settings, projects } = await getPortfolioPageData();
+  const { settings, officialCategories, projects } = await getPortfolioPageData();
 
   return (
     <div className="flex flex-col min-h-screen bg-[#DBDBDB] dark:bg-[#060A12] transition-colors duration-200">
@@ -72,9 +81,11 @@ export default async function PortfolioPage() {
         <SectionContainer width="default" paddingY="none">
           <PortfolioClientView
             initialProjects={projects}
-            badge={settings.badge || 'PORTFOLIO'}
-            title={settings.title || 'Selected'}
-            highlightedTitle={settings.highlightedTitle || 'client projects'}
+            badge={settings.badge}
+            title={settings.title}
+            highlightedTitle={settings.highlightedTitle}
+            description={settings.description}
+            categories={officialCategories}
           />
         </SectionContainer>
       </main>

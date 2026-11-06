@@ -4,51 +4,57 @@ import React, { useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { Project } from '@/types/project';
 import { ProjectCard } from '@/components/work/ProjectCard';
+import { RichTextContent } from '@/components/ui/RichTextContent';
+import { defaultWorkPageSettings } from '@/types/workPage';
 
 interface PortfolioClientViewProps {
   initialProjects: Project[];
   title?: string;
   highlightedTitle?: string;
   badge?: string;
+  description?: string;
+  categories?: string[];
   hideHeader?: boolean;
 }
 
 export function PortfolioClientView({
   initialProjects,
-  title = 'Selected',
-  highlightedTitle = 'client projects',
-  badge = 'PORTFOLIO',
+  title = defaultWorkPageSettings.title,
+  highlightedTitle = defaultWorkPageSettings.highlightedTitle,
+  badge = defaultWorkPageSettings.badge,
+  description = defaultWorkPageSettings.description,
+  categories: customCategories,
   hideHeader = false,
 }: PortfolioClientViewProps) {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [visibleCount, setVisibleCount] = useState<number>(12);
 
-  // Extract unique categories from projects and sort cleanly
+  // Extract unique categories from projects or prioritize official categories
   const categories = useMemo(() => {
     const rawCategories = Array.from(
-      new Set(initialProjects.map((p) => p.category?.trim()).filter(Boolean))
+      new Set([
+        ...(customCategories || []),
+        ...initialProjects.map((p) => p.category?.trim()).filter(Boolean),
+      ])
     );
 
     const categoryList = [{ id: 'all', label: 'All' }];
 
     rawCategories.forEach((cat) => {
-      const label = cat.toLowerCase() === 'web design' ? 'Websites' : cat;
-      categoryList.push({ id: cat.toLowerCase(), label });
+      if (cat) {
+        categoryList.push({ id: cat.toLowerCase(), label: cat });
+      }
     });
 
     return categoryList;
-  }, [initialProjects]);
+  }, [initialProjects, customCategories]);
 
   // Filter projects by category and search
   const filteredProjects = useMemo(() => {
     return initialProjects.filter((project) => {
-      const projCat = (project.category || '').toLowerCase();
-      
-      const matchesCategory =
-        activeCategory === 'all' ||
-        projCat === activeCategory ||
-        (activeCategory === 'websites' && (projCat.includes('web') || projCat.includes('site')));
+      const projCat = (project.category || '').toLowerCase().trim();
+      const matchesCategory = activeCategory === 'all' || projCat === activeCategory;
 
       const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
@@ -65,20 +71,29 @@ export function PortfolioClientView({
 
   return (
     <div className="w-full">
-      {/* Editorial Header Section strictly matching Reference Screenshot */}
+      {/* Editorial Header Section strictly dynamic from Admin */}
       {!hideHeader && (
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-14">
-          {/* Left: Eyebrow + Elegant Heading */}
-          <div>
-            <span className="block text-xs font-bold font-mono tracking-[0.2em] text-[#8B1E2D] dark:text-rose-400 uppercase mb-2">
-              {badge}
-            </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
-              {title}{' '}
-              <span className="font-serif italic font-normal text-[#8B1E2D] dark:text-rose-400">
-                {highlightedTitle}
+          {/* Left: Eyebrow + Modern Heading + Description */}
+          <div className="max-w-2xl">
+            {badge && (
+              <span className="block text-xs font-bold font-mono tracking-[0.2em] text-[#8B1E2D] dark:text-rose-400 uppercase mb-2">
+                <RichTextContent content={badge} inline />
               </span>
+            )}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
+              <RichTextContent content={title} inline />{' '}
+              {highlightedTitle && (
+                <span className="font-extrabold bg-gradient-to-r from-[#C52233] via-rose-600 to-[#8B1E2D] dark:from-rose-400 dark:via-rose-300 dark:to-white bg-clip-text text-transparent">
+                  <RichTextContent content={highlightedTitle} inline />
+                </span>
+              )}
             </h1>
+            {description && (
+              <p className="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                <RichTextContent content={description} inline />
+              </p>
+            )}
           </div>
 
           {/* Right: Filter Pills Row + Compact Search */}
