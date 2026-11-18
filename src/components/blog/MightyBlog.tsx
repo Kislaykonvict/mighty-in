@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
+import { RichTextContent } from '@/components/ui/RichTextContent';
 import '@/styles/blog.css';
 
 export interface BlogPostItem {
@@ -24,6 +25,7 @@ interface MightyBlogProps {
   allCategories?: string[];
   title?: string;
   titleAccent?: string;
+  description?: string;
   latestCount?: number;
 }
 
@@ -44,6 +46,7 @@ export default function MightyBlog({
   allCategories,
   title = 'The Mighty',
   titleAccent = 'Blog',
+  description = 'A practical look at how SEO, performance ads, engineering, and brand strategy work together to drive compounding growth.',
   latestCount = 3,
 }: MightyBlogProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -172,10 +175,22 @@ export default function MightyBlog({
           </label>
         </div>
 
-        {/* ── Page title ── */}
-        <h2 id="mwb-title" className="mwb-title">
-          {title} <i>{titleAccent}</i>
-        </h2>
+        {/* ── Page title + description ── */}
+        <div className="mwb-header">
+          <h2 id="mwb-title" className="mwb-title">
+            <RichTextContent content={title} inline />{' '}
+            {titleAccent && (
+              <i>
+                <RichTextContent content={titleAccent} inline />
+              </i>
+            )}
+          </h2>
+          {description && (
+            <div className="mwb-desc">
+              <RichTextContent content={description} inline />
+            </div>
+          )}
+        </div>
 
         {!featured ? (
           <p className="mwb-empty">No articles found. Try another category or search query.</p>

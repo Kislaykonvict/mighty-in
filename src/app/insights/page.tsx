@@ -5,6 +5,7 @@ import { insightsData } from '@/data/insights';
 import { getPageSEO, formatPageMetadata } from '@/lib/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import MightyBlog, { BlogPostItem } from '@/components/blog/MightyBlog';
+import { defaultInsightPageSettings } from '@/types/insight';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -67,20 +68,43 @@ export default async function InsightsPage() {
 
   // Extract categories (prioritize official taxonomy from siteSection)
   let categories: string[] = [];
+  let headerTitle = defaultInsightPageSettings.title;
+  let headerTitleAccent = defaultInsightPageSettings.titleAccent;
+  let headerDescription = defaultInsightPageSettings.description;
+
   try {
-    const catSection = await prisma.siteSection.findUnique({
-      where: {
-        pageSlug_sectionKey: {
-          pageSlug: 'insights',
-          sectionKey: 'categories',
+    const [catSection, headerSection] = await Promise.all([
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'insights',
+            sectionKey: 'categories',
+          },
         },
-      },
-    });
+      }),
+      prisma.siteSection.findUnique({
+        where: {
+          pageSlug_sectionKey: {
+            pageSlug: 'insights',
+            sectionKey: 'header',
+          },
+        },
+      }),
+    ]);
+
     if (catSection && Array.isArray((catSection.content as any)?.categories)) {
       categories = (catSection.content as any).categories;
     }
+
+    if (headerSection) {
+      if (headerSection.title) headerTitle = headerSection.title;
+      if (headerSection.subtitle) headerDescription = headerSection.subtitle;
+      const content = (headerSection.content as any) || {};
+      if (content.titleAccent !== undefined) headerTitleAccent = content.titleAccent;
+      if (content.description) headerDescription = content.description;
+    }
   } catch (err) {
-    console.error('Error fetching insight categories:', err);
+    console.error('Error fetching insight sections:', err);
   }
 
   if (categories.length === 0) {
@@ -93,8 +117,9 @@ export default async function InsightsPage() {
       <MightyBlog
         initialPosts={posts}
         allCategories={categories}
-        title="The Mighty"
-        titleAccent="Blog"
+        title={headerTitle}
+        titleAccent={headerTitleAccent}
+        description={headerDescription}
       />
     </div>
   );

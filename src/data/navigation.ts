@@ -63,6 +63,10 @@ export const navItems: NavItem[] = [
     href: '/about',
   },
   {
+    name: 'Team',
+    href: '/team',
+  },
+  {
     name: 'Insights',
     href: '/insights',
   },
@@ -76,6 +80,7 @@ export const footerLinks = {
   ],
   company: [
     { name: 'About Mighty Warner', href: '/about' },
+    { name: 'Leadership & Team', href: '/team' },
     { name: 'Global Office Hubs', href: '/#global-offices' },
     { name: 'The Mighty Warner Method', href: '/approach' },
     { name: 'Selected Work & Case Studies', href: '/work' },

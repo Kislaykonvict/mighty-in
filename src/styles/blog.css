@@ -104,7 +104,7 @@ html:not(.dark) .mwb:not(.dark),
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 36px;
+  margin-bottom: 22px;
 }
 
 .mwb-pills {
@@ -162,12 +162,16 @@ html:not(.dark) .mwb:not(.dark),
 }
 
 /* ════════════════════════════════════════════
-   SECTION TITLE  "The Mighty Blog"
+   SECTION TITLE & DESCRIPTION "The Mighty Blog"
 ════════════════════════════════════════════ */
+.mwb-header {
+  margin-bottom: 34px;
+}
+
 .mwb-title {
-  margin: 0 0 36px;
+  margin: 0 0 10px;
   font-size: 44px;
-  line-height: 54px;
+  line-height: 52px;
   font-weight: 300;
   letter-spacing: -1.2px;
   color: var(--text);
@@ -176,6 +180,15 @@ html:not(.dark) .mwb:not(.dark),
   color: var(--accent);
   font-weight: 500;
   font-style: italic;
+}
+
+.mwb-desc {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--soft);
+  max-width: 680px;
+  font-weight: 400;
 }
 
 /* ════════════════════════════════════════════
@@ -445,6 +458,7 @@ html:not(.dark) .mwb:not(.dark),
 @media (max-width: 680px) {
   .mwb-wrap { padding: 32px 20px 48px; }
   .mwb-title { font-size: 32px; line-height: 40px; }
+  .mwb-desc { font-size: 14.5px; line-height: 1.5; }
   .mwb-lead-title { font-size: 24px; line-height: 32px; }
   .mwb-search { width: 100%; }
 }

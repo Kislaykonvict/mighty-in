@@ -65,6 +65,23 @@ export const DEFAULT_PAGE_SEO_DATA: PageSeo[] = [
     customHeadScripts: '',
   },
   {
+    pageRoute: '/team',
+    pageName: 'Leadership & Team',
+    metaTitle: 'Leadership & Multidisciplinary Team | Mighty Warner',
+    metaDescription:
+      'Meet the multidisciplinary leaders, engineers, data scientists, and strategists behind Mighty Warner.',
+    metaKeywords: [
+      'Leadership Team',
+      'Mighty Warner Team',
+      'Engineering Leaders',
+      'Brand Strategists',
+      'Executive Profiles',
+    ],
+    metaImage: '/images/og/mighty-warner-og.jpg',
+    canonicalUrl: `${siteConfig.url}/team`,
+    customHeadScripts: '',
+  },
+  {
     pageRoute: '/work',
     pageName: 'Selected Work & Portfolio',
     metaTitle: 'Selected Work & Case Studies | Mighty Warner Portfolio',
@@ -289,59 +306,57 @@ export async function getPageSEO(route: string): Promise<PageSeo> {
     };
 
   try {
-    const existing = await prisma.pageSeo.findUnique({
+    const record = await prisma.pageSeo.upsert({
       where: { pageRoute: normalized },
+      update: {},
+      create: {
+        pageRoute: fallback.pageRoute,
+        pageName: fallback.pageName,
+        metaTitle: fallback.metaTitle,
+        metaDescription: fallback.metaDescription,
+        metaKeywords: fallback.metaKeywords,
+        metaImage: fallback.metaImage,
+        canonicalUrl: fallback.canonicalUrl,
+        customHeadScripts: fallback.customHeadScripts,
+      },
     });
 
-    if (existing) {
-      return {
-        id: existing.id,
-        pageRoute: existing.pageRoute,
-        pageName: existing.pageName,
-        metaTitle: existing.metaTitle,
-        metaDescription: existing.metaDescription,
-        metaKeywords: Array.isArray(existing.metaKeywords) ? existing.metaKeywords : [],
-        metaImage: existing.metaImage || '/og.jpg',
-        canonicalUrl: existing.canonicalUrl,
-        customHeadScripts: existing.customHeadScripts || '',
-        createdAt: existing.createdAt,
-        updatedAt: existing.updatedAt,
-      };
-    }
-
-    // Auto-seed this route into PostgreSQL
+    return {
+      id: record.id,
+      pageRoute: record.pageRoute,
+      pageName: record.pageName,
+      metaTitle: record.metaTitle,
+      metaDescription: record.metaDescription,
+      metaKeywords: Array.isArray(record.metaKeywords) ? record.metaKeywords : [],
+      metaImage: record.metaImage || '/og.jpg',
+      canonicalUrl: record.canonicalUrl,
+      customHeadScripts: record.customHeadScripts || '',
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    };
+  } catch (error: any) {
     try {
-      const created = await prisma.pageSeo.create({
-        data: {
-          pageRoute: fallback.pageRoute,
-          pageName: fallback.pageName,
-          metaTitle: fallback.metaTitle,
-          metaDescription: fallback.metaDescription,
-          metaKeywords: fallback.metaKeywords,
-          metaImage: fallback.metaImage,
-          canonicalUrl: fallback.canonicalUrl,
-          customHeadScripts: fallback.customHeadScripts,
-        },
+      const existing = await prisma.pageSeo.findUnique({
+        where: { pageRoute: normalized },
       });
-
-      return {
-        id: created.id,
-        pageRoute: created.pageRoute,
-        pageName: created.pageName,
-        metaTitle: created.metaTitle,
-        metaDescription: created.metaDescription,
-        metaKeywords: Array.isArray(created.metaKeywords) ? created.metaKeywords : [],
-        metaImage: created.metaImage || '/og.jpg',
-        canonicalUrl: created.canonicalUrl,
-        customHeadScripts: created.customHeadScripts || '',
-        createdAt: created.createdAt,
-        updatedAt: created.updatedAt,
-      };
-    } catch (insertError) {
-      console.warn(`[getPageSEO] Could not auto-seed ${normalized}:`, insertError);
-      return fallback;
+      if (existing) {
+        return {
+          id: existing.id,
+          pageRoute: existing.pageRoute,
+          pageName: existing.pageName,
+          metaTitle: existing.metaTitle,
+          metaDescription: existing.metaDescription,
+          metaKeywords: Array.isArray(existing.metaKeywords) ? existing.metaKeywords : [],
+          metaImage: existing.metaImage || '/og.jpg',
+          canonicalUrl: existing.canonicalUrl,
+          customHeadScripts: existing.customHeadScripts || '',
+          createdAt: existing.createdAt,
+          updatedAt: existing.updatedAt,
+        };
+      }
+    } catch {
+      // Ignore
     }
-  } catch (error) {
     console.warn(`[getPageSEO] Database query failed for ${normalized}, using fallback:`, error);
     return fallback;
   }

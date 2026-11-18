@@ -26,10 +26,13 @@ import {
   Image as ImageIcon,
   Loader2,
   User,
+  Sliders,
 } from 'lucide-react';
 import { useAdminTheme } from '@/components/admin/AdminThemeContext';
 import { TipTapEditor } from '@/components/admin/TipTapEditor';
+import { MinimalRichTextEditor } from '@/components/admin/MinimalRichTextEditor';
 import { convertContentToHtml } from '@/lib/utils/blogContent';
+import { defaultInsightPageSettings, InsightPageSettings } from '@/types/insight';
 
 interface ArticleItem {
   id: string;
@@ -110,6 +113,10 @@ export default function AdminInsightsPage() {
   const [hasMoreThanTwoRows, setHasMoreThanTwoRows] = useState(false);
   const [twoRowsHeight, setTwoRowsHeight] = useState<number | null>(null);
   const categoryInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Editorial Banner State
+  const [headerSettings, setHeaderSettings] = useState<InsightPageSettings>(defaultInsightPageSettings);
+  const [isSavingHeader, setIsSavingHeader] = useState(false);
   const categoriesContainerRef = React.useRef<HTMLDivElement>(null);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
@@ -149,9 +156,49 @@ export default function AdminInsightsPage() {
     }
   };
 
+  const fetchHeaderSettings = async () => {
+    try {
+      const res = await fetch('/api/admin/insights/settings');
+      const data = await res.json();
+      if (data.success && data.data) {
+        setHeaderSettings({
+          title: data.data.title || defaultInsightPageSettings.title,
+          titleAccent:
+            data.data.titleAccent !== undefined ? data.data.titleAccent : defaultInsightPageSettings.titleAccent,
+          description: data.data.description || defaultInsightPageSettings.description,
+        });
+      }
+    } catch {
+      // Ignore
+    }
+  };
+
+  const handleSaveHeader = async () => {
+    setIsSavingHeader(true);
+    try {
+      const res = await fetch('/api/admin/insights/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(headerSettings),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setHeaderSettings(data.data);
+        showToast('Insights header banner published successfully!');
+      } else {
+        showToast(data.error || 'Failed to update header settings', 'error');
+      }
+    } catch {
+      showToast('Network error while saving header settings', 'error');
+    } finally {
+      setIsSavingHeader(false);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
     fetchCategories();
+    fetchHeaderSettings();
   }, []);
 
   // Measure if categories wrap to more than 2 rows
@@ -514,6 +561,74 @@ export default function AdminInsightsPage() {
             <Plus className="w-4 h-4" />
             <span>Add Article</span>
           </button>
+        </div>
+      </div>
+
+      {/* Insights & Blog Page Editorial Banner */}
+      <div
+        className={`p-6 rounded-2xl border space-y-4 ${
+          isDark ? 'bg-[#0B101D] border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-rose-500" />
+              <span>Insights &amp; Blog Page Editorial Banner</span>
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Controls the main title, doodled accent, and description on /insights.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSaveHeader}
+            disabled={isSavingHeader}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer"
+          >
+            {isSavingHeader ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            <span>Update Banner</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Headline Title
+            </label>
+            <MinimalRichTextEditor
+              value={headerSettings.title}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, title: val })}
+              placeholder="The Mighty"
+              variant="inline"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Title Accent (Italic / Doodle)
+            </label>
+            <MinimalRichTextEditor
+              value={headerSettings.titleAccent}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, titleAccent: val })}
+              placeholder="Blog"
+              variant="inline"
+            />
+          </div>
+
+          <div className="space-y-1.5 md:col-span-2">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Description Paragraph
+            </label>
+            <MinimalRichTextEditor
+              value={headerSettings.description}
+              onChange={(val) => setHeaderSettings({ ...headerSettings, description: val })}
+              placeholder="A practical look at how SEO, performance ads, engineering, and brand strategy work together to drive compounding growth."
+              variant="multiline"
+              minHeight="68px"
+            />
+          </div>
         </div>
       </div>
 

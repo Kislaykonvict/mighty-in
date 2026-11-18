@@ -31,6 +31,7 @@ import {
   Mail,
   ClipboardCheck,
   Search,
+  Users,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -101,6 +102,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         name: 'About Page',
         href: '/admin/about',
         icon: Sparkles,
+      },
+      {
+        name: 'Team',
+        href: '/admin/team',
+        icon: Users,
       },
       {
         name: 'Case Studies / Work',

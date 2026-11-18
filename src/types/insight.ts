@@ -25,3 +25,17 @@ export interface Insight {
   tags: string[];
   featured?: boolean;
 }
+
+export interface InsightPageSettings {
+  title: string;
+  titleAccent: string;
+  description: string;
+}
+
+export const defaultInsightPageSettings: InsightPageSettings = {
+  title: 'The Mighty',
+  titleAccent: 'Blog',
+  description:
+    'A practical look at how SEO, performance ads, engineering, and brand strategy work together to drive compounding growth.',
+};
+
