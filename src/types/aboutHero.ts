@@ -12,8 +12,8 @@ export interface AboutHeroData {
 export const defaultAboutHeroData: AboutHeroData = {
   headline: 'We combine strategy, technology, and talent to solve the most complex business challenges.',
   subheadline: '',
-  ctaText: 'Explore Our Method',
-  ctaLink: '/approach',
+  ctaText: 'Explore Our Work',
+  ctaLink: '/work',
   backgroundImage: '/images/about/hero-versett.jpg',
   imageAlt: 'Mighty Warner Strategic Technology & Digital Solutions',
   scrollTarget: '#trajectory',

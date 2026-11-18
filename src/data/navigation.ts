@@ -55,10 +55,6 @@ export const navItems: NavItem[] = [
     href: '/growth-lab',
   },
   {
-    name: 'Approach',
-    href: '/approach',
-  },
-  {
     name: 'About',
     href: '/about',
   },
@@ -82,7 +78,6 @@ export const footerLinks = {
     { name: 'About Mighty Warner', href: '/about' },
     { name: 'Leadership & Team', href: '/team' },
     { name: 'Global Office Hubs', href: '/#global-offices' },
-    { name: 'The Mighty Warner Method', href: '/approach' },
     { name: 'Selected Work & Case Studies', href: '/work' },
     { name: 'Insights & Thought Leadership', href: '/insights' },
     { name: 'Growth Assessment', href: '/assessment' },

@@ -577,7 +577,7 @@ async function main() {
               slug: 'strata-financial-brand-transformation',
               metric: '$140M+ Pipeline Value Generated',
             },
-            recommendedServiceHref: '/approach',
+            recommendedServiceHref: '/growth-lab',
           },
           {
             id: 'cmo',
@@ -703,7 +703,7 @@ async function main() {
               'Embedded Engineering & Growth Delivery Pods',
             ],
             ctaText: 'Explore The Connected Ecosystem →',
-            ctaHref: '/approach',
+            ctaHref: '/growth-lab',
           },
         ],
       },
@@ -934,17 +934,6 @@ async function main() {
       metaKeywords: ['Case Studies', 'Client Portfolio', 'Digital Transformation', 'Software Case Studies'],
       metaImage: '/images/og/mighty-warner-og.jpg',
       canonicalUrl: 'https://mightywarner.com/work',
-      customHeadScripts: '',
-    },
-    {
-      pageRoute: '/approach',
-      pageName: 'Our Approach & Methodology',
-      metaTitle: 'Our Methodology & Approach | The Mighty Warner Method',
-      metaDescription:
-        'Explore our battle-tested 5-stage framework (Discover, Define, Build, Activate, Optimize) designed to de-risk investments and compound commercial velocity.',
-      metaKeywords: ['Mighty Warner Method', 'Growth Framework', 'Product Strategy', 'Software Architecture'],
-      metaImage: '/images/og/mighty-warner-og.jpg',
-      canonicalUrl: 'https://mightywarner.com/approach',
       customHeadScripts: '',
     },
     {

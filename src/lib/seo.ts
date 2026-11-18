@@ -100,23 +100,6 @@ export const DEFAULT_PAGE_SEO_DATA: PageSeo[] = [
     customHeadScripts: '',
   },
   {
-    pageRoute: '/approach',
-    pageName: 'Our Approach & Methodology',
-    metaTitle: 'Our Methodology & Approach | The Mighty Warner Method',
-    metaDescription:
-      'Explore our battle-tested 5-stage framework (Discover, Define, Build, Activate, Optimize) designed to de-risk investments and compound commercial velocity.',
-    metaKeywords: [
-      'Mighty Warner Method',
-      'Growth Framework',
-      'Product Strategy',
-      'Software Architecture',
-      'Agile Delivery',
-    ],
-    metaImage: '/images/og/mighty-warner-og.jpg',
-    canonicalUrl: `${siteConfig.url}/approach`,
-    customHeadScripts: '',
-  },
-  {
     pageRoute: '/businesses/digital-growth',
     pageName: 'Digital & Growth Vertical',
     metaTitle: 'Digital & Growth | High-Performance Brand & SEO Engine | Mighty Warner',

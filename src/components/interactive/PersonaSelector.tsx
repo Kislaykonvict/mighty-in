@@ -38,7 +38,7 @@ const personas: Persona[] = [
       slug: 'strata-financial-brand-transformation',
       metric: '$140M+ Pipeline Value Generated',
     },
-    recommendedServiceHref: '/approach',
+    recommendedServiceHref: '/growth-lab',
   },
   {
     id: 'cmo',

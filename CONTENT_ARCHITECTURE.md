@@ -25,7 +25,6 @@ Treat the existing repository route list below as the **new-app implementation i
 | `/work/[slug]` | Breadcrumb/hero; hero image; metrics; challenge/objectives; strategy/solution/technologies; optional gallery; optional testimonial; related work; final CTA |
 | `/insights` | Header; article cards; final CTA |
 | `/insights/[slug]` | Breadcrumb/header/author; cover; takeaways; rich article body; tags; related articles; final CTA |
-| `/approach` | Header; interactive method; detailed five-stage breakdown; values; final CTA |
 | `/about` | Header; company stats; timeline; people; office globe; values; final CTA |
 | `/contact` | Header; contact wizard; contact-channel/sidebar content; office globe |
 | `/assessment` | Assessment header/trust signals; assessment wizard/result |

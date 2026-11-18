@@ -67,7 +67,7 @@ export function AboutHeroVersett({ initialData }: AboutHeroVersettProps) {
             {data.ctaText && (
               <div>
                 <Link
-                  href={data.ctaLink || '/approach'}
+                  href={data.ctaLink || '/work'}
                   className="inline-flex items-center text-sm sm:text-base text-slate-200 hover:text-white pb-1.5 border-b border-white/50 hover:border-white transition-all tracking-wide font-medium cursor-pointer"
                 >
                   {data.ctaText}

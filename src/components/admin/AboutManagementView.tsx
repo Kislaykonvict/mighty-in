@@ -530,7 +530,7 @@ export function AboutManagementView() {
                           ? 'bg-slate-950 border-slate-800 text-white placeholder:text-slate-600'
                           : 'bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400'
                       }`}
-                      placeholder="/approach"
+                      placeholder="/work"
                     />
                   </div>
                 </div>
