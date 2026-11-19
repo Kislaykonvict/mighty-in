@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { StickyBottomCta } from './StickyBottomCta';
-import { GrowthTerminal } from '@/components/interactive/GrowthTerminal';
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -21,7 +20,6 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <main className="flex-grow">{children}</main>
       <Footer />
       <StickyBottomCta />
-      <GrowthTerminal />
     </>
   );
 }
