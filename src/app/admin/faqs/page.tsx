@@ -668,213 +668,227 @@ export default function AdminFaqsPage() {
 
       {/* Modal: Add / Edit FAQ */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/60 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
           <div
-            className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border p-6 sm:p-8 shadow-2xl ${
+            className={`relative w-full max-w-2xl my-auto rounded-3xl border flex flex-col max-h-[calc(100vh-3.5rem)] sm:max-h-[85vh] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.35),0_0_30px_rgba(0,0,0,0.1)] ring-1 ring-black/5 dark:ring-white/10 transition-all ${
               isDark
                 ? 'bg-[#0B101D] border-white/10 text-white'
                 : 'bg-white border-slate-200 text-slate-900'
             }`}
           >
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/8 mb-6">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+            {/* Modal Header */}
+            <div
+              className={`p-6 sm:px-8 border-b flex items-center justify-between shrink-0 transition-colors ${
+                isDark ? 'border-white/10 bg-[#0B101D]' : 'border-slate-100 bg-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
                   <HelpCircle className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     {editingFaq ? 'Edit FAQ Item' : 'Create New FAQ Item'}
                   </h2>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Assign this question to a specific page or make it global across the entire site.
                   </p>
                 </div>
               </div>
 
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                aria-label="Close dialog"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveFaq} className="space-y-5">
-              {/* Target Page Selector */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Target Page Destination <span className="text-rose-500">*</span>
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <select
-                    value={isCustomPage ? 'custom' : formPageSlug}
-                    onChange={(e) => {
-                      if (e.target.value === 'custom') {
-                        setIsCustomPage(true);
-                      } else {
-                        setIsCustomPage(false);
-                        setFormPageSlug(e.target.value);
-                      }
-                    }}
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-1 focus:ring-rose-500 ${
-                      isDark
-                        ? 'bg-[#0F1626] border-white/10 text-white'
-                        : 'bg-slate-50 border-slate-200 text-slate-900'
-                    }`}
-                  >
-                    <optgroup label="General">
-                      <option value="global">All Pages (Global)</option>
-                    </optgroup>
-                    <optgroup label="Core Pages">
-                      <option value="/">Homepage (/)</option>
-                      <option value="/about">About Us (/about)</option>
-                      <option value="/team">Team (/team)</option>
-                      <option value="/work">Work &amp; Portfolio (/work)</option>
-                      <option value="/contact">Contact (/contact)</option>
-                      <option value="/insights">Insights &amp; Blog (/insights)</option>
-                    </optgroup>
-                    <optgroup label="Business Verticals">
-                      <option value="/businesses/digital-growth">
-                        Digital &amp; Growth (/businesses/digital-growth)
-                      </option>
-                      <option value="/businesses/technology">
-                        Technology (/businesses/technology)
-                      </option>
-                      <option value="/businesses/talent-solutions">
-                        Talent Solutions (/businesses/talent-solutions)
-                      </option>
-                    </optgroup>
-                    <optgroup label="Other">
-                      <option value="custom">Custom Route URL...</option>
-                    </optgroup>
-                  </select>
-
-                  {isCustomPage && (
-                    <input
-                      type="text"
-                      required
-                      value={formCustomPageSlug}
-                      onChange={(e) => setFormCustomPageSlug(e.target.value)}
-                      placeholder="e.g. /privacy-policy"
-                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-mono focus:outline-none focus:ring-1 focus:ring-rose-500 ${
+            <form onSubmit={handleSaveFaq} className="flex flex-col flex-1 overflow-hidden min-h-0">
+              {/* Scrollable Form Body */}
+              <div className="p-6 sm:p-8 overflow-y-auto flex-1 space-y-5">
+                {/* Target Page Selector */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Target Page Destination <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <select
+                      value={isCustomPage ? 'custom' : formPageSlug}
+                      onChange={(e) => {
+                        if (e.target.value === 'custom') {
+                          setIsCustomPage(true);
+                        } else {
+                          setIsCustomPage(false);
+                          setFormPageSlug(e.target.value);
+                        }
+                      }}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-medium focus:outline-none focus:ring-1 focus:ring-rose-500 ${
                         isDark
-                          ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
-                          : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                          ? 'bg-[#0F1626] border-white/10 text-white'
+                          : 'bg-slate-50 border-slate-200 text-slate-900'
+                      }`}
+                    >
+                      <optgroup label="General">
+                        <option value="global">All Pages (Global)</option>
+                      </optgroup>
+                      <optgroup label="Core Pages">
+                        <option value="/">Homepage (/)</option>
+                        <option value="/about">About Us (/about)</option>
+                        <option value="/team">Team (/team)</option>
+                        <option value="/work">Work &amp; Portfolio (/work)</option>
+                        <option value="/contact">Contact (/contact)</option>
+                        <option value="/insights">Insights &amp; Blog (/insights)</option>
+                      </optgroup>
+                      <optgroup label="Business Verticals">
+                        <option value="/businesses/digital-growth">
+                          Digital &amp; Growth (/businesses/digital-growth)
+                        </option>
+                        <option value="/businesses/technology">
+                          Technology (/businesses/technology)
+                        </option>
+                        <option value="/businesses/talent-solutions">
+                          Talent Solutions (/businesses/talent-solutions)
+                        </option>
+                      </optgroup>
+                      <optgroup label="Other">
+                        <option value="custom">Custom Route URL...</option>
+                      </optgroup>
+                    </select>
+
+                    {isCustomPage && (
+                      <input
+                        type="text"
+                        required
+                        value={formCustomPageSlug}
+                        onChange={(e) => setFormCustomPageSlug(e.target.value)}
+                        placeholder="e.g. /privacy-policy"
+                        className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-mono focus:outline-none focus:ring-1 focus:ring-rose-500 ${
+                          isDark
+                            ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
+                            : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                        }`}
+                      />
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    This FAQ will render automatically on the selected page&apos;s FAQ accordion and inject into its Google SEO Schema.
+                  </p>
+                </div>
+
+                {/* Question */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Question <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formQuestion}
+                    onChange={(e) => setFormQuestion(e.target.value)}
+                    placeholder="e.g. How does your agile engineering sprint model work?"
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
+                      isDark
+                        ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
+                        : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                    }`}
+                  />
+                </div>
+
+                {/* Answer */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Answer <span className="text-rose-500">*</span>
+                  </label>
+                  <textarea
+                    rows={5}
+                    required
+                    value={formAnswer}
+                    onChange={(e) => setFormAnswer(e.target.value)}
+                    placeholder="Write a clear, authoritative answer. Newlines and paragraph breaks are preserved."
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm leading-relaxed focus:outline-none focus:ring-1 focus:ring-rose-500 resize-y ${
+                      isDark
+                        ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
+                        : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                    }`}
+                  />
+                </div>
+
+                {/* Category & Order Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Category Tag
+                    </label>
+                    <select
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value)}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
+                        isDark
+                          ? 'bg-[#0F1626] border-white/10 text-white'
+                          : 'bg-slate-50 border-slate-200 text-slate-900'
+                      }`}
+                    >
+                      {STANDARD_FAQ_CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Display Sequence Order
+                    </label>
+                    <input
+                      type="number"
+                      value={formOrder}
+                      onChange={(e) => setFormOrder(Number(e.target.value))}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
+                        isDark
+                          ? 'bg-[#0F1626] border-white/10 text-white'
+                          : 'bg-slate-50 border-slate-200 text-slate-900'
                       }`}
                     />
-                  )}
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  This FAQ will render automatically on the selected page&apos;s FAQ accordion and inject into its Google SEO Schema.
-                </p>
-              </div>
-
-              {/* Question */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Question <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formQuestion}
-                  onChange={(e) => setFormQuestion(e.target.value)}
-                  placeholder="e.g. How does your agile engineering sprint model work?"
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
-                    isDark
-                      ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
-                      : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
-                  }`}
-                />
-              </div>
-
-              {/* Answer */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Answer <span className="text-rose-500">*</span>
-                </label>
-                <textarea
-                  rows={5}
-                  required
-                  value={formAnswer}
-                  onChange={(e) => setFormAnswer(e.target.value)}
-                  placeholder="Write a clear, authoritative answer. Newlines and paragraph breaks are preserved."
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm leading-relaxed focus:outline-none focus:ring-1 focus:ring-rose-500 resize-y ${
-                    isDark
-                      ? 'bg-[#0F1626] border-white/10 text-white placeholder-slate-500'
-                      : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
-                  }`}
-                />
-              </div>
-
-              {/* Category & Order Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Category Tag
-                  </label>
-                  <select
-                    value={formCategory}
-                    onChange={(e) => setFormCategory(e.target.value)}
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
-                      isDark
-                        ? 'bg-[#0F1626] border-white/10 text-white'
-                        : 'bg-slate-50 border-slate-200 text-slate-900'
-                    }`}
-                  >
-                    {STANDARD_FAQ_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Display Sequence Order
-                  </label>
-                  <input
-                    type="number"
-                    value={formOrder}
-                    onChange={(e) => setFormOrder(Number(e.target.value))}
-                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-1 focus:ring-rose-500 ${
-                      isDark
-                        ? 'bg-[#0F1626] border-white/10 text-white'
-                        : 'bg-slate-50 border-slate-200 text-slate-900'
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {/* Active Toggle */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5">
-                <div>
-                  <div className="text-xs font-bold text-slate-900 dark:text-white">
-                    Publish Status
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Active questions are immediately visible to users and indexed by search engines.
                   </div>
                 </div>
 
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formIsActive}
-                    onChange={(e) => setFormIsActive(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600" />
-                </label>
+                {/* Active Toggle */}
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/5">
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 dark:text-white">
+                      Publish Status
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Active questions are immediately visible to users and indexed by search engines.
+                    </div>
+                  </div>
+
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formIsActive}
+                      onChange={(e) => setFormIsActive(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-emerald-600" />
+                  </label>
+                </div>
               </div>
 
-              {/* Buttons */}
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-200 dark:border-white/8">
+              {/* Modal Footer (Sticky at bottom) */}
+              <div
+                className={`px-6 py-4 sm:px-8 border-t flex items-center justify-end gap-3 shrink-0 transition-colors ${
+                  isDark ? 'border-white/10 bg-[#080D1A]' : 'border-slate-100 bg-slate-50/80'
+                }`}
+              >
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
