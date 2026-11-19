@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Layers, Mail, MapPin } from 'lucide-react';
+import { ArrowRight, Mail, MapPin } from 'lucide-react';
 import { footerLinks } from '@/data/navigation';
 import { siteConfig } from '@/config/site';
 import { FooterNewsletterForm } from '@/components/newsletter/FooterNewsletterForm';

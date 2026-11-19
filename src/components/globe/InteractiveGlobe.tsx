@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import createGlobe, { Arc, Marker } from 'cobe';
 import { MIGHTY_OFFICES, OfficeLocation } from '@/data/offices';
-import { Play, Pause, Compass, RotateCcw, MapPin, Sparkles, Navigation } from 'lucide-react';
+import { Play, Pause, Compass, RotateCcw } from 'lucide-react';
 
 interface InteractiveGlobeProps {
   selectedOffice: OfficeLocation | null;

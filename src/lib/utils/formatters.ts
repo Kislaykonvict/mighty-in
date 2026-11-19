@@ -13,10 +13,14 @@ export function formatDate(dateString: string): string {
 
 export function slugify(text: string): string {
   return text
+    .toString()
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
 }
 
 export function truncate(text: string, length: number = 160): string {

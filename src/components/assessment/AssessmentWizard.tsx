@@ -9,7 +9,6 @@ import {
 } from '@/types/assessmentSection';
 import { assessmentQuestions, calculateAssessmentResult } from '@/data/assessment';
 import { AssessmentAnswer, AssessmentResult } from '@/types/assessment';
-import { assessmentApi } from '@/lib/api/assessment';
 import { AssessmentResultCard } from './AssessmentResultCard';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';

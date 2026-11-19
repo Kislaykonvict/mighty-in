@@ -14,7 +14,7 @@ import {
   Sparkles,
   Layers,
 } from 'lucide-react';
-import { TrackRecordData, defaultTrackRecordData, TrackRecordCard } from '@/types/trackRecord';
+import { TrackRecordData, defaultTrackRecordData } from '@/types/trackRecord';
 import { RichTextContent } from '@/components/ui/RichTextContent';
 
 const ICON_MAP: Record<string, React.ElementType> = {

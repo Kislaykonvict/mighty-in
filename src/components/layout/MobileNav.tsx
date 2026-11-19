@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown, ArrowRight, Sparkles, Cpu, Users, Layers, Building } from 'lucide-react';
+import { X, ChevronDown, ArrowRight, Sparkles, Cpu, Users, Building } from 'lucide-react';
 import { navItems } from '@/data/navigation';
 import { Button } from '@/components/ui/Button';
 import { analytics } from '@/lib/analytics';

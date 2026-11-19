@@ -19,7 +19,6 @@ import {
   ArrowDown,
   Loader2,
   Sliders,
-  Sparkles,
 } from 'lucide-react';
 import { useAdminTheme } from '@/components/admin/AdminThemeContext';
 import { MinimalRichTextEditor } from '@/components/admin/MinimalRichTextEditor';

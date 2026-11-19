@@ -17,8 +17,6 @@ import {
   ArrowDown,
   Loader2,
   Globe,
-  Layers,
-  Sparkles,
   Eye,
   EyeOff,
   Filter,

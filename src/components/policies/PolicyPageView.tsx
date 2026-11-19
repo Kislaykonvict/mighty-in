@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowDown, ArrowRight, ShieldCheck, Clock, FileText, ChevronRight, Mail } from 'lucide-react';
+import { ArrowDown, ArrowRight, ShieldCheck, Clock, ChevronRight, Mail } from 'lucide-react';
 import { PolicyPageData } from '@/types/policyPage';
 import { RichTextContent } from '@/components/ui/RichTextContent';
 

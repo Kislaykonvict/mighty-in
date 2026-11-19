@@ -60,16 +60,10 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Configure the interactive diagnostic wizard, questions, scoring tiers, and ROI calculator benchmarks',
       };
     }
-    if (pathname?.startsWith('/admin/assessment') || pathname?.startsWith('/admin/assesment')) {
+    if (pathname?.startsWith('/admin/assessment')) {
       return {
         title: 'Assessment & Growth Diagnostic',
         subtitle: 'Manage diagnostic hero headlines, metadata pills, questions, options, scoring tiers, and conversion CTAs',
-      };
-    }
-    if (pathname?.startsWith('/admin/sections')) {
-      return {
-        title: 'Site Sections (Builder)',
-        subtitle: 'Build and customize modular homepage layout blocks and interactive components',
       };
     }
     if (pathname?.startsWith('/admin/homepage-projects')) {

@@ -6,20 +6,15 @@ import {
   Calculator,
   Sparkles,
   Sliders,
-  HelpCircle,
   Save,
-  RotateCcw,
   Plus,
   Trash2,
-  Edit2,
   CheckCircle2,
   AlertCircle,
   Eye,
   ExternalLink,
   ChevronDown,
   ChevronUp,
-  Layers,
-  ArrowRight,
   TrendingUp,
   Users,
   DollarSign,
@@ -29,10 +24,7 @@ import { useAdminTheme } from '@/components/admin/AdminThemeContext';
 import {
   HomeGrowthToolsSectionData,
   defaultHomeGrowthToolsSectionData,
-  RoiCalculatorData,
-  defaultRoiCalculatorData,
 } from '@/types/growthTools';
-import { AssessmentSectionData, defaultAssessmentSectionData } from '@/types/assessmentSection';
 import { AssessmentQuestion, AssessmentOption } from '@/types/assessment';
 import { HomeGrowthToolsClient } from '@/components/home/HomeGrowthToolsClient';
 

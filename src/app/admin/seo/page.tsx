@@ -14,7 +14,6 @@ import {
   CheckCircle,
   AlertCircle,
   AlertTriangle,
-  Eye,
   X,
   Upload,
   Sparkles,
