@@ -247,7 +247,6 @@ export async function PUT(req: NextRequest) {
     });
 
     // Revalidate public pages and cache
-    revalidatePath('/assessment');
     revalidatePath('/');
     revalidatePath('/admin/assessment');
 

@@ -216,7 +216,7 @@ export function ChallengeSelector() {
                   </Button>
 
                   <Button
-                    href="/assessment"
+                    href="/#growth-tools"
                     variant="outline"
                     size="md"
                   >

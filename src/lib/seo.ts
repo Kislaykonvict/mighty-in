@@ -185,22 +185,6 @@ export const DEFAULT_PAGE_SEO_DATA: PageSeo[] = [
     customHeadScripts: '',
   },
   {
-    pageRoute: '/assessment',
-    pageName: 'Growth Diagnostic Assessment',
-    metaTitle: 'Growth Diagnostic Assessment | Calculate Your Momentum Score | Mighty Warner',
-    metaDescription:
-      'Take our rapid diagnostic assessment to benchmark your brand positioning, software stack, and talent readiness.',
-    metaKeywords: [
-      'Growth Diagnostic',
-      'Momentum Score',
-      'Business Audit',
-      'Digital Assessment',
-    ],
-    metaImage: '/images/og/mighty-warner-og.jpg',
-    canonicalUrl: `${siteConfig.url}/assessment`,
-    customHeadScripts: '',
-  },
-  {
     pageRoute: '/faqs',
     pageName: 'Frequently Asked Questions',
     metaTitle: 'Frequently Asked Questions | Mighty Warner Knowledge Base',

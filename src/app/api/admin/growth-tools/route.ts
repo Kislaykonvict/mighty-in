@@ -173,7 +173,6 @@ export async function PUT(req: NextRequest) {
             content: diagnosticContent,
           },
         });
-        revalidatePath('/assessment');
       }
     } catch (e) {
       console.warn('Sync to assessment/main failed:', e);

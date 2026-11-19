@@ -76,7 +76,7 @@ export function GrowthTerminal() {
       icon: Layers,
       shortcut: 'EVAL',
       action: () => {
-        router.push('/assessment');
+        router.push('/#growth-tools');
         setIsOpen(false);
       },
     },

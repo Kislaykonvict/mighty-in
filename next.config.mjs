@@ -21,6 +21,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/assessment',
+        destination: '/#growth-tools',
+        permanent: true,
+      },
+      {
+        source: '/growth-lab',
+        destination: '/#growth-tools',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

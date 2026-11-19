@@ -19,7 +19,7 @@ export const defaultFinalCtaData: FinalCtaData = {
   primaryCtaText: 'Start a conversation',
   primaryCtaLink: '/contact',
   secondaryCtaText: 'Take the 3-minute assessment',
-  secondaryCtaLink: '/assessment',
+  secondaryCtaLink: '/#growth-tools',
   showSecondaryCta: true,
   guaranteeNote:
     'Average initial strategic consultation booked within 24 business hours • Non-disclosure agreement guaranteed',

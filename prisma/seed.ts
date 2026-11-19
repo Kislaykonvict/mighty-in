@@ -54,14 +54,14 @@ async function main() {
       stickyCta: {
         showMobile: true,
         cta1Text: 'Diagnostic',
-        cta1Link: '/assessment',
+        cta1Link: '/#growth-tools',
         cta2Text: 'Start Conversation',
         cta2Link: '/contact',
       },
       growthTerminal: {
         enabled: true,
         quickActions: [
-          { label: 'Growth Diagnostic (3-min)', href: '/assessment', category: 'tools' },
+          { label: 'Growth Diagnostic (3-min)', href: '/#growth-tools', category: 'tools' },
           { label: '90-Day Strategy Blueprint', href: '/#strategy-builder', category: 'tools' },
           { label: 'ROI Revenue Simulator', href: '/#roi-calculator', category: 'tools' },
           { label: 'Digital & Growth Solutions', href: '/businesses/digital-growth', category: 'businesses' },
@@ -90,14 +90,14 @@ async function main() {
       stickyCta: {
         showMobile: true,
         cta1Text: 'Diagnostic',
-        cta1Link: '/assessment',
+        cta1Link: '/#growth-tools',
         cta2Text: 'Start Conversation',
         cta2Link: '/contact',
       },
       growthTerminal: {
         enabled: true,
         quickActions: [
-          { label: 'Growth Diagnostic (3-min)', href: '/assessment', category: 'tools' },
+          { label: 'Growth Diagnostic (3-min)', href: '/#growth-tools', category: 'tools' },
           { label: '90-Day Strategy Blueprint', href: '/#strategy-builder', category: 'tools' },
           { label: 'ROI Revenue Simulator', href: '/#roi-calculator', category: 'tools' },
           { label: 'Digital & Growth Solutions', href: '/businesses/digital-growth', category: 'businesses' },
@@ -817,7 +817,7 @@ async function main() {
       subtitle: 'Take our quick 3-minute diagnostic across brand positioning, web performance, software scalability, and talent velocity to calculate your Business Momentum Score.',
       badge: 'SIGNATURE DIAGNOSTIC',
       ctaText: 'Start 3-Minute Diagnostic',
-      ctaLink: '/assessment',
+      ctaLink: '/#growth-tools',
       order: 13,
       content: {
         trustSignals: [
@@ -989,17 +989,6 @@ async function main() {
       metaKeywords: ['Contact Mighty Warner', 'Global Offices', 'RFP Submission'],
       metaImage: '/images/og/mighty-warner-og.jpg',
       canonicalUrl: 'https://mightywarner.com/contact',
-      customHeadScripts: '',
-    },
-    {
-      pageRoute: '/assessment',
-      pageName: 'Growth Diagnostic Assessment',
-      metaTitle: 'Growth Diagnostic Assessment | Calculate Your Momentum Score | Mighty Warner',
-      metaDescription:
-        'Take our rapid diagnostic assessment to benchmark your brand positioning, software stack, and talent readiness.',
-      metaKeywords: ['Growth Diagnostic', 'Momentum Score', 'Business Audit'],
-      metaImage: '/images/og/mighty-warner-og.jpg',
-      canonicalUrl: 'https://mightywarner.com/assessment',
       customHeadScripts: '',
     },
     {

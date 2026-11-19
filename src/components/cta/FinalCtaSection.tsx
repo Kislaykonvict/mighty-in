@@ -92,7 +92,7 @@ export function FinalCtaSection({ data }: FinalCtaSectionProps) {
 
           {cta.showSecondaryCta && cta.secondaryCtaText && (
             <Button
-              href={cta.secondaryCtaLink || '/assessment'}
+              href={cta.secondaryCtaLink || '/#growth-tools'}
               variant="outline"
               size="lg"
               leftIcon={<Sparkles className="w-4 h-4 text-rose-600 dark:text-sky-400" />}

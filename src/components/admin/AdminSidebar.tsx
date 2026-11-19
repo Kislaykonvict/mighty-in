@@ -140,11 +140,6 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
         icon: Mail,
       },
       {
-        name: 'Assessment',
-        href: '/admin/assessment',
-        icon: ClipboardCheck,
-      },
-      {
         name: 'Insights (Blog)',
         href: '/admin/insights',
         icon: FileText,

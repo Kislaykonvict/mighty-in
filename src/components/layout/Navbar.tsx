@@ -152,16 +152,6 @@ export function Navbar() {
 
           {/* Desktop Right Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/assessment"
-              className={`text-xs font-mono font-medium px-3 py-1.5 rounded-lg border transition-colors ${
-                isOpaque
-                  ? 'text-slate-800 hover:text-rose-600 dark:text-slate-200 dark:hover:text-sky-400 border-neutral-300 hover:border-slate-400 dark:border-white/10 dark:hover:border-sky-400/40 bg-white/60 dark:bg-transparent'
-                  : 'text-white/95 hover:text-white border-white/20 hover:border-white/40 bg-white/10 hover:bg-white/15'
-              }`}
-            >
-              Diagnostic 72/100
-            </Link>
 
             <ThemeToggle
               className={

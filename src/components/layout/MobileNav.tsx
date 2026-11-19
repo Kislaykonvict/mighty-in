@@ -160,19 +160,6 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   </Link>
                 </div>
               ))}
-
-            <div className="border-b border-slate-200 dark:border-white/10 pb-4">
-              <Link
-                href="/assessment"
-                onClick={onClose}
-                className="flex items-center justify-between text-base font-semibold text-rose-600 dark:text-sky-400 py-1"
-              >
-                <span>3-Minute Growth Assessment</span>
-                <span className="px-2 py-0.5 text-xs font-mono rounded bg-rose-50 text-rose-600 border border-rose-200 dark:bg-sky-400/10 dark:border-sky-400/30 dark:text-sky-300">
-                  Interactive
-                </span>
-              </Link>
-            </div>
           </div>
         </div>
 
