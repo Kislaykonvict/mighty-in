@@ -9,10 +9,7 @@ interface FaqAccordionClientProps {
 }
 
 export function FaqAccordionClient({ faqs }: FaqAccordionClientProps) {
-  const [openIds, setOpenIds] = useState<Record<string, boolean>>({
-    // Open first FAQ by default for immediate engagement
-    [faqs[0]?.id || '']: true,
-  });
+  const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
 
   const toggleItem = (id: string) => {
     setOpenIds((prev) => ({
