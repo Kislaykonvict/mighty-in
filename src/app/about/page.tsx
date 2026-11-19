@@ -6,7 +6,6 @@ import { prisma } from '@/lib/db/prisma';
 import { AboutHeroVersett } from '@/components/about/AboutHeroVersett';
 import { InnovativeTrajectorySection } from '@/components/about/InnovativeTrajectorySection';
 import { AboutStorySection } from '@/components/about/AboutStorySection';
-import { PeopleSection } from '@/components/people/PeopleSection';
 import { FaqSection } from '@/components/faq/FaqSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
@@ -140,10 +139,7 @@ export default async function AboutPage() {
       {/* 3. Story & Philosophy (Photo + Narrative Cards, Dynamic) */}
       <AboutStorySection initialData={storyData} />
 
-      {/* 4. Leadership & Culture */}
-      <PeopleSection />
-
-      {/* 4.5. Dynamic Page-Specific FAQs */}
+      {/* 4. Dynamic Page-Specific FAQs */}
       <FaqSection pageSlug="/about" />
 
       {/* 5. Final Call to Action */}
