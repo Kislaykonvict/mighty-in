@@ -21,7 +21,7 @@ export function BusinessPhilosophySection({ data }: BusinessPhilosophySectionPro
   return (
     <section
       id="philosophy"
-      className="py-20 sm:py-32 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden text-slate-900 dark:text-white"
+      className="py-20 sm:py-32 bg-[#DBDBDB] dark:bg-[#080C14] relative overflow-hidden text-slate-900 dark:text-white"
     >
       {/* Background atmospheric ambient gradients */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-rose-500/5 dark:bg-sky-500/5 blur-[140px] pointer-events-none rounded-full" />

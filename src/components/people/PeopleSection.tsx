@@ -15,7 +15,7 @@ export function PeopleSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-[#DBDBDB] dark:bg-[#080C14] relative border-t border-neutral-300 dark:border-white/8 transition-colors duration-200">
+    <section className="py-16 sm:py-24 bg-[#DBDBDB] dark:bg-[#080C14] relative transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

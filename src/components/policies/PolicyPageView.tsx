@@ -33,7 +33,7 @@ export function PolicyPageView({ page }: PolicyPageViewProps) {
       {/* ============================================================ */}
       {/* 1. HERO SECTION: Full-Screen Picture + Optional Bottom-Left Text */}
       {/* ============================================================ */}
-      <section className="relative w-full min-h-[75vh] sm:min-h-screen flex items-end overflow-hidden bg-slate-950 pb-14 sm:pb-20 pt-36 border-b border-slate-200 dark:border-white/10">
+      <section className="relative w-full min-h-[75vh] sm:min-h-screen flex items-end overflow-hidden bg-slate-950 pb-14 sm:pb-20 pt-36">
         {/* Full-bleed background image covering whole screen */}
         <div className="absolute inset-0 pointer-events-none">
           <Image

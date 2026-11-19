@@ -36,7 +36,7 @@ export function InnovativeTrajectorySection({ initialData }: InnovativeTrajector
   }, [handlePrev, handleNext]);
 
   return (
-    <section id="trajectory" className="py-14 sm:py-20 bg-[#DBDBDB] dark:bg-[#080C14] border-b border-neutral-300 dark:border-white/8 relative overflow-hidden text-slate-900 dark:text-white">
+    <section id="trajectory" className="py-14 sm:py-20 bg-[#DBDBDB] dark:bg-[#080C14] relative overflow-hidden text-slate-900 dark:text-white">
       {/* Subtle ambient light */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-rose-500/5 dark:bg-indigo-600/5 blur-[120px] pointer-events-none rounded-full" />
 

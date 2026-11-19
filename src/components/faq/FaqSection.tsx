@@ -75,7 +75,7 @@ export async function FaqSection({
 
   return (
     <section
-      className={`py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#080C14] border-t border-neutral-300 dark:border-white/8 relative overflow-hidden transition-colors duration-200 ${className}`}
+      className={`py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#080C14] relative overflow-hidden transition-colors duration-200 ${className}`}
     >
       {/* Google FAQPage JSON-LD Structured Data */}
       <script

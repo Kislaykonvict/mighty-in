@@ -22,7 +22,7 @@ export function HomeGrowthToolsSection({
   return (
     <section
       id="growth-tools"
-      className={`py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#060A12] border-t border-neutral-300 dark:border-white/8 relative overflow-hidden transition-colors duration-200 ${className}`}
+      className={`py-20 sm:py-28 bg-[#DBDBDB] dark:bg-[#060A12] relative overflow-hidden transition-colors duration-200 ${className}`}
     >
       {/* Background Ambient Glows */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[500px] rounded-full bg-gradient-to-r from-rose-500/5 via-orange-500/5 to-emerald-500/5 dark:from-rose-500/10 dark:via-orange-500/10 dark:to-emerald-500/10 blur-[130px] pointer-events-none" />

@@ -28,7 +28,7 @@ export function AboutHeroVersett({ initialData }: AboutHeroVersettProps) {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex items-end overflow-hidden bg-[#080C14] border-b border-white/8">
+    <section className="relative w-full min-h-screen flex items-end overflow-hidden bg-[#080C14]">
       {/* Background Image Layer with Cinematic Clarity */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Image
