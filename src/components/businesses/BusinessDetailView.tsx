@@ -10,6 +10,7 @@ import {
 } from '@/types/businessVertical';
 import { BusinessHeroSection } from './BusinessHeroSection';
 import { BusinessPhilosophySection } from './BusinessPhilosophySection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 
 interface BusinessDetailViewProps {
@@ -111,6 +112,9 @@ export async function BusinessDetailView({ slug }: BusinessDetailViewProps) {
 
       {/* 2. Philosophy & Craft Narrative Cards (Dynamic) */}
       <BusinessPhilosophySection data={philosophy} />
+
+      {/* 2.5. Dynamic Vertical-Specific FAQs */}
+      <FaqSection pageSlug={`/businesses/${slug}`} />
 
       {/* 3. Common Global Conversion CTA (Growth Accelerator) */}
       <FinalCtaSection />

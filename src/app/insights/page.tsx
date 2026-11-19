@@ -5,6 +5,7 @@ import { insightsData } from '@/data/insights';
 import { getPageSEO, formatPageMetadata } from '@/lib/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import MightyBlog, { BlogPostItem } from '@/components/blog/MightyBlog';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { defaultInsightPageSettings } from '@/types/insight';
 
 export const revalidate = 0;
@@ -121,6 +122,9 @@ export default async function InsightsPage() {
         titleAccent={headerTitleAccent}
         description={headerDescription}
       />
+
+      {/* Dynamic FAQs assigned to /insights */}
+      <FaqSection pageSlug="/insights" />
     </div>
   );
 }

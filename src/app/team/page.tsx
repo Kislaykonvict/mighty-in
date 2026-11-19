@@ -6,6 +6,7 @@ import { getPageSEO, formatPageMetadata } from '@/lib/seo';
 import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { RichTextContent } from '@/components/ui/RichTextContent';
 import { defaultTeamPageSettings, TeamPageSettings, TeamMemberItem } from '@/types/team';
 
@@ -159,6 +160,9 @@ export default async function TeamPage() {
           )}
         </SectionContainer>
       </section>
+
+      {/* FAQs */}
+      <FaqSection pageSlug="/team" />
 
       {/* Final Call to Action */}
       <FinalCtaSection />

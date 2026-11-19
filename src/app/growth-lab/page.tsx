@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { GrowthLabClient } from './GrowthLabClient';
 import { Sparkles, Calculator, Layers, ArrowLeftRight, Crown } from 'lucide-react';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSEO('/growth-lab');
@@ -45,6 +46,9 @@ export default function GrowthLabPage() {
           <GrowthLabClient />
         </Suspense>
       </SectionContainer>
+
+      {/* FAQs */}
+      <FaqSection pageSlug="/growth-lab" />
 
       <FinalCtaSection />
     </div>

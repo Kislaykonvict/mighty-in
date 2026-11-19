@@ -5,6 +5,7 @@ import { CustomHeadCode } from '@/components/seo/CustomHeadCode';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { PortfolioClientView } from '@/app/portfolio/PortfolioClientView';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultWorkPageSettings, WorkPageSettings } from '@/types/workPage';
 
@@ -90,6 +91,9 @@ export default async function WorkPage() {
           />
         </SectionContainer>
       </main>
+
+      {/* FAQs */}
+      <FaqSection pageSlug="/work" />
 
       {/* Conversion Banner */}
       <FinalCtaSection />

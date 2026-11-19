@@ -6,6 +6,7 @@ import { SectionContainer } from '@/components/layout/SectionContainer';
 import { Badge } from '@/components/ui/Badge';
 import { ContactWizard } from '@/components/contact/ContactWizard';
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { Mail, MapPin, Clock, ShieldCheck } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
 import { defaultGlobalOfficesData, GlobalOfficesData } from '@/types/globalOffices';
@@ -244,6 +245,9 @@ export default async function ContactPage() {
           </div>
         </div>
       </SectionContainer>
+
+      {/* FAQs */}
+      <FaqSection pageSlug="/contact" />
 
       {/* Global Office Network 3D Globe Section */}
       <GlobalOfficesSection initialData={globalOfficesData} />

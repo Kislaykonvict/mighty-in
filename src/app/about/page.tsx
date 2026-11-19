@@ -7,6 +7,7 @@ import { AboutHeroVersett } from '@/components/about/AboutHeroVersett';
 import { InnovativeTrajectorySection } from '@/components/about/InnovativeTrajectorySection';
 import { AboutStorySection } from '@/components/about/AboutStorySection';
 import { PeopleSection } from '@/components/people/PeopleSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { AboutHeroData, defaultAboutHeroData } from '@/types/aboutHero';
 import { TrajectoryData, defaultTrajectoryData } from '@/types/trajectory';
@@ -141,6 +142,9 @@ export default async function AboutPage() {
 
       {/* 4. Leadership & Culture */}
       <PeopleSection />
+
+      {/* 4.5. Dynamic Page-Specific FAQs */}
+      <FaqSection pageSlug="/about" />
 
       {/* 5. Final Call to Action */}
       <FinalCtaSection />

@@ -7,6 +7,7 @@ import { WorkSection } from '@/components/work/WorkSection';
 import { TestimonialsSection } from '@/components/testimonials/TestimonialsSection';
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
+import { FaqSection } from '@/components/faq/FaqSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultHeroData, HeroData } from '@/types/hero';
 import {
@@ -307,6 +308,9 @@ export default async function HomePage() {
 
       {/* 5. Global Footprint: Interactive 3D Globe with Pinpoint Offices */}
       <GlobalOfficesSection initialData={globalOfficesData} />
+
+      {/* 5.5. Dynamic Page-Specific FAQs */}
+      <FaqSection pageSlug="/" />
 
       {/* 6. Conversion: Final What's Next CTA */}
       <FinalCtaSection data={finalCtaData} />
