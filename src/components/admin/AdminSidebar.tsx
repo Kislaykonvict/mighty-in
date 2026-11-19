@@ -32,6 +32,7 @@ import {
   ClipboardCheck,
   Search,
   Users,
+  Calculator,
 } from 'lucide-react';
 import { useAdminTheme } from './AdminThemeContext';
 
@@ -90,6 +91,11 @@ const NAVIGATION_GROUPS: NavigationGroup[] = [
             name: 'Global Offices',
             href: '/admin/global-offices',
             icon: Globe,
+          },
+          {
+            name: 'Growth & ROI Tools',
+            href: '/admin/growth-tools',
+            icon: Calculator,
           },
           {
             name: 'Site Sections (Builder)',

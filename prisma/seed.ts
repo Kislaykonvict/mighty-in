@@ -577,7 +577,7 @@ async function main() {
               slug: 'strata-financial-brand-transformation',
               metric: '$140M+ Pipeline Value Generated',
             },
-            recommendedServiceHref: '/growth-lab',
+            recommendedServiceHref: '/#growth-tools',
           },
           {
             id: 'cmo',
@@ -703,7 +703,7 @@ async function main() {
               'Embedded Engineering & Growth Delivery Pods',
             ],
             ctaText: 'Explore The Connected Ecosystem →',
-            ctaHref: '/growth-lab',
+            ctaHref: '/#growth-tools',
           },
         ],
       },
@@ -967,17 +967,6 @@ async function main() {
       metaKeywords: ['SOW Dedicated Pods', 'Contingent Staffing', 'Technical Recruitment'],
       metaImage: '/images/og/mighty-warner-og.jpg',
       canonicalUrl: 'https://mightywarner.com/businesses/talent-solutions',
-      customHeadScripts: '',
-    },
-    {
-      pageRoute: '/growth-lab',
-      pageName: 'Interactive Growth Lab',
-      metaTitle: 'Interactive Growth Lab & Simulation Engines | Mighty Warner',
-      metaDescription:
-        'Interactive toolset including the 90-Day Strategy Blueprint synthesizer, ROI revenue impact simulator, and persona diagnostic.',
-      metaKeywords: ['ROI Calculator', '90-Day Strategy Builder', 'Growth Simulation'],
-      metaImage: '/images/og/mighty-warner-og.jpg',
-      canonicalUrl: 'https://mightywarner.com/growth-lab',
       customHeadScripts: '',
     },
     {

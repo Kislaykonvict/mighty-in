@@ -52,7 +52,7 @@ export function GrowthTerminal() {
       icon: Sparkles,
       shortcut: 'DIAG',
       action: () => {
-        router.push('/growth-lab?tab=diagnostic');
+        router.push('/#growth-tools');
         setIsOpen(false);
       },
     },
@@ -64,19 +64,19 @@ export function GrowthTerminal() {
       icon: Calculator,
       shortcut: 'ROI',
       action: () => {
-        router.push('/growth-lab?tab=roi');
+        router.push('/#growth-tools');
         setIsOpen(false);
       },
     },
     {
-      id: 'strategy',
-      title: 'Synthesize 90-Day Strategy Blueprint',
-      description: 'Generate customized sprint roadmap by goal & industry',
-      category: 'Tools',
+      id: 'assessment',
+      title: 'Full Assessment & Diagnostic Hub',
+      description: 'Comprehensive business momentum evaluation & benchmark report',
+      category: 'Diagnostic',
       icon: Layers,
-      shortcut: 'STRAT',
+      shortcut: 'EVAL',
       action: () => {
-        router.push('/growth-lab?tab=strategy');
+        router.push('/assessment');
         setIsOpen(false);
       },
     },

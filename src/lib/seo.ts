@@ -152,22 +152,6 @@ export const DEFAULT_PAGE_SEO_DATA: PageSeo[] = [
     customHeadScripts: '',
   },
   {
-    pageRoute: '/growth-lab',
-    pageName: 'Interactive Growth Lab',
-    metaTitle: 'Interactive Growth Lab & Simulation Engines | Mighty Warner',
-    metaDescription:
-      'Interactive toolset including the 90-Day Strategy Blueprint synthesizer, ROI revenue impact simulator, and persona diagnostic.',
-    metaKeywords: [
-      'ROI Calculator',
-      '90-Day Strategy Builder',
-      'Growth Simulation',
-      'Interactive Tools',
-    ],
-    metaImage: '/images/og/mighty-warner-og.jpg',
-    canonicalUrl: `${siteConfig.url}/growth-lab`,
-    customHeadScripts: '',
-  },
-  {
     pageRoute: '/insights',
     pageName: 'Insights & Perspectives',
     metaTitle: 'Insights & Strategic Perspectives | Mighty Warner',

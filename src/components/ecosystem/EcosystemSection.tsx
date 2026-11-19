@@ -99,7 +99,7 @@ export function EcosystemSection() {
             </div>
 
             <Link
-              href="/growth-lab"
+              href="/#growth-tools"
               className="text-xs font-semibold text-rose-600 dark:text-sky-400 hover:text-rose-700 dark:hover:text-sky-300 flex items-center gap-1 shrink-0 group"
             >
               <span>Explore our unified methodology</span>

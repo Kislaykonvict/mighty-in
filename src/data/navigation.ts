@@ -51,10 +51,6 @@ export const navItems: NavItem[] = [
     href: '/work',
   },
   {
-    name: 'Growth Lab',
-    href: '/growth-lab',
-  },
-  {
     name: 'About',
     href: '/about',
   },
@@ -80,7 +76,7 @@ export const footerLinks = {
     { name: 'Global Office Hubs', href: '/#global-offices' },
     { name: 'Selected Work & Case Studies', href: '/work' },
     { name: 'Insights & Thought Leadership', href: '/insights' },
-    { name: 'Growth Assessment', href: '/assessment' },
+    { name: 'Growth Diagnostic & ROI', href: '/#growth-tools' },
   ],
   services: [
     { name: 'Web Applications', href: '/businesses/technology' },
@@ -94,6 +90,6 @@ export const footerLinks = {
     { name: 'Global Locations & Desks', href: '/contact#global-offices' },
     { name: 'Employer Hiring Portal', href: '/contact?topic=talent-solutions&type=employer' },
     { name: 'Candidate Career Network', href: '/contact?topic=talent-solutions&type=candidate' },
-    { name: 'Take Growth Diagnostic', href: '/assessment' },
+    { name: 'Take Growth Diagnostic', href: '/#growth-tools' },
   ],
 };

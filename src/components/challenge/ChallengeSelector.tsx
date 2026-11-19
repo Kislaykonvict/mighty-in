@@ -97,7 +97,7 @@ const challengeOptions: ChallengeOption[] = [
       'Interactive Growth & Systems Diagnostic',
     ],
     ctaText: 'Explore The Full Ecosystem →',
-    ctaHref: '/growth-lab',
+    ctaHref: '/#growth-tools',
   },
 ];
 

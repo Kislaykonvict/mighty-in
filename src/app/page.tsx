@@ -8,6 +8,12 @@ import { TestimonialsSection } from '@/components/testimonials/TestimonialsSecti
 import { GlobalOfficesSection } from '@/components/globe/GlobalOfficesSection';
 import { FinalCtaSection } from '@/components/cta/FinalCtaSection';
 import { FaqSection } from '@/components/faq/FaqSection';
+import { HomeGrowthToolsSection } from '@/components/home/HomeGrowthToolsSection';
+import {
+  HomeGrowthToolsSectionData,
+  defaultHomeGrowthToolsSectionData,
+} from '@/types/growthTools';
+import { defaultAssessmentSectionData } from '@/types/assessmentSection';
 import { prisma } from '@/lib/db/prisma';
 import { defaultHeroData, HeroData } from '@/types/hero';
 import {
@@ -270,6 +276,88 @@ async function getGlobalOfficesData(): Promise<GlobalOfficesData> {
   }
 }
 
+async function getGrowthToolsData(): Promise<HomeGrowthToolsSectionData> {
+  try {
+    const section = await prisma.siteSection.findUnique({
+      where: {
+        pageSlug_sectionKey: {
+          pageSlug: 'home',
+          sectionKey: 'growth_tools',
+        },
+      },
+    });
+
+    if (!section) {
+      // Check if existing assessment section exists to carry over custom questions
+      try {
+        const assessmentSec = await prisma.siteSection.findUnique({
+          where: {
+            pageSlug_sectionKey: {
+              pageSlug: 'assessment',
+              sectionKey: 'main',
+            },
+          },
+        });
+        if (assessmentSec && assessmentSec.content) {
+          const assContent = assessmentSec.content as any;
+          return {
+            ...defaultHomeGrowthToolsSectionData,
+            diagnostic: {
+              ...defaultAssessmentSectionData,
+              ...assContent,
+              badge: assessmentSec.badge || assContent.badge || defaultAssessmentSectionData.badge,
+              title: assessmentSec.title || assContent.title || defaultAssessmentSectionData.title,
+              description: assessmentSec.subtitle || assContent.description || defaultAssessmentSectionData.description,
+            },
+          };
+        }
+      } catch {}
+      return defaultHomeGrowthToolsSectionData;
+    }
+
+    const content = (section.content as any) || {};
+
+    let diagnostic = content.diagnostic;
+    if (!diagnostic) {
+      try {
+        const assessmentSec = await prisma.siteSection.findUnique({
+          where: {
+            pageSlug_sectionKey: {
+              pageSlug: 'assessment',
+              sectionKey: 'main',
+            },
+          },
+        });
+        if (assessmentSec && assessmentSec.content) {
+          const assContent = assessmentSec.content as any;
+          diagnostic = {
+            ...defaultAssessmentSectionData,
+            ...assContent,
+            badge: assessmentSec.badge || assContent.badge || defaultAssessmentSectionData.badge,
+            title: assessmentSec.title || assContent.title || defaultAssessmentSectionData.title,
+            description: assessmentSec.subtitle || assContent.description || defaultAssessmentSectionData.description,
+          };
+        }
+      } catch {}
+    }
+
+    return {
+      badge: section.badge || defaultHomeGrowthToolsSectionData.badge,
+      title: section.title || defaultHomeGrowthToolsSectionData.title,
+      highlightedTitle: content.highlightedTitle || defaultHomeGrowthToolsSectionData.highlightedTitle,
+      description: section.subtitle || content.description || defaultHomeGrowthToolsSectionData.description,
+      diagnosticTabLabel: content.diagnosticTabLabel || defaultHomeGrowthToolsSectionData.diagnosticTabLabel,
+      roiTabLabel: content.roiTabLabel || defaultHomeGrowthToolsSectionData.roiTabLabel,
+      defaultActiveTab: content.defaultActiveTab || defaultHomeGrowthToolsSectionData.defaultActiveTab,
+      diagnostic: diagnostic || defaultHomeGrowthToolsSectionData.diagnostic,
+      roi: content.roi || defaultHomeGrowthToolsSectionData.roi,
+      isActive: section.isActive ?? true,
+    };
+  } catch (err) {
+    return defaultHomeGrowthToolsSectionData;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   return constructDynamicMetadata('/', {
     title: 'One Company. Multiple Ways to Move Your Business Forward',
@@ -280,13 +368,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [heroData, testimonialsData, workData, finalCtaData, globalOfficesData] =
+  const [heroData, testimonialsData, workData, finalCtaData, globalOfficesData, growthToolsData] =
     await Promise.all([
       getHeroData(),
       getTestimonialsData(),
       getHomepageWorkData(),
       getFinalCtaData(),
       getGlobalOfficesData(),
+      getGrowthToolsData(),
     ]);
 
   return (
@@ -311,6 +400,9 @@ export default async function HomePage() {
 
       {/* 5.5. Dynamic Page-Specific FAQs */}
       <FaqSection pageSlug="/" />
+
+      {/* 5.75. Interactive Growth Diagnostic & Revenue ROI Calculator */}
+      <HomeGrowthToolsSection data={growthToolsData} />
 
       {/* 6. Conversion: Final What's Next CTA */}
       <FinalCtaSection data={finalCtaData} />

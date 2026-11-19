@@ -733,7 +733,6 @@ export default function AdminFaqsPage() {
                       <option value="/team">Team (/team)</option>
                       <option value="/work">Work &amp; Portfolio (/work)</option>
                       <option value="/contact">Contact (/contact)</option>
-                      <option value="/growth-lab">Growth Lab (/growth-lab)</option>
                       <option value="/insights">Insights &amp; Blog (/insights)</option>
                     </optgroup>
                     <optgroup label="Business Verticals">

@@ -23,7 +23,6 @@ export const STANDARD_FAQ_PAGES: FaqPageOption[] = [
   { value: '/team', label: 'Team (/team)', group: 'Core Pages' },
   { value: '/work', label: 'Work & Portfolio (/work)', group: 'Core Pages' },
   { value: '/contact', label: 'Contact (/contact)', group: 'Core Pages' },
-  { value: '/growth-lab', label: 'Growth Lab (/growth-lab)', group: 'Core Pages' },
   { value: '/insights', label: 'Insights & Blog (/insights)', group: 'Core Pages' },
   { value: '/businesses/digital-growth', label: 'Digital & Growth (/businesses/digital-growth)', group: 'Business Verticals' },
   { value: '/businesses/technology', label: 'Technology (/businesses/technology)', group: 'Business Verticals' },

@@ -248,7 +248,7 @@ export async function PUT(req: NextRequest) {
 
     // Revalidate public pages and cache
     revalidatePath('/assessment');
-    revalidatePath('/growth-lab');
+    revalidatePath('/');
     revalidatePath('/admin/assessment');
 
     const resultData: AssessmentSectionData = {

@@ -54,6 +54,12 @@ function AdminShell({ children }: { children: React.ReactNode }) {
         subtitle: 'Manage hero headlines, practice options, form fields, direct channels, and SLA guarantees',
       };
     }
+    if (pathname?.startsWith('/admin/growth-tools')) {
+      return {
+        title: 'Homepage Growth Diagnostic & ROI Calculator',
+        subtitle: 'Configure the interactive diagnostic wizard, questions, scoring tiers, and ROI calculator benchmarks',
+      };
+    }
     if (pathname?.startsWith('/admin/assessment') || pathname?.startsWith('/admin/assesment')) {
       return {
         title: 'Assessment & Growth Diagnostic',

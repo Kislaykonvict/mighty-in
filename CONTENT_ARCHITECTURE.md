@@ -28,7 +28,6 @@ Treat the existing repository route list below as the **new-app implementation i
 | `/about` | Header; company stats; timeline; people; office globe; values; final CTA |
 | `/contact` | Header; contact wizard; contact-channel/sidebar content; office globe |
 | `/assessment` | Assessment header/trust signals; assessment wizard/result |
-| `/growth-lab` | Header; tabbed diagnostic, strategy, ROI, before/after, persona tools; final CTA |
 | `/robots.txt`, `/sitemap.xml` | Generated SEO routes; sitemap is presently derived from static arrays |
 
 ## Home page sections
